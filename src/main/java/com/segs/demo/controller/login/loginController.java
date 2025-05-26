@@ -13,6 +13,7 @@ public class loginController {
     @GetMapping("/login")
     public String login(HttpServletRequest request, HttpSession session, ModelMap model) {
         // Simulate DB user ID from session
+        session.setAttribute("userId", 7);
         Integer userId = (Integer) session.getAttribute("userId");
 
         if (userId == null) {
@@ -51,14 +52,14 @@ public class loginController {
         session.setAttribute("Navigation_Mode", "Term");
         session.setAttribute("ATTRIBUTESEGSSHOWREEXAMS", "FALSE");
 
-        return "segsMenu";
+        return "segsMenuFaculty";
     }
 
     // Simulate fetching user
     private User fetchUserDetails(int userId) {
         // Replace with real DB/service call
         if (userId == 7) {
-            return new User("Harish", "harish@demo.com", "FACULTY", 7);
+            return new User("Bhavya", "bhavya@demo.com", "FACULTY", 7);
         } else if (userId == 2025) {
             return new User("Admin", "admin@demo.com", "REGISTRAR", 2025);
         } else {
