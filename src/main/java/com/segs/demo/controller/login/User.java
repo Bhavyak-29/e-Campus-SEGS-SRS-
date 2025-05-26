@@ -1,4 +1,4 @@
-package com.segs.demo.model;
+package com.segs.demo.controller.login;
 
 public class User {
     private String UserName;
