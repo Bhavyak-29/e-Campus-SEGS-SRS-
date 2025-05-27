@@ -13,7 +13,7 @@ public class loginController {
     @GetMapping("/login")
     public String login(HttpServletRequest request, HttpSession session, ModelMap model) {
         // Simulate DB user ID from session
-        session.setAttribute("userId", 7);
+        session.setAttribute("userId", null);
         Integer userId = (Integer) session.getAttribute("userId");
 
         if (userId == null) {

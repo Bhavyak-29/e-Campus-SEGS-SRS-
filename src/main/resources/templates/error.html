@@ -1,8 +1,131 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head><title>Error</title></head>
+<head>
+    <title>Student Page</title>
+    <style>
+        body {
+            background-image: url('/login_38.gif');
+            background-repeat: repeat-y;       /* Repeat vertically */
+            background-position: left top;     /* Align to the left */
+            background-attachment: fixed;      /* So it doesn't scroll */
+            background-color: white;           /* Optional */
+        }
+
+        /* Add a right-side image by using a pseudo-element */
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 20px; /* match the width of your gif */
+            height: 100%;
+            background-image: url('/login_38.gif');
+            background-repeat: repeat-y;
+            background-position: right top;
+            background-attachment: fixed;
+            z-index: -1;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .top-bar {
+            background-color: #003366;
+            padding: 10px;
+            color: white;
+        }
+
+        .nav-bar {
+            background-color: #6699cc;
+        }
+
+        .nav-bar td {
+            text-align: center;
+            font-weight: bold;
+            border-right: 1px solid #003366;
+        }
+
+        .nav-bar a {
+            display: block;
+            color: white;
+            padding: 8px 0;
+            text-decoration: none;
+        }
+
+        .nav-bar a:hover {
+            background-color: #336699;
+        }
+
+        .sidemenu {
+            background-image: url('login_38.gif');
+            background-repeat: repeat-y;
+            width: 15px;
+        }
+
+        .content {
+            padding: 30px;
+            text-align: center;
+        }
+
+        .footer {
+            font-size: 12px;
+            color: #333;
+            text-align: center;
+            padding: 10px;
+            border-top: 1px solid #6699cc;
+        }
+    </style>
+</head>
 <body>
-<h2>Error Occurred</h2>
-<p th:text="${error}"></p>
+
+<table>
+    <tr>
+        <td colspan="3" class="top-bar">
+            <span style="font-size: 24px; font-weight: bold;">DA-IICT</span>
+            <span style="font-size: 16px;">&nbsp;Dhirubhai Ambani Institute of Information & Communication Technology</span>
+        </td>
+    </tr>
+
+    <tr class="nav-bar">
+        <td colspan="3">
+            <table width="100%">
+                <tr>
+                    <td><a href="#">Transaction</a></td>
+                    <td><a href="#">Student Detail</a></td>
+                    <td><a href="#">Registration</a></td>
+                    <td><a href="#">Course Adjustements</a></td>
+                    <td><a href="#">Result</a></td>
+                    <td><a href="#">Hostel</a></td>
+                    <td><a href="#">Fees</a></td>
+                    <td><a href="#">Attendance</a></td>
+                    <td><a href="#">Utilities</a></td>
+                    <td><a href="#">LOGOUT</a></td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+
+    <tr>
+        <td class="sidemenu"></td>
+        <td class="content">
+            <h2>Welcome to Students Page!!</h2>
+            <hr style="width: 50%;">
+            <p style="font-size: 16px;">Welcome <strong>SUMIT KUMAR VISHWAKARMA</strong></p>
+        </td>
+        <td class="sidemenu"></td>
+    </tr>
+
+    <tr>
+        <td class="sidemenu"></td>
+        <td class="footer" colspan="1">
+            &copy; 2002 DA-IICT, Near Indroda Circle, Ahmedabad-Gandhinagar Highway, Gandhinagar - 382 009, Gujarat, India.<br>
+            Designed, developed and maintained by <a href="http://www.exchangenext.com" target="_blank">Internet ExchangeNext.com Ltd.</a>
+        </td>
+        <td class="sidemenu"></td>
+    </tr>
+</table>
+
 </body>
 </html>
