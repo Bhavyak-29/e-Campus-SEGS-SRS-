@@ -1,4 +1,11 @@
-INSERT INTO ACADEMICYEARS (AYRID, AYRNAME, AYRROWSTATE, AYRFIELD1) VALUES
-(1, '2022-2023', 1, 100),
-(2, '2023-2024', 1, 101),
-(3, '2024-2025', 1, 102);
+INSERT INTO COURSES (CRSID, CRSNAME, CRSCODE, CRSROWSTATE) VALUES
+(101, 'Introduction to Computer Science', 'CS101', 1),
+(102, 'Data Structures', 'CS102', 1),
+(103, 'Algorithms', 'CS103', 1),
+(104, 'Database Systems', 'CS104', 1),
+(105, 'Operating Systems', 'CS105', 1),
+(106, 'Software Engineering', 'CS106', 1),
+(107, 'Computer Networks', 'CS107', 1),
+(108, 'Artificial Intelligence', 'CS108', 1),
+(109, 'Machine Learning', 'CS109', 1),
+(110, 'Web Technologies', 'CS110', 1);
