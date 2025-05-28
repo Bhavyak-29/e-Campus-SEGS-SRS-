@@ -3,11 +3,11 @@ package com.segs.demo.controller.login;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.segs.demo.model.User;
 import com.segs.demo.service.loginservice;
-
+import org.springframework.web.bind.annotation.RequestMethod;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
@@ -17,7 +17,7 @@ public class loginController {
     @Autowired
     private loginservice loginService;
 
-    @GetMapping("/login")
+    @RequestMapping("/")
     public String login(HttpServletRequest request, HttpSession session, ModelMap model) {
          session.setAttribute("userId", 7); // Simulated input
         Integer userId = (Integer) session.getAttribute("userId");
