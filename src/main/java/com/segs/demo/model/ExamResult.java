@@ -25,6 +25,10 @@ public class ExamResult {
     @Column(name = "ROW_ST")
     private Integer rowState;
 
+    @ManyToOne
+    @JoinColumn(name = "CRSID")
+    private Course course;
+
     public Long getId() {
         return id;
     }
@@ -55,6 +59,14 @@ public class ExamResult {
 
     public void setRowState(Integer rowState) {
         this.rowState = rowState;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
     
 }

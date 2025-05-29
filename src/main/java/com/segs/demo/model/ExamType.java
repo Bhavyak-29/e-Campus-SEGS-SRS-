@@ -1,8 +1,10 @@
 package com.segs.demo.model;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "EGEXAMM1")
@@ -16,6 +18,10 @@ public class ExamType {
 
     @Column(name = "ROW_ST")
     private Integer rowState;
+
+    @ManyToOne
+    @JoinColumn(name = "CRSID") // ← replace with actual column name in table
+    private Course course;
 
     public Long getId() {
         return id;
@@ -39,5 +45,13 @@ public class ExamType {
 
     public void setRowState(Integer rowState) {
         this.rowState = rowState;
+    }
+
+    public Course getCourse() {
+        return course;
+    }
+
+    public void setCourse(Course course) {
+        this.course = course;
     }
 }

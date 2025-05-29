@@ -194,10 +194,10 @@
         <td class="sidemenu"></td>
         <td class="content">
             <h2 class="mb-4 text-center" style="margin-left:100px;">Direct Grade Entry</h2>
-            <form method="post" th:action="@{/directGradeEntry}">
+            <!-- <form method="post" th:action="@{/directGradeEntry}">
                 <div class="mb-3 w-50" style="margin-left:340px;">
                     <label for="termSelect" class="form-label">Term</label>
-                    <select id="termSelect" class="form-select" name="termId">
+                    <select id="termSelect" class="form-select" name="TRMID">
                         <option th:each="term : ${terms}"
                                 th:value="${term.id}"
                                 th:text="${term.name}">
@@ -217,7 +217,7 @@
 
                 <div class="mb-3 w-50" style="margin-left:340px;">
                     <label for="academicYearSelect" class="form-label">Academic Year</label>
-                    <select id="academicYearSelect" class="form-select" name="academicYearId">
+                    <select id="academicYearSelect" class="form-select" name="AYRID">
                         <option th:each="ay : ${academicYears}"
                                 th:value="${ay.id}"
                                 th:text="${ay.name}">
@@ -227,11 +227,47 @@
 
                 <div class="mb-3 w-50" style="margin-left:340px;">
                     <label for="courseSelect" class="form-label">Course</label>
-                    <select id="courseSelect" class="form-select" name="courseId">
+                    <select id="courseSelect" class="form-select" name="CRSID">
                         <option th:each="course : ${courses}"
                                 th:value="${course.id}"
                                 th:text="${course.code} + ' - ' + ${course.name}">
                         </option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="margin-left:430px;width:400px;">Proceed</button>
+            </form> -->
+            <form method="post" th:action="@{/directGradeEntry}">
+                <!-- Academic Year -->
+                <div class="mb-3 w-50" style="margin-left:340px;">
+                    <label for="academicYearSelect" class="form-label">Academic Year</label>
+                    <select id="academicYearSelect" class="form-select" name="AYRID" onchange="fetchTerms(this.value)">
+                        <option value="">-- Select Academic Year --</option>
+                        <option th:each="ay : ${academicYears}" th:value="${ay.id}" th:text="${ay.name}"></option>
+                    </select>
+                </div>
+
+                <!-- Term -->
+                <div class="mb-3 w-50" style="margin-left:340px;">
+                    <label for="termSelect" class="form-label">Term</label>
+                    <select id="termSelect" class="form-select" name="TRMID" onchange="fetchCourses(this.value)">
+                        <option value="">-- Select Term --</option>
+                    </select>
+                </div>
+
+                <!-- Course -->
+                <div class="mb-3 w-50" style="margin-left:340px;">
+                    <label for="courseSelect" class="form-label">Course</label>
+                    <select id="courseSelect" class="form-select" name="CRSID" onchange="fetchExamTypes(this.value)">
+                        <option value="">-- Select Course --</option>
+                    </select>
+                </div>
+
+                <!-- Exam Type -->
+                <div class="mb-3 w-50" style="margin-left:340px;">
+                    <label for="examTypeSelect" class="form-label">Exam Type</label>
+                    <select id="examTypeSelect" class="form-select" name="examTypeId">
+                        <option value="">-- Select Exam Type --</option>
                     </select>
                 </div>
 
@@ -250,5 +286,57 @@
         <td class="sidemenu"></td>
     </tr>
 </table>
+<script>
+    function fetchTerms(AYRID) {
+        fetch(`/api/terms?AYRID=${AYRID}`)
+            .then(response => response.json())
+            .then(data => {
+                const termSelect = document.getElementById("termSelect");
+                termSelect.innerHTML = '<option value="">-- Select Term --</option>';
+                data.forEach(term => {
+                    const option = document.createElement("option");
+                    option.value = term.id;
+                    option.text = term.name;
+                    termSelect.appendChild(option);
+                });
+
+                // Reset dependent selects
+                document.getElementById("courseSelect").innerHTML = '<option value="">-- Select Course --</option>';
+                document.getElementById("examTypeSelect").innerHTML = '<option value="">-- Select Exam Type --</option>';
+            });
+    }
+
+    function fetchCourses(TRMID) {
+        fetch(`/api/courses?TRMID=${TRMID}`)
+            .then(response => response.json())
+            .then(data => {
+                const courseSelect = document.getElementById("courseSelect");
+                courseSelect.innerHTML = '<option value="">-- Select Course --</option>';
+                data.forEach(course => {
+                    const option = document.createElement("option");
+                    option.value = course.id;
+                    option.text = course.code + " - " + course.name;
+                    courseSelect.appendChild(option);
+                });
+
+                document.getElementById("examTypeSelect").innerHTML = '<option value="">-- Select Exam Type --</option>';
+            });
+    }
+
+    function fetchExamTypes(CRSID) {
+        fetch(`/api/exam-types?CRSID=${CRSID}`)
+            .then(response => response.json())
+            .then(data => {
+                const examTypeSelect = document.getElementById("examTypeSelect");
+                examTypeSelect.innerHTML = '<option value="">-- Select Exam Type --</option>';
+                data.forEach(exam => {
+                    const option = document.createElement("option");
+                    option.value = exam.id;
+                    option.text = exam.title;
+                    examTypeSelect.appendChild(option);
+                });
+            });
+    }
+</script>
 </body>
 </html>

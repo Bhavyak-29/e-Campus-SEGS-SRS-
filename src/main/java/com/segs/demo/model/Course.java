@@ -2,6 +2,8 @@ package com.segs.demo.model;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -19,6 +21,10 @@ public class Course {
 
     @Column(name = "CRSROWSTATE")
     private Integer rowState;
+
+    @ManyToOne
+    @JoinColumn(name = "TRMID")  // this column references TERM.TRMID
+    private Term term;
 
     public Long getId() {
         return id;
@@ -51,5 +57,13 @@ public class Course {
     public void setRowState(Integer rowState) {
         this.rowState = rowState;
     }    
+
+    public Term getTerm() { 
+        return term; 
+    }
+    
+    public void setTerm(Term term) { 
+        this.term = term; 
+    }
 }
 
