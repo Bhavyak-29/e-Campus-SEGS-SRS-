@@ -5,17 +5,17 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.segs.demo.model.User;
+import com.segs.demo.model.Users;
 
 
 @Service
 public class loginservice {
-    public User fetchUserDetails(int userId) {
+    public Users fetchUserDetails(int userId) {
         // Replace with real DB/service call
         if (userId == 7) {
-            return new User("Bhavya", "bhavya@demo.com", "FACULTY", 7);
+            return new Users("Bhavya", "bhavya@demo.com", "FACULTY", 7);
         } else if (userId == 2025) {
-            return new User("Admin", "admin@demo.com", "REGISTRAR", 2025);
+            return new Users("Admin", "admin@demo.com", "REGISTRAR", 2025);
         } else {
             return null;
         }

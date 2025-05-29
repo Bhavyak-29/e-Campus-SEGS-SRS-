@@ -5,7 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.segs.demo.model.User;
+import com.segs.demo.model.Users;
 import com.segs.demo.service.loginservice;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -25,7 +25,7 @@ public class loginController {
             return "error";
         }
 
-        User user = loginService.fetchUserDetails(userId);
+        Users user = loginService.fetchUserDetails(userId);
 
         if (user == null) {
             session.setAttribute("SegsUserCategory", "INVALIDUSER");

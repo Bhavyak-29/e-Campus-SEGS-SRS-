@@ -22,9 +22,9 @@ public class TermCourse {
     @JoinColumn(name = "TCRCRSID")
     private Course course;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "TCRFACULTYID")
-    private User user;
+    private Users user;
 
     @Column(name = "TCRROWSTATE")
     private Integer rowState;
@@ -53,11 +53,11 @@ public class TermCourse {
         this.course = course;
     }
 
-    public User getUser() {
+    public Users getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(Users user) {
         this.user = user;
     }
 

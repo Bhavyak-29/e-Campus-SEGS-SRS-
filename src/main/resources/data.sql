@@ -1,3 +1,14 @@
+-- Insert User
+
+-- user entity
+INSERT INTO users (user_id, user_name, user_mail_id, user_category) VALUES
+(1001, 'Alice Johnson', 'alice.johnson@example.com', 'faculty'),
+(1002, 'Bob Smith', 'bob.smith@example.com', 'teacher'),
+(1003, 'Charlie Brown', 'charlie.brown@example.com', 'admin'),
+(1004, 'Diana Prince', 'diana.prince@example.com', 'faculty'),
+(1005, 'Ethan Hunt', 'ethan.hunt@example.com', 'faculty'),
+(1006, 'Ethan Brown', 'ethan.brown@example.com', 'admin');
+
 -- Insert Academic Years
 INSERT INTO ACADEMICYEARS (AYRID, AYRNAME, AYRROWSTATE, AYRFIELD1) VALUES (10, '2023-2024', 1, 10);
 INSERT INTO ACADEMICYEARS (AYRID, AYRNAME, AYRROWSTATE, AYRFIELD1) VALUES (11, '2024-2025', 1, 20);

@@ -2,15 +2,12 @@ package com.segs.demo.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Column;
 
 @Entity
-public class User {
+public class Users {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int userId;
 
     @Column(nullable = false)
@@ -23,10 +20,10 @@ public class User {
     private String userCategory;
 
     // Constructors
-    public User() {
+    public Users() {
     }
 
-    public User(String userName, String userMailId, String userCategory, int userId) {
+    public Users(String userName, String userMailId, String userCategory, int userId) {
         this.userName = userName;
         this.userMailId = userMailId;
         this.userCategory = userCategory;
