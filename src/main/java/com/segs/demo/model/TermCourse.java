@@ -1,10 +1,11 @@
 package com.segs.demo.model;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
 import jakarta.persistence.Column;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "TERMCOURSES")
@@ -21,8 +22,9 @@ public class TermCourse {
     @JoinColumn(name = "TCRCRSID")
     private Course course;
 
-    @Column(name = "TCRFACULTYID")
-    private String facultyId;
+    @OneToOne
+    @JoinColumn(name = "TCRFACULTYID")
+    private User user;
 
     @Column(name = "TCRROWSTATE")
     private Integer rowState;
@@ -51,13 +53,21 @@ public class TermCourse {
         this.course = course;
     }
 
-    public String getFacultyId() {
-        return facultyId;
+    public User getUser() {
+        return user;
     }
 
-    public void setFacultyId(String facultyId) {
-        this.facultyId = facultyId;
+    public void setUser(User user) {
+        this.user = user;
     }
+
+    // public Integer getFacultyId() {
+    //     return facultyId;
+    // }
+
+    // public void setFacultyId(Integer facultyId) {
+    //     this.facultyId = facultyId;
+    // }
 
     public Integer getRowState() {
         return rowState;
