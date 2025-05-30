@@ -1,32 +1,49 @@
 package com.segs.demo.controller.login;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-
 import com.segs.demo.model.Users;
 import com.segs.demo.service.loginservice;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 public class loginController {
+
     @Autowired
     private loginservice loginService;
 
-    @RequestMapping("/")
-    public String login(HttpServletRequest request, HttpSession session, ModelMap model) {
-         session.setAttribute("userId", 7); // Simulated input
-        Integer userId = (Integer) session.getAttribute("userId");
+    // This returns the login form at /login (GET)
+    @GetMapping("/login")
+    public String loginPage() {
+        return "login"; // Make sure login.html is inside /templates
+    }
 
-        if (userId == null) {
+    // This is the post-login landing page
+    @RequestMapping("/")
+    public String postLoginRedirect(HttpServletRequest request, HttpSession session, Authentication authentication, ModelMap model) {
+        // Get the authenticated user's username
+        String username = null;
+        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+            username = ((UserDetails) authentication.getPrincipal()).getUsername();
+        }
+
+        if (username == null) {
             return "error";
         }
 
-        Users user = loginService.fetchUserDetails(userId);
+        // You can fetch userId using username (e.g. from DB)
+        // For demo, simulate userId = 7
+        Integer userId = 7;
+        session.setAttribute("userId", userId);
 
+        Users user = loginService.fetchUserDetails(userId);
         if (user == null) {
             session.setAttribute("SegsUserCategory", "INVALIDUSER");
             session.setAttribute("SegsAccessFailure", "YOU ARE NOT PERMITTED TO ACCESS THE APPLICATION");
@@ -34,7 +51,7 @@ public class loginController {
         }
 
         String userCategory = user.getUserCategory();
-        String userIp = "";
+        String userIp = request.getRemoteAddr(); // Get actual client IP
 
         if (!loginService.isAllowedUser(userCategory, userId)) {
             session.setAttribute("SegsUserCategory", "INVALIDUSER");
@@ -52,7 +69,6 @@ public class loginController {
         session.setAttribute("Navigation_Mode", "Term");
         session.setAttribute("ATTRIBUTESEGSSHOWREEXAMS", "FALSE");
 
-        return "segsMenuFaculty";
+        return "segsMenuFaculty"; // Your home page
     }
-
 }

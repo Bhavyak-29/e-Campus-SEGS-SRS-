@@ -23,7 +23,6 @@ public class SpringSecurityConfiguration {
         
         return new InMemoryUserDetailsManager(userDetails1,userDetails2);
     }
-
     private UserDetails createNewUser(String username, String password) {
         Function<String,String> passwordEncoder = input -> passwordEncoder().encode(input);
         UserDetails userDetails = User.builder().passwordEncoder(passwordEncoder)
@@ -43,9 +42,23 @@ public class SpringSecurityConfiguration {
     
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{  // we take HttpSecurity object to implement our own rules
+        
+        // this implements that whenever we refer to any url in our domain....it must
+        // be authenticated first, then only we would be able to see those webpages
         http.authorizeHttpRequests(
-            auth -> auth.anyRequest().authenticated()); //All incoming HTTP requests must be authenticated (i.e. logged in)
-        http.formLogin(withDefaults());
+            auth -> auth
+            .requestMatchers("/images/**", "/css/**", "/js/**").permitAll()
+            .anyRequest().authenticated()
+            );
+        //All incoming HTTP requests must be authenticated (i.e. logged in)
+        
+        
+        http.formLogin(form -> form
+            .loginPage("/login")
+            .defaultSuccessUrl("/", true)
+            .permitAll()
+        );
+        http.logout(withDefaults());
         http.csrf().disable();
         http.headers().frameOptions().disable();
         return http.build(); //Creates the SecurityFilterChain with all the rules you defined.
