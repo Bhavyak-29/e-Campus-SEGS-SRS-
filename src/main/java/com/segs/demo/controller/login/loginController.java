@@ -29,46 +29,6 @@ public class loginController {
     @RequestMapping("/")
     public String postLoginRedirect(HttpServletRequest request, HttpSession session, Authentication authentication, ModelMap model) {
         // Get the authenticated user's username
-        String username = null;
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            username = ((UserDetails) authentication.getPrincipal()).getUsername();
-        }
-
-        if (username == null) {
-            return "error";
-        }
-
-        // You can fetch userId using username (e.g. from DB)
-        // For demo, simulate userId = 7
-        Integer userId = 7;
-        session.setAttribute("userId", userId);
-
-        Users user = loginService.fetchUserDetails(userId);
-        if (user == null) {
-            session.setAttribute("SegsUserCategory", "INVALIDUSER");
-            session.setAttribute("SegsAccessFailure", "YOU ARE NOT PERMITTED TO ACCESS THE APPLICATION");
-            return "accessDenied";
-        }
-
-        String userCategory = user.getUserCategory();
-        String userIp = request.getRemoteAddr(); // Get actual client IP
-
-        if (!loginService.isAllowedUser(userCategory, userId)) {
-            session.setAttribute("SegsUserCategory", "INVALIDUSER");
-            session.setAttribute("SegsAccessFailure", "YOU ARE NOT PERMITTED TO ACCESS THE APPLICATION");
-            return "accessDenied";
-        }
-
-        if (!loginService.isPermittedMachine(userId, userIp)) {
-            session.setAttribute("SegsUserCategory", "INVALIDIP");
-            session.setAttribute("SegsAccessFailure", "YOU ARE NOT PERMITTED TO ACCESS THE APPLICATION FROM THIS MACHINE");
-            return "accessDenied";
-        }
-
-        session.setAttribute("SegsUserCategory", userCategory);
-        session.setAttribute("Navigation_Mode", "Term");
-        session.setAttribute("ATTRIBUTESEGSSHOWREEXAMS", "FALSE");
-
         return "segsMenuFaculty"; // Your home page
     }
 }

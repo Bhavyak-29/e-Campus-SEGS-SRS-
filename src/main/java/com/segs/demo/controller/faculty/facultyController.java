@@ -3,6 +3,7 @@ package com.segs.demo.controller.faculty;
 import com.segs.demo.model.*;
 import com.segs.demo.repository.StudentRepository;
 import com.segs.demo.service.facultyService;
+import com.segs.demo.service.GradeService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,8 @@ public class facultyController {
     @Autowired
     private StudentRepository studentRepository;
 
+     @Autowired
+    private GradeService gradeService;
     // --- Direct Grade Entry (Existing functionality) ---
     @RequestMapping("/directGradeEntry")
     public String directGradeEntry(ModelMap model) {
@@ -37,8 +40,33 @@ public class facultyController {
         model.addAttribute("courses", courses);
 
         return "directGradeEntry";
-    }
 
+
+    }
+    @RequestMapping("/directGradeEntry/gradeOptions")
+    public String showGradeOptions(
+            @RequestParam(required = false) Long CRSID,
+            @RequestParam(required = false) Long examTypeId,
+            @RequestParam(required = false) List<String> selectedGrades,
+            ModelMap model) {
+
+        // Load grades for dropdown (assuming a GradeRepository exists)
+        List<Grade> allGrades = gradeService.getAllGrades();
+        model.addAttribute("grades", allGrades);
+
+        if (CRSID != null && examTypeId != null) {
+            // Fetch students with grades, optionally filter by selected grades
+            List<StudentGradeDTO> studentGrades = gradeService.getStudentGrades(CRSID, examTypeId, selectedGrades);
+            model.addAttribute("studentGrades", studentGrades);
+            model.addAttribute("selectedGrades", selectedGrades);
+        }
+
+        model.addAttribute("CRSID", CRSID);
+        model.addAttribute("examTypeId", examTypeId);
+
+        return "gradeOptions";
+    }
+  
     // --- Student Info: Search Form View ---
     @GetMapping("/student-search")
     public String showSearchForm() {
@@ -57,5 +85,8 @@ public class facultyController {
         model.addAttribute("students", students);
 
         return "student_search"; // Return same view with results
+        
     }
+
+    
 }
