@@ -169,3 +169,29 @@
             content: "\203A"; /* Unicode for › */
             border: none !important; /* remove Bootstrap down arrow */
         }
+    /* Grade option hover effect */
+    #grades option:hover {
+        background-color: #dceafc !important;
+        color: #0d6efd;
+    }
+
+    /* Scrollbar styling for WebKit browsers (Chrome, Edge, Safari) */
+    #grades::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    #grades::-webkit-scrollbar-track {
+        background: #f1f1f1;
+    }
+
+    #grades::-webkit-scrollbar-thumb {
+        background-color: #adb5bd;
+        border-radius: 4px;
+    }
+
+    /* Firefox scrollbar */
+    #grades {
+        cursor: pointer; 
+        scrollbar-width: thin;
+        scrollbar-color: #adb5bd #f1f1f1;
+    }

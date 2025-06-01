@@ -14,10 +14,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.ArrayList;
 import java.util.Collections;
-
-
+import java.util.Comparator;
 import java.util.List;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 @Controller
 public class facultyController {
@@ -54,11 +57,17 @@ public class facultyController {
             @RequestParam(required = false) Long examTypeId,
             @RequestParam(required = false) List<String> selectedGrades,
             ModelMap model) {
+            List<Grade> allGrades = gradeService.getAllGrades();
 
-        // Load grades for dropdown (assuming a GradeRepository exists)
-        List<Grade> allGrades = gradeService.getAllGrades();
-        model.addAttribute("grades", allGrades);
+            List<Grade> distinctGrades = allGrades.stream()
+                .collect(Collectors.collectingAndThen(
+                    Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(Grade::getGradeValue))),
+                    ArrayList::new
+                ));
 
+model.addAttribute("grades", distinctGrades);
+
+model.addAttribute("grades", distinctGrades);
         if (CRSID != null && examTypeId != null) {
             // Fetch students with grades, optionally filter by selected grades
             List<StudentGradeDTO> studentGrades = gradeService.getStudentGrades(CRSID, examTypeId, selectedGrades);
