@@ -67,7 +67,7 @@
                     enrollment.setId(Long.parseLong("100"));  // ← You must define this method
 
                     Student student = new Student();
-                    student.setId(form.getStudentId());  // or Integer, depending on your Student ID type
+                    student.setStdinstid(form.getStudentId());  // or Integer, depending on your Student ID type
                     enrollment.setStudent(student);
 
                     Course course = new Course();

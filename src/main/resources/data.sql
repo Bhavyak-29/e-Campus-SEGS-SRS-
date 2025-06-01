@@ -70,28 +70,71 @@ INSERT INTO EGGRSTT1 (EXMRID, EXAMTYPE_ID, TCRID, ROW_ST) VALUES
 (9, 3, 9, 1),
 (10, 1, 10, 1);
 
--- Insert Students
-INSERT INTO STUDENT (ID, ROLL_NO, NAME, BRANCH, BATCH, SECTION, FATHER_NAME) VALUES
-(1, '202201001', 'Alice Johnson', 'ICT', '2022', 'A', 'Michael Johnson'),
-(2, '202201002', 'Bob Smith', 'ICT-CS', '2022', 'B', 'Robert Smith'),
-(3, '202201003', 'Charlie Brown', 'MNC', '2022', '', 'James Brown'),
-(4, '202201004', 'David Wilson', 'EVD', '2022', '', 'John Wilson'),
-(5, '202201005', 'Eva Davis', 'ICT', '2022', 'A', 'William Davis'),
-(6, '202201006', 'Frank Miller', 'ICT-CS', '2022', 'B', 'Charles Miller'),
-(7, '202201007', 'Grace Lee', 'MNC', '2022', '', 'Thomas Lee'),
-(8, '202201008', 'Helen Walker', 'EVD', '2022', '', 'Robert Walker'),
-(20, '202201010', 'Helen Walker', 'EVD', '2022', '', 'Robert Walker');
+-- PROGRAMS
+INSERT INTO PROGRAMS (prgid, prgname) VALUES
+(1, 'B.Tech in ICT'),
+(2, 'B.Tech in ICT-CS'),
+(3, 'B.Tech in MNC'),
+(4, 'B.Tech in EVD');
+
+-- BATCHES
+INSERT INTO BATCHES (bchid, bchprgid) VALUES
+(101, 1), -- ICT
+(102, 2), -- ICT-CS
+(103, 3), -- MNC
+(104, 4); -- EVD
+
+-- ADDRESSES (dummy addresses)
+INSERT INTO ADDRESSES (adrid, adrline1, adrline2) VALUES
+(1001, 'A1', 'A2'),
+(1002, 'B1', 'B2'),
+(1003, 'C1', 'C2'),
+(1004, 'D1', 'D2'),
+(1005, 'E1', 'E2'),
+(1006, 'F1', 'F2'),
+(1007, 'G1', 'G2'),
+(1008, 'H1', 'H2'),
+(1009, 'I1', 'I2');
+
+-- SEMESTERS
+INSERT INTO SEMESTERS (strid, strrowstate, strseqno) VALUES
+(1, 1, 1);
+
+-- STUDENTS
+INSERT INTO STUDENTS (STUDENTID, stdfirstname, stdlastname, stdrowstate, stdbchid, CURRADRID, PRMTADRID, EMGRADRID, stdemail) VALUES
+(202201001, 'Alice', 'Johnson', 1, 101, 1001, 1002, 1003, '202201001@daiict.ac.in'),
+(202201002, 'Bob', 'Smith', 1, 102, 1002, 1003, 1001, '202201002@daiict.ac.in'),
+(202201003, 'Charlie', 'Brown', 1, 103, 1003, 1001, 1002, '202201003@daiict.ac.in'),
+(202201004, 'David', 'Wilson', 1, 104, 1001, 1002, 1003, '202201004@daiict.ac.in'),
+(202201005, 'Eva', 'Davis', 1, 101, 1002, 1003, 1001, '202201005@daiict.ac.in'),
+(202201006, 'Frank', 'Miller', 1, 102, 1003, 1001, 1002, '202201006@daiict.ac.in'),
+(202201007, 'Grace', 'Lee', 1, 103, 1001, 1002, 1003, '202201007@daiict.ac.in'),
+(202201008, 'Helen', 'Walker', 1, 104, 1002, 1003, 1001, '202201008@daiict.ac.in'),
+(202201010, 'Helen', 'Walker', 1, 104, 1002, 1003, 1001, '202201010@daiict.ac.in'); -- Duplicate entry intentionally retained
+
+-- STUDENTREGISTRATIONS
+INSERT INTO STUDENTREGISTRATIONS (srgid, srgstdid, srgstrid, srgrowstate) VALUES
+(1, 1, 1, 1),
+(2, 2, 1, 1),
+(3, 3, 1, 1),
+(4, 4, 1, 1),
+(5, 5, 1, 1),
+(6, 6, 1, 1),
+(7, 7, 1, 1),
+(8, 8, 1, 1),
+(9, 20, 1, 1);
+
 
 -- Sample ENROLLMENT inserts
 INSERT INTO ENROLLMENTS (ENRID, STUDENTID, CRSID, ENRSTATUS,TRMID) VALUES
-(1, 1, 101, 'enrolled',1),
-(2, 2, 102, 'enrolled',1),
-(3, 3, 102, 'enrolled',1),
-(4, 4, 102, 'enrolled',1),
-(5, 5, 101, 'enrolled',1),
-(6, 6, 103, 'enrolled',1),
-(7, 7, 101, 'enrolled',1),
-(8, 8, 103, 'enrolled',1);
+(1, 202201001, 101, 'enrolled',1),
+(2, 202201002, 102, 'enrolled',1),
+(3, 202201003, 102, 'enrolled',1),
+(4, 202201004, 102, 'enrolled',1),
+(5, 202201005, 101, 'enrolled',1),
+(6, 202201006, 103, 'enrolled',1),
+(7, 202201007, 101, 'enrolled',1),
+(8, 202201008, 103, 'enrolled',1);
 
 -- Sample GRADE inserts
 INSERT INTO GRADES (GRADEID, ENRID, GRADE_VALUE, GRADE_REMARKS, ROWSTATE, EXAM_TYPE) VALUES

@@ -3,60 +3,103 @@ package com.segs.demo.model;
 import jakarta.persistence.*;
 
 @Entity
+@Table(name = "STUDENTS")
 public class Student {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "STUDENTID")
+    private Long stdinstid;
 
-    private String rollNo;
-    private String name;
-    private String branch;
-    private String batch;
-    private String section;
-    private String fatherName;
+    private String stdfirstname;
+    private String stdlastname;
+    private int stdrowstate;
 
-    public Long getId() {
-        return id;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "stdbchid")
+    private Batch batch;
+
+    @Column(name = "CURRADRID")
+    private Long currAdrId;
+
+    @Column(name = "PRMTADRID")
+    private Long prmtAdrId;
+
+    @Column(name = "EMGRADRID")
+    private Long emrgAdrId;
+
+    private String stdemail;
+
+    // Getters and Setters
+
+    public Long getStdinstid() {
+        return stdinstid;
     }
-    public void setId(Long id) {
-        this.id = id;
+
+    public void setStdinstid(Long stdinstid) {
+        this.stdinstid = stdinstid;
     }
-    public String getRollNo() {
-        return rollNo;
+
+    public String getStdfirstname() {
+        return stdfirstname;
     }
-    public void setRollNo(String rollNo) {
-        this.rollNo = rollNo;
+
+    public void setStdfirstname(String stdfirstname) {
+        this.stdfirstname = stdfirstname;
     }
-    public String getName() {
-        return name;
+
+    public String getStdlastname() {
+        return stdlastname;
     }
-    public void setName(String name) {
-        this.name = name;
+
+    public void setStdlastname(String stdlastname) {
+        this.stdlastname = stdlastname;
     }
-    public String getBranch() {
-        return branch;
+
+    public int getStdrowstate() {
+        return stdrowstate;
     }
-    public void setBranch(String branch) {
-        this.branch = branch;
+
+    public void setStdrowstate(int stdrowstate) {
+        this.stdrowstate = stdrowstate;
     }
-    public String getBatch() {
+
+    public Batch getBatch() {
         return batch;
     }
-    public void setBatch(String batch) {
+
+    public void setBatch(Batch batch) {
         this.batch = batch;
     }
-    public String getSection() {
-        return section;
-    }
-    public void setSection(String section) {
-        this.section = section;
-    }
-    public String getFatherName() {
-        return fatherName;
-    }
-    public void setFatherName(String fatherName) {
-        this.fatherName = fatherName;
-    }    
-}
 
+    public Long getCurrAdrId() {
+        return currAdrId;
+    }
+
+    public void setCurrAdrId(Long currAdrId) {
+        this.currAdrId = currAdrId;
+    }
+
+    public Long getPrmtAdrId() {
+        return prmtAdrId;
+    }
+
+    public void setPrmtAdrId(Long prmtAdrId) {
+        this.prmtAdrId = prmtAdrId;
+    }
+
+    public Long getEmrgAdrId() {
+        return emrgAdrId;
+    }
+
+    public void setEmrgAdrId(Long emrgAdrId) {
+        this.emrgAdrId = emrgAdrId;
+    }
+
+    public String getStdemail() {
+        return stdemail;
+    }
+
+    public void setStdemail(String stdemail) {
+        this.stdemail = stdemail;
+    }
+}

@@ -10,8 +10,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import java.util.Collections;
+
 
 import java.util.List;
 
@@ -68,25 +72,46 @@ public class facultyController {
         return "gradeOptions";
     }
   
-    // --- Student Info: Search Form View ---
-    @GetMapping("/student-search")
-    public String showSearchForm() {
-        return "student_search"; // This is the form view
+    @GetMapping("/students/search")
+    public String showStudentSearchForm() {
+        return "student_search"; // This will be your search form view (studentSearch.html)
     }
 
-    // --- Student Info: Search Result Handling ---
-    @GetMapping("/student-info")
-    public String getStudentInfo(
-            @RequestParam String branch,
-            @RequestParam String batch,
-            @RequestParam String section,
-            Model model) {
+    @PostMapping("/students/search")
+    public String searchStudents(
+            @RequestParam(required = false) String fname,
+            @RequestParam(required = false) String lname,
+            @RequestParam(required = false) Long instId,
+            ModelMap model) {
 
-        List<Student> students = studentRepository.findByBranchAndBatchAndSection(branch, batch, section);
+        List<Student> students;
+
+        if (instId != null) {
+            students = studentRepository.findByStdinstidAndStdrowstateGreaterThan(instId, 0);
+        } else if (fname != null && lname != null) {
+            students = studentRepository.findByStdfirstnameContainingIgnoreCaseAndStdlastnameContainingIgnoreCaseAndStdrowstateGreaterThan(fname, lname, 0);
+        } else if (fname != null) {
+            students = studentRepository.findByStdfirstnameContainingIgnoreCaseAndStdrowstateGreaterThan(fname, 0);
+        } else if (lname != null) {
+            students = studentRepository.findByStdlastnameContainingIgnoreCaseAndStdrowstateGreaterThan(lname, 0);
+        } else {
+            students = Collections.emptyList();
+        }
+
         model.addAttribute("students", students);
+        return "student_search"; // View: search results
+    }
 
-        return "student_search"; // Return same view with results
-        
+    @GetMapping("/students/{id}")
+    public String showStudentInfo(@PathVariable Long id, Model model) {
+        Student student = studentRepository.findById(id).orElse(null);
+
+        if (student == null) {
+            return "error/404"; // Or handle gracefully
+        }
+
+        model.addAttribute("student", student);
+        return "student_details"; // This view will display full info
     }
 
     

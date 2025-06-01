@@ -111,6 +111,31 @@
             background-color: #e6f0ff;
             color: black;
         }
+        .dropdown-submenu {
+            position: relative;
+        }
+
+        .dropdown-submenu > .dropdown-menu {
+            top: 0;
+            left: 100%;
+            margin-left: 0;
+            border-left: 2px solid black;
+            border-radius: 0;
+            display: none;
+        }
+
+        .dropdown-submenu:hover > .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-submenu > .dropdown-toggle::after {
+            float: right;
+            margin-top: 0.3rem;
+            margin-right: 0.2rem;
+            content: "\203A"; /* Unicode for › */
+            border: none !important; /* remove Bootstrap down arrow */
+        }
+
     </style>
 </head>
 <body>
@@ -158,11 +183,17 @@
                     </td>
                     <td>
                         <div class="dropdown">
-                            <button class="btn btn-notification dropdown-toggle w-100" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
+                            <div class="btn btn-notification dropdown-toggle w-100" style="color:white;font-weight:bold;" data-bs-toggle="dropdown">
                                 Reports (All Courses)
-                            </button>
+                            </div>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/student-search">Student Info</a></li>
+                                <li class="dropdown-submenu position-relative">
+                                    <a class="dropdown-item dropdown-toggle" href="#">Student Info</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="/students/search">Studentwise</a></li>
+                                        <li><a class="dropdown-item" href="#">Batchwise</a></li>
+                                    </ul>
+                                </li>
                                 <li><a class="dropdown-item" href="#">Course</a></li>
                                 <li><a class="dropdown-item" href="#">Registrations</a></li>
                                 <li><a class="dropdown-item" href="#">Attendance</a></li>
