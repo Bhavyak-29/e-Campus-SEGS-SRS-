@@ -6,183 +6,96 @@
     <!-- Bootstrap 5 CSS & JS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    <style>
-        body {
-            background-color: white;
-            background-image: url('/login_38.gif');
-            background-repeat: repeat-y;
-            background-position: left top;
-            background-attachment: fixed;
-        }
-
-        body::after {
-            content: "";
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 20px;
-            height: 100%;
-            background-image: url('/login_38.gif');
-            background-repeat: repeat-y;
-            background-position: right top;
-            background-attachment: fixed;
-            z-index: -1;
-        }
-
-        .top-bar {
-            background-color: #003366;
-            color: white;
-            padding: 10px 20px;
-        }
-
-        .nav-bar {
-            background-color: #6699cc;
-        }
-
-        .nav-link {
-            font-weight: bold;
-            color: white !important;
-        }
-
-        .nav-link:hover {
-            background-color: #336699;
-        }
-
-        .dropdown-menu .dropdown-item {
-            font-weight: bold;
-        }
-
-        .form-title {
-            font-size: 24px;
-            font-weight: 600;
-            color: #003366;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .form-section {
-            background-color: #f9f9f9;
-            padding: 25px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-
-        .footer {
-            font-size: 12px;
-            color: #333;
-            text-align: center;
-            padding: 15px;
-            border-top: 1px solid #6699cc;
-            margin-top: 50px;
-        }
-
-        .sidemenu {
-            width: 15px;
-        }
-
-        .btn-notification {
-            background-color: transparent;
-            border: none;
-        }
-
-        .dropdown-submenu {
-            position: relative;
-        }
-
-        .dropdown-submenu > .dropdown-menu {
-            top: 0;
-            left: 100%;
-            margin-left: 0;
-            border-left: 2px solid black;
-            border-radius: 0;
-            display: none;
-        }
-
-        .dropdown-submenu:hover > .dropdown-menu {
-            display: block;
-        }
-
-        .dropdown-submenu > .dropdown-toggle::after {
-            float: right;
-            margin-top: 0.3rem;
-            margin-right: 0.2rem;
-            content: "\203A"; /* Unicode for › */
-            border: none !important; /* remove Bootstrap down arrow */
-        }
-    </style>
+    <link rel="stylesheet" th:href="@{/css/ecampus.css}" />
+    
 </head>
 <body>
+<table style="width:100%;">
 
 <!-- Top Header -->
-<div class="top-bar d-flex align-items-center justify-content-between">
-    <div>
-        <span style="font-size: 24px; font-weight: bold;">DA-IICT</span>
-        <span style="font-size: 16px;">&nbsp;Dhirubhai Ambani Institute of Information & Communication Technology</span>
-    </div>
-</div>
+    <tr>
+        <td colspan="3" class="top-bar">
+            <a href="/" style="text-decoration: none; color: inherit;">
+                <span style="font-size: 24px; font-weight: bold; cursor: pointer;">DA-IICT</span>
+            </a>
+            <span style="font-size: 16px;">&nbsp;Dhirubhai Ambani Institute of Information & Communication Technology</span>
+        </td>
+    </tr>
 
-<!-- Navigation -->
-<nav class="navbar navbar-expand-lg nav-bar">
-    <div class="container-fluid">
-        <ul class="navbar-nav d-flex flex-row w-100 justify-content-between">
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle text-center" href="#" data-bs-toggle="dropdown">Transaction</a>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="/directGradeEntry">Direct Grade Entry</a></li>
-                    <li><a class="dropdown-item" href="#">Course Feedback</a></li>
-                    <li><a class="dropdown-item" href="#">Modify Grade</a></li>
-                    <li><a class="dropdown-item" href="#">Revis I Grade</a></li>
-                    <li><a class="dropdown-item" href="#">Allocate TA</a></li>
-                    <li><a class="dropdown-item" href="#">Approval Status</a></li>
-                </ul>
-            </li>
-
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle text-center" href="#" data-bs-toggle="dropdown">Reports (Your Course)</a>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Marks</a></li>
-                    <li><a class="dropdown-item" href="#">Results</a></li>
-                    <li><a class="dropdown-item" href="#">Course Evaluation</a></li>
-                    <li><a class="dropdown-item" href="#">Attendance Report</a></li>
-                </ul>
-            </li>
-            <td>
-                <div class="dropdown">
-                    <div class="btn btn-notification dropdown-toggle w-100" style="color:white;font-weight:bold;" data-bs-toggle="dropdown">
-                        Reports (All Courses)
-                    </div>
-                    <ul class="dropdown-menu">
-                        <li class="dropdown-submenu position-relative">
-                            <a class="dropdown-item dropdown-toggle" href="#">Student Info</a>
+    <tr class="nav-bar">
+        <td colspan="3">
+            <table width="100%">
+                <tr>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
+                                Transaction
+                            </button>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/students/search">Studentwise</a></li>
-                                <li><a class="dropdown-item" href="#">Batchwise</a></li>
+                                <li><a class="dropdown-item" href="/directGradeEntry">Direct Grade Entry</a></li>
+                                <li><a class="dropdown-item" href="#">Course Feedback</a></li>
+                                <li><a class="dropdown-item" href="#">Modify Grade</a></li>
+                                <li><a class="dropdown-item" href="#">Revise I Grade</a></li>
+                                <li><a class="dropdown-item" href="#">Allocate TA</a></li>
+                                <li><a class="dropdown-item" href="#">Approval Status</a></li>
                             </ul>
-                        </li>
-                        <li><a class="dropdown-item" href="#">Course</a></li>
-                        <li><a class="dropdown-item" href="#">Registrations</a></li>
-                        <li><a class="dropdown-item" href="#">Attendance</a></li>
-                        <li><a class="dropdown-item" href="#">Result</a></li>
-                    </ul>
-                </div>
-            </td>          
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle text-center" href="#" data-bs-toggle="dropdown">Help</a>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">About Application</a></li>
-                    <li><a class="dropdown-item" href="#">Workflow of SEGS</a></li>
-                    <li><a class="dropdown-item" href="#">Contact Us</a></li>
-                </ul>
-            </li>
-
-            <li class="nav-item">
-                <a class="btn btn-danger" href="/logout">Logout</a>
-            </li>
-        </ul>
-    </div>
-</nav>
-
+                        </div>
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
+                                Reports (Your Course)
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Marks</a></li>
+                                <li><a class="dropdown-item" href="#">Results</a></li>
+                                <li><a class="dropdown-item" href="#">Course Evaluation</a></li>
+                                <li><a class="dropdown-item" href="#">Attendance Report</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <div class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" data-bs-toggle="dropdown">
+                                Reports (All Courses)
+                            </div>
+                            <ul class="dropdown-menu">
+                                <li class="dropdown-submenu position-relative">
+                                    <a class="dropdown-item dropdown-toggle" href="#">Student Info</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="/students/search">Studentwise</a></li>
+                                        <li><a class="dropdown-item" href="#">Batchwise</a></li>
+                                    </ul>
+                                </li>
+                                <li><a class="dropdown-item" href="#">Course</a></li>
+                                <li><a class="dropdown-item" href="#">Registrations</a></li>
+                                <li><a class="dropdown-item" href="#">Attendance</a></li>
+                                <li><a class="dropdown-item" href="#">Result</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
+                                Help
+                            </button>
+                            <ul class="dropdown-menu w-50">
+                                <li><a class="dropdown-item" href="#">About Application</a></li>
+                                <li><a class="dropdown-item" href="#">Workflow of SEGS</a></li>
+                                <li><a class="dropdown-item" href="#">Contact US</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td>
+                        <a class="btn btn-logout-modern w-100" style="color:white;font-weight:bold;" href="/logout">
+                            Logout
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
 <!-- Main Content -->
 <div class="container mt-4">
     <div class="text-center">
