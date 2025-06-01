@@ -28,7 +28,16 @@
                                 Transaction
                             </button>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="/directGradeEntry">Direct Grade Entry</a></li>
+                                <li class="dropdown-submenu position-relative">
+                                    <a class="dropdown-item dropdown-toggle" href="/directGradeEntry">Direct Grade Entry</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="/directGradeEntry">Grade View</a></li>
+                                        <li><a class="dropdown-item" href="/grades/upload">Grade Insert</a></li>
+                                        <li><a class="dropdown-item" href="#">Audit Grade Insert</a></li>
+                                        <li><a class="dropdown-item" href="#">Course Marks View</a></li>
+                                        <li><a class="dropdown-item" href="#">Compute Grade</a></li>
+                                    </ul>
+                                </li>
                                 <li><a class="dropdown-item" href="#">Course Feedback</a></li>
                                 <li><a class="dropdown-item" href="#">Modify Grade</a></li>
                                 <li><a class="dropdown-item" href="#">Revise I Grade</a></li>
@@ -36,6 +45,7 @@
                                 <li><a class="dropdown-item" href="#">Approval Status</a></li>
                             </ul>
                         </div>
+
                     </td>
                     <td>
                         <div class="dropdown">
