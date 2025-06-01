@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Upload Grades</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            background-image: url('/login_38.gif');
+            background-repeat: repeat-y;
+            background-position: left top;
+            background-attachment: fixed;
+            background-color: white;
+        }
+
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 20px;
+            height: 100%;
+            background-image: url('/login_38.gif');
+            background-repeat: repeat-y;
+            background-position: right top;
+            background-attachment: fixed;
+            z-index: -1;
+        }
+
+        .top-bar {
+            background-color: #003366;
+            padding: 10px;
+            color: white;
+        }
+
+        .nav-bar {
+            background-color: #6699cc;
+            padding: 0;
+        }
+
+        .nav-bar .nav-item {
+            display: inline-block;
+            text-align: center;
+            font-weight: bold;
+            border-right: 1px solid #003366;
+        }
+
+        .nav-bar .dropdown-toggle {
+            color: white;
+            font-weight: bold;
+            border-radius: 0;
+        }
+
+        .nav-bar .dropdown-menu {
+            display: none;
+            position: absolute;
+            background-color: #fff;
+            border: 2px solid black;
+            border-top: none;
+            min-width: 200px;
+            z-index: 1000;
+            padding: 0;
+        }
+
+        .nav-bar .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-menu li a {
+            display: block;
+            padding: 10px 16px;
+            color: #0056b3;
+            text-decoration: none;
+            font-weight: bold;
+            border-bottom: 1px solid black;
+            background-color: #fff;
+        }
+
+        .dropdown-menu li:last-child a {
+            border-bottom: none;
+        }
+
+        .dropdown-menu li a:hover {
+            background-color: #e6f0ff;
+            color: black;
+        }
+
+        .content {
+            padding: 30px;
+            text-align: center;
+        }
+
+        form {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: left;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            margin-top: 15px;
+        }
+
+        .footer {
+            font-size: 12px;
+            color: #333;
+            text-align: center;
+            padding: 10px;
+            border-top: 1px solid #6699cc;
+        }
+    </style>
+</head>
+<body>
+
+<div class="top-bar">
+    <span style="font-size: 24px; font-weight: bold;">DA-IICT</span>
+    <span style="font-size: 16px;">&nbsp;Dhirubhai Ambani Institute of Information & Communication Technology</span>
+</div>
+
+<div class="nav-bar p-2">
+    <div class="d-flex flex-wrap justify-content-around">
+        <div class="dropdown nav-item">
+            <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown">Transaction</button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="/directGradeEntry">Direct Grade Entry</a></li>
+                <li><a class="dropdown-item" href="#">Course Feedback</a></li>
+                <li><a class="dropdown-item" href="#">Modify Grade</a></li>
+                <li><a class="dropdown-item" href="#">Revis I Grade</a></li>
+                <li><a class="dropdown-item" href="#">Allocate TA</a></li>
+                <li><a class="dropdown-item" href="#">Approval Status</a></li>
+            </ul>
+        </div>
+
+        <div class="dropdown nav-item">
+            <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown">Reports (Your Course)</button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Marks</a></li>
+                <li><a class="dropdown-item" href="#">Results</a></li>
+                <li><a class="dropdown-item" href="#">Course Evaluation</a></li>
+                <li><a class="dropdown-item" href="#">Attendance Report</a></li>
+            </ul>
+        </div>
+
+        <div class="dropdown nav-item">
+            <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown">Reports (All Courses)</button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="/student-search">Student info</a></li>
+                <li><a class="dropdown-item" href="#">Course</a></li>
+                <li><a class="dropdown-item" href="#">Registrations</a></li>
+                <li><a class="dropdown-item" href="#">Attendance</a></li>
+                <li><a class="dropdown-item" href="#">Result</a></li>
+            </ul>
+        </div>
+
+        <div class="dropdown nav-item">
+            <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown">Help</button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">About Application</a></li>
+                <li><a class="dropdown-item" href="#">Workflow of SEGS</a></li>
+                <li><a class="dropdown-item" href="#">Contact Us</a></li>
+            </ul>
+        </div>
+
+        <div class="nav-item">
+            <a class="btn btn-danger" style="color:black;" href="/logout">Logout</a>
+        </div>
+    </div>
+</div>
+
+<div class="content">
+    <h2>Upload Grades</h2>
+    <form th:action="@{/grades/upload}" method="post">
+        <label for="term">Term ID:</label>
+        <input type="text" id="term" name="term" required/>
+
+        <label for="course">Course ID:</label>
+        <input type="text" id="course" name="course" required/>
+
+        <label for="examtype">Exam Type ID:</label>
+        <input type="text" id="examtype" name="examtype" required/>
+
+        <label for="studentId">Student ID:</label>
+        <input type="text" id="studentId" name="studentId" required/>
+
+        <label for="grade">Grade:</label>
+        <input type="text" id="grade" name="grade" required/>
+
+        <button type="submit" class="btn btn-primary">Upload Grades</button>
+    </form>
+</div>
+
+<div class="footer">
+    &copy; 2002 DA-IICT, Near Indroda Circle, Ahmedabad-Gandhinagar Highway, Gandhinagar - 382 009, Gujarat, India.<br>
+    Designed, developed and maintained by <a href="http://www.exchangenext.com" target="_blank">Internet ExchangeNext.com Ltd.</a>
+</div>
+
+</body>
+</html>

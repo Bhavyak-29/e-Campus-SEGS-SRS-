@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 public class Enrollment {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ENRID")
     private Long id;
 
@@ -28,6 +28,12 @@ public class Enrollment {
     @Column(name = "ENRMARKS")
     private Double marks;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "TRMID", nullable = false) // Adjust column name as per your DB schema
+    private Term term;
+
+    
+    
     // Getters and setters
 
     public Long getId() {
@@ -76,5 +82,13 @@ public class Enrollment {
 
     public void setMarks(Double marks) {
         this.marks = marks;
+    }
+
+    public Term getTerm() {
+        return term;
+    }
+
+    public void setTerm(Term term) {
+        this.term = term;
     }
 }

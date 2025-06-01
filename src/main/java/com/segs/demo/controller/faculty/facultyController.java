@@ -29,6 +29,7 @@ public class facultyController {
     // --- Direct Grade Entry (Existing functionality) ---
     @RequestMapping("/directGradeEntry")
     public String directGradeEntry(ModelMap model) {
+        
         List<Term> terms = facultyService.getAllTerms();
         List<ExamType> examTypes = facultyService.getAllExamTypes();
         List<AcademicYear> academicYears = facultyService.getAllAcademicYears();

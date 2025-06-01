@@ -43,7 +43,7 @@
         }
 
         .nav-bar {
-            background-color: #6699cc;
+            background-color:rgb(0, 0, 0);
         }
 
         .nav-bar td {
@@ -54,7 +54,7 @@
 
         .nav-bar a {
             display: block;
-            color:  #336699;
+            color:rgb(0, 0, 0);
             padding: 8px 0;
             text-decoration: none;
         }
@@ -123,6 +123,36 @@
             background-color: #e6f0ff;
             color: black;
         }
+        .btn-modern-nav {
+            background: linear-gradient(to right, #336699, #6699cc);
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-modern-nav:hover {
+            background: linear-gradient(to left, #336699, #6699cc);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+        .btn-logout-modern {
+            background: linear-gradient(to right, #cc0000, #ff3333);
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-logout-modern:hover {
+            background: linear-gradient(to left, #cc0000, #ff3333);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
 
     </style>
 </head>
@@ -131,7 +161,9 @@
 <table>
     <tr>
         <td colspan="3" class="top-bar">
-            <span style="font-size: 24px; font-weight: bold;">DA-IICT</span>
+            <a href="/" style="text-decoration: none; color: inherit;">
+                <span style="font-size: 24px; font-weight: bold; cursor: pointer;">DA-IICT</span>
+            </a>
             <span style="font-size: 16px;">&nbsp;Dhirubhai Ambani Institute of Information & Communication Technology</span>
         </td>
     </tr>
@@ -142,14 +174,14 @@
                 <tr>
                     <td>
                         <div class="dropdown">
-                            <button class="btn btn-notification dropdown-toggle w-100" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
+                            <button class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
                                 Transaction
                             </button>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="/directGradeEntry">Direct Grade Entry</a></li>
                                 <li><a class="dropdown-item" href="#">Course Feedback</a></li>
                                 <li><a class="dropdown-item" href="#">Modify Grade</a></li>
-                                <li><a class="dropdown-item" href="#">Revis I Grade</a></li>
+                                <li><a class="dropdown-item" href="#">Revise I Grade</a></li>
                                 <li><a class="dropdown-item" href="#">Allocate TA</a></li>
                                 <li><a class="dropdown-item" href="#">Approval Status</a></li>
                             </ul>
@@ -157,20 +189,20 @@
                     </td>
                     <td>
                         <div class="dropdown">
-                            <button class="btn btn-notification dropdown-toggle w-100" style="color:white;" type="button" data-bs-toggle="dropdown">
+                            <button class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
                                 Reports (Your Course)
                             </button>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="#">Marks</a></li>
                                 <li><a class="dropdown-item" href="#">Results</a></li>
-                                <li><a class="dropdown-item" href="#">course Evaluation</a></li>
+                                <li><a class="dropdown-item" href="#">Course Evaluation</a></li>
                                 <li><a class="dropdown-item" href="#">Attendance Report</a></li>
                             </ul>
                         </div>
                     </td>
                     <td>
                         <div class="dropdown">
-                            <button class="btn btn-notification dropdown-toggle w-100" style="color:white;" type="button" data-bs-toggle="dropdown">
+                            <button class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
                                 Reports (All Courses)
                             </button>
                             <ul class="dropdown-menu">
@@ -184,7 +216,7 @@
                     </td>
                     <td>
                         <div class="dropdown">
-                            <button class="btn btn-notification dropdown-toggle w-100" style="color:white;" type="button" data-bs-toggle="dropdown">
+                            <button class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
                                 Help
                             </button>
                             <ul class="dropdown-menu">
@@ -195,7 +227,7 @@
                         </div>
                     </td>
                     <td>
-                    <a class="btn btn-danger w-100" style="color:black;" href="/logout">
+                    <a class="btn btn-logout-modern w-100" style="color:white;font-weight:bold;" href="/logout">
                         Logout
                     </a>
                     </td>
@@ -209,7 +241,7 @@
         <td class="sidemenu"></td>
         <td class="content">
             <h2>Welcome to Faculty Page!!</h2>
-            <hr style="width: 100%;">
+            <hr style="width: 70%;margin-left:220px;">
             <p style="font-size: 16px;">Welcome <strong>Professor PM Jat</strong></p>
         </td>
         <td class="sidemenu"></td>
@@ -219,7 +251,7 @@
         <td class="sidemenu"></td>
         <td class="footer" colspan="1">
             &copy; 2002 DA-IICT, Near Indroda Circle, Ahmedabad-Gandhinagar Highway, Gandhinagar - 382 009, Gujarat, India.<br>
-            Designed, developed and maintained by <a href="http://www.exchangenext.com" target="_blank">Internet ExchangeNext.com Ltd.</a>
+            Designed, developed and maintained by Bhavya, Sumit & Harsh</a>
         </td>
         <td class="sidemenu"></td>
     </tr>

@@ -79,29 +79,30 @@ INSERT INTO STUDENT (ID, ROLL_NO, NAME, BRANCH, BATCH, SECTION, FATHER_NAME) VAL
 (5, '202201005', 'Eva Davis', 'ICT', '2022', 'A', 'William Davis'),
 (6, '202201006', 'Frank Miller', 'ICT-CS', '2022', 'B', 'Charles Miller'),
 (7, '202201007', 'Grace Lee', 'MNC', '2022', '', 'Thomas Lee'),
-(8, '202201008', 'Helen Walker', 'EVD', '2022', '', 'Robert Walker');
+(8, '202201008', 'Helen Walker', 'EVD', '2022', '', 'Robert Walker'),
+(20, '202201010', 'Helen Walker', 'EVD', '2022', '', 'Robert Walker');
 
 -- Sample ENROLLMENT inserts
-INSERT INTO ENROLLMENTS (ENRID, STUDENTID, CRSID, ENRSTATUS) VALUES
-(1, 1, 101, 'enrolled'),
-(2, 2, 102, 'enrolled'),
-(3, 3, 102, 'enrolled'),
-(4, 4, 102, 'enrolled'),
-(5, 5, 101, 'enrolled'),
-(6, 6, 103, 'enrolled'),
-(7, 7, 101, 'enrolled'),
-(8, 8, 103, 'enrolled');
+INSERT INTO ENROLLMENTS (ENRID, STUDENTID, CRSID, ENRSTATUS,TRMID) VALUES
+(1, 1, 101, 'enrolled',1),
+(2, 2, 102, 'enrolled',1),
+(3, 3, 102, 'enrolled',1),
+(4, 4, 102, 'enrolled',1),
+(5, 5, 101, 'enrolled',1),
+(6, 6, 103, 'enrolled',1),
+(7, 7, 101, 'enrolled',1),
+(8, 8, 103, 'enrolled',1);
 
 -- Sample GRADE inserts
 INSERT INTO GRADES (GRADEID, ENRID, GRADE_VALUE, GRADE_REMARKS, ROWSTATE, EXAM_TYPE) VALUES
-(1, 1, 'A', 'Excellent performance', 1, 1),
-(2, 2, 'B+', 'Good job', 1, 1),
-(3, 3, 'B', 'Satisfactory', 1, 1),
-(4, 4, 'A-', 'Very good', 1, 2),
-(5, 5, 'C', 'Excellent', 1, 1),
-(6, 6, 'C', 'Needs improvement', 1, 1),
-(7, 7, 'B+', 'Good', 1, 2),
-(8, 8, 'A', 'Excellent', 1, 1);
+(1, 1, 'AA', 'Excellent performance', 1, 1),
+(2, 2, 'BB', 'Good job', 1, 1),
+(3, 3, 'AB', 'Satisfactory', 1, 1),
+(4, 4, 'AA', 'Very good', 1, 2),
+(5, 5, 'CC', 'Excellent', 1, 1),
+(6, 6, 'BC', 'Needs improvement', 1, 1),
+(7, 7, 'CD', 'Good', 1, 2),
+(8, 8, 'F', 'Excellent', 1, 1);
 
 -- -- Insert into student_grades table
 -- INSERT INTO student_grades (student_id, course_id, grade) VALUES

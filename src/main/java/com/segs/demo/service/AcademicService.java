@@ -11,7 +11,6 @@ import com.segs.demo.model.ExamType;
 import com.segs.demo.model.Term;
 import com.segs.demo.model.TermCourse;
 import com.segs.demo.repository.ExamResultRepository;
-import com.segs.demo.repository.ExamTypeRepository;
 import com.segs.demo.repository.TermCourseRepository;
 import com.segs.demo.repository.TermRepository;
 
@@ -27,8 +26,8 @@ public class AcademicService {
     @Autowired
     private ExamResultRepository examResultRepo;
 
-    @Autowired
-    private ExamTypeRepository examTypeRepo;
+    // @Autowired
+    // private ExamTypeRepository examTypeRepo;
 
     public List<Term> getTermsByAcademicYear(Long AYRID) {
         return termRepo.findByAcademicYear_Id(AYRID);

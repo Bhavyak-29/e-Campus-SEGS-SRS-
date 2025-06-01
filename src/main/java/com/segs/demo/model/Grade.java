@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 public class Grade {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "GRADEID")
     private Long id;
 
@@ -28,15 +28,27 @@ public class Grade {
     @Column(name = "EXAM_TYPE")
     private Long examType;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "FACULTY_ID")
+    private Users faculty;
+
+    public Users getFaculty() {
+        return faculty;
+    }
+
+    public void setFaculty(Users faculty) {
+        this.faculty = faculty;
+    }
+
     // Constructors
     public Grade() {}
 
-    public Grade(Enrollment enrollment, String gradeValue, String remarks, Integer rowState, Long examType) {
+    public Grade(Enrollment enrollment, String gradeValue, Long examType, Course course, Term term, String remarks, Integer rowState) {
         this.enrollment = enrollment;
         this.gradeValue = gradeValue;
+        this.examType = examType;
         this.remarks = remarks;
         this.rowState = rowState;
-        this.examType = examType;
     }
 
     // Getters and setters
