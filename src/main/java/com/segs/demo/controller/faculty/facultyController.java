@@ -38,7 +38,7 @@ public class facultyController {
     public String directGradeEntry(ModelMap model) {
         
         List<Term> terms = facultyService.getAllTerms();
-        List<ExamType> examTypes = facultyService.getAllExamTypes();
+        List<Egcrstt1> examTypes = facultyService.getAllExamTypes();
         List<AcademicYear> academicYears = facultyService.getAllAcademicYears();
         List<Course> courses = facultyService.getAllCourses();
 

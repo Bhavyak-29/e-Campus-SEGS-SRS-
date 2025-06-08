@@ -157,8 +157,7 @@
     <td class="sidemenu"></td>
 </tr>
 
-</table>
-<script>
+</table><script>
     function fetchTerms(AYRID) {
         fetch(`/api/terms?AYRID=${AYRID}`)
             .then(response => response.json())
@@ -182,6 +181,7 @@
         fetch(`/api/courses?TRMID=${TRMID}`)
             .then(response => response.json())
             .then(data => {
+                console.log("TRMID in fetchCourses:", TRMID);
                 const courseSelect = document.getElementById("courseSelect");
                 courseSelect.innerHTML = '<option value="">-- Select Course --</option>';
                 data.forEach(course => {
@@ -195,8 +195,15 @@
             });
     }
 
-    function fetchExamTypes(CRSID) {
-        fetch(`/api/exam-types?CRSID=${CRSID}`)
+    function fetchExamTypes(CRSID, TRMID) {
+        console.log("Inside fetchExamTypes: CRSID =", CRSID, ", TRMID =", TRMID);
+
+        if (!CRSID || !TRMID) {
+            console.warn("Missing CRSID or TRMID. Aborting fetchExamTypes.");
+            return;
+        }
+
+        fetch(`/api/exam-types?CRSID=${CRSID}&TRMID=${TRMID}`)
             .then(response => response.json())
             .then(data => {
                 const examTypeSelect = document.getElementById("examTypeSelect");
@@ -209,6 +216,18 @@
                 });
             });
     }
+
+    // Attach listener for course selection — make sure TRMID is fetched from termSelect directly
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("courseSelect").addEventListener("change", function () {
+            const selectedCrsId = this.value;
+            const selectedTrmId = document.getElementById("termSelect").value;
+
+            console.log("Course selected:", selectedCrsId, " | Term selected:", selectedTrmId);
+            fetchExamTypes(selectedCrsId, selectedTrmId);
+        });
+    });
 </script>
+
 </body>
 </html>

@@ -102,47 +102,80 @@
             </td>
         </tr>
     </table>
-<div class="container mt-5 d-flex justify-content-center">
-    <div class="w-50">
+<!-- Header and Navbar remain unchanged -->
+
+<div class="container mt-5">
+    <div class="w-75 mx-auto card shadow p-4">
         <h2 class="text-center mb-4">Upload Grades</h2>
-        <form th:action="@{/grades/upload}" method="post">
-            <div class="mb-3">
-                <label for="term" class="form-label">Term ID:</label>
-                <input type="text" id="term" name="term" class="form-control" required/>
+
+        <!-- Tab navigation -->
+        <ul class="nav nav-tabs" id="gradeUploadTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="manual-tab" data-bs-toggle="tab" data-bs-target="#manual" type="button" role="tab">Manual Entry</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="csv-tab" data-bs-toggle="tab" data-bs-target="#csv" type="button" role="tab">Upload CSV</button>
+            </li>
+        </ul>
+
+        <!-- Tab content -->
+        <div class="tab-content mt-4" id="gradeUploadTabsContent">
+
+            <!-- Manual Form -->
+            <div class="tab-pane fade show active" id="manual" role="tabpanel">
+                <form th:action="@{/grades/upload}" method="post">
+                    <div class="mb-3">
+                        <label for="term" class="form-label">Term ID</label>
+                        <input type="text" id="term" name="term" class="form-control" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="course" class="form-label">Course ID</label>
+                        <input type="text" id="course" name="course" class="form-control" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="examtype" class="form-label">Exam Type ID</label>
+                        <input type="text" id="examtype" name="examtype" class="form-control" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="studentId" class="form-label">Student ID</label>
+                        <input type="text" id="studentId" name="studentId" class="form-control" required />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="grade" class="form-label">Grade</label>
+                        <input type="text" id="grade" name="grade" class="form-control" required />
+                    </div>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-success">Submit Grade</button>
+                    </div>
+                </form>
             </div>
 
-            <div class="mb-3">
-                <label for="course" class="form-label">Course ID:</label>
-                <input type="text" id="course" name="course" class="form-control" required/>
+            <!-- CSV Upload Form -->
+            <div class="tab-pane fade" id="csv" role="tabpanel">
+                <form th:action="@{/grades/uploadCsv}" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="file" class="form-label">Select CSV File</label>
+                        <input type="file" id="file" name="file" class="form-control" accept=".csv" required />
+                        <small class="text-muted">Expected columns: termId, courseId, examTypeId, studentId, grade</small>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-success">Upload CSV</button>
+                    </div>
+                </form>
             </div>
 
-            <div class="mb-3">
-                <label for="examtype" class="form-label">Exam Type ID:</label>
-                <input type="text" id="examtype" name="examtype" class="form-control" required/>
-            </div>
-
-            <div class="mb-3">
-                <label for="studentId" class="form-label">Student ID:</label>
-                <input type="text" id="studentId" name="studentId" class="form-control" required/>
-            </div>
-
-            <div class="mb-3">
-                <label for="grade" class="form-label">Grade:</label>
-                <input type="text" id="grade" name="grade" class="form-control" required/>
-            </div>
-
-            <div class="text-center">
-                <button type="submit" class="btn btn-primary">Upload Grades</button>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-
-
-<div class="footer" colspan="1" style = "margin-top: 10px;">
+<div class="footer mt-5 text-center">
     &copy; 2002 DA-IICT, Near Indroda Circle, Ahmedabad-Gandhinagar Highway, Gandhinagar - 382 009, Gujarat, India.<br>
-    Designed, developed and maintained by Bhavya, Sumit & Harsh</a>
+    Designed, developed and maintained by Bhavya, Sumit & Harsh
 </div>
 
 </body>

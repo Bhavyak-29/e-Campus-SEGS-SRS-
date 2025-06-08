@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface facultyService {
     List<Term> getAllTerms();
-    List<ExamType> getAllExamTypes();
+    List<Egcrstt1> getAllExamTypes();
     List<AcademicYear> getAllAcademicYears();
     List<Course> getAllCourses();
 }

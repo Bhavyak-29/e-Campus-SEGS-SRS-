@@ -84,9 +84,25 @@
                     faculty.setUserId(facultyId);
                     grade.setFaculty(faculty);
 
-                    ExamType examType = new ExamType();
-                    examType.setId((form.getExamtype()));
-                    grade.setExamType((form.getExamtype()));
+
+
+
+
+                    
+
+                    Egcrstt1Id egcrstt1Id = new Egcrstt1Id();
+                    egcrstt1Id.setTcrid(Long.parseLong(form.getTerm())); // or form.getTcrid() if you have it
+                    egcrstt1Id.setExamtypeId(form.getExamtype());
+                    egcrstt1Id.setStudId(form.getStudentId()); // Make sure this is a Long
+
+                    Egcrstt1 egcrstt1 = new Egcrstt1();
+                    egcrstt1.setId(egcrstt1Id);
+
+
+
+
+
+
 
                     grade.setGradeValue(form.getGrade().trim().toUpperCase());
                     grade.setRemarks(null);

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.segs.demo.model.CourseDTO;
+import com.segs.demo.model.Egcrstt1Id;
 import com.segs.demo.model.ExamType;
 import com.segs.demo.model.Term;
 import com.segs.demo.service.AcademicService;
@@ -33,7 +34,7 @@ public class GradeEntryApiController {
     }
 
     @GetMapping("/exam-types")
-    public List<ExamType> getExamTypesByCourse(@RequestParam Long CRSID) {
-        return academicService.getExamTypesByCourse(CRSID);
+    public List<ExamType> getExamTypes(@RequestParam Long CRSID, @RequestParam Long TRMID) {
+        return academicService.getExamTypesByCourseAndTerm(CRSID, TRMID);
     }
 }

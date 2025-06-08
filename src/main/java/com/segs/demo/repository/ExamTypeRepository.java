@@ -10,4 +10,6 @@ import com.segs.demo.model.ExamType;
 @Repository
 public interface ExamTypeRepository extends JpaRepository<ExamType, Long> {
     List<ExamType> findByCourse_Id(Long crsId);
+    List<ExamType> findByIdIn(List<Long> examtypeIds);
+
 }

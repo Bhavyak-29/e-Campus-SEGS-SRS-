@@ -7,11 +7,11 @@ import org.springframework.stereotype.Service;
 
 import com.segs.demo.model.AcademicYear;
 import com.segs.demo.model.Course;
-import com.segs.demo.model.ExamType;
+import com.segs.demo.model.Egcrstt1;
 import com.segs.demo.model.Term;
 import com.segs.demo.repository.AcademicYearRepository;
 import com.segs.demo.repository.CourseRepository;
-import com.segs.demo.repository.ExamTypeRepository;
+import com.segs.demo.repository.Egcrstt1Repository;
 import com.segs.demo.repository.TermRepository;
 import com.segs.demo.service.facultyService;
 
@@ -22,7 +22,7 @@ public class facultyServiceImpl implements facultyService {
     private TermRepository termRepository;
 
     @Autowired
-    private ExamTypeRepository examTypeRepository;
+    private Egcrstt1Repository examTypeRepository;
 
     @Autowired
     private AcademicYearRepository academicYearRepository;
@@ -36,7 +36,7 @@ public class facultyServiceImpl implements facultyService {
     }
 
     @Override
-    public List<ExamType> getAllExamTypes() {
+    public List<Egcrstt1> getAllExamTypes() {
         return examTypeRepository.findAll();
     }
 
