@@ -1,22 +1,22 @@
 package com.segs.demo.model;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-import jakarta.persistence.Id;
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 @Entity
-@Table(name = "ACADEMICYEARS")
+@Table(name = "academicyears", schema = "ec2")
 public class AcademicYear {
     @Id
-    @Column(name = "AYRID")
+    @Column(name = "ayrid")
     private Long id;
 
-    @Column(name = "AYRNAME")
+    @Column(name = "ayrname")
     private String name;
 
-    @Column(name = "AYRROWSTATE")
+    @Column(name = "ayrrowstate")
     private Integer rowState;
 
-    @Column(name = "AYRFIELD1")
+    @Column(name = "ayrfield1")
     private Integer field1;
 
     public Long getId() {

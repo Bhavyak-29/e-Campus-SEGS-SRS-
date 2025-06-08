@@ -1,9 +1,13 @@
 package com.segs.demo.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "SEMESTERS")
+@Table(name = "semesters",schema="ec2")
 public class Semester {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

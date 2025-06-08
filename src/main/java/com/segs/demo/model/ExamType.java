@@ -7,16 +7,16 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "EGEXAMM1")
+@Table(name = "egexamm1", schema = "ec2")
 public class ExamType {
     @Id
-    @Column(name = "EXAMTYPE_ID")
+    @Column(name = "examtype_id")
     private Long id;
 
-    @Column(name = "EXAMTYPE_TITLE")
+    @Column(name = "examtype_title")
     private String title;
 
-    @Column(name = "ROW_ST")
+    @Column(name = "row_st")
     private Integer rowState;
 
     @ManyToOne

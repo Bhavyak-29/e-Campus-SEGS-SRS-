@@ -1,13 +1,22 @@
 package com.segs.demo.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "STUDENTS")
+@Table(name = "students",schema="ec2")
 public class Student {
 
     @Id
-    @Column(name = "STUDENTID")
+    @Column(name = "stdid")
+    private Long stdid;
+    
+
     private Long stdinstid;
 
     private String stdfirstname;
@@ -30,7 +39,13 @@ public class Student {
     private String stdemail;
 
     // Getters and Setters
+    public Long getStdid() {
+        return stdid;
+    }
 
+    public void setStdid(Long stdid) {
+        this.stdid = stdid;
+    }
     public Long getStdinstid() {
         return stdinstid;
     }

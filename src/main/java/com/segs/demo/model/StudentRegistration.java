@@ -1,14 +1,15 @@
 package com.segs.demo.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "STUDENTREGISTRATIONS")
+@Table(name = "studentregistration",schema="ec2")
 public class StudentRegistration {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long srgid;
-
     private Long srgstdid;
     private Long srgstrid;
     private int srgrowstate;

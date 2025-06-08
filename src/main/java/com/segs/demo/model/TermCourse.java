@@ -7,25 +7,25 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "TERMCOURSES")
+@Table(name = "termcourses", schema = "ec2")
 public class TermCourse {
     @Id
-    @Column(name = "TCRID")
+    @Column(name = "tcrid")
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "TCRTRMID")
+    @JoinColumn(name = "tcrtrmid")
     private Term term;
 
     @ManyToOne
-    @JoinColumn(name = "TCRCRSID")
+    @JoinColumn(name = "tcrcrsid")
     private Course course;
 
     @ManyToOne
-    @JoinColumn(name = "TCRFACULTYID")
+    @JoinColumn(name = "tcrfacultyid")
     private Users user;
 
-    @Column(name = "TCRROWSTATE")
+    @Column(name = "tcrrowstate")
     private Integer rowState;
 
     public Long getId() {

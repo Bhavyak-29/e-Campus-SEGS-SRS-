@@ -7,7 +7,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "EGGRSTT1")
+@Table(name = "egcrstt1", schema = "ec2")
 public class ExamResult {
 
     @Id
@@ -15,14 +15,14 @@ public class ExamResult {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "EXAMTYPE_ID")
+    @JoinColumn(name = "examtype_id")
     private ExamType examType;
 
     @ManyToOne
-    @JoinColumn(name = "TCRID")
+    @JoinColumn(name = "tcrid")
     private TermCourse termCourse;
 
-    @Column(name = "ROW_ST")
+    @Column(name = "row_st")
     private Integer rowState;
 
     @ManyToOne
