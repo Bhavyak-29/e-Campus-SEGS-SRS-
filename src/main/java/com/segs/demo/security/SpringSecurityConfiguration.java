@@ -58,6 +58,7 @@ public class SpringSecurityConfiguration {
             .defaultSuccessUrl("/", true)
             .permitAll()
         );
+        http.httpBasic(withDefaults());
         http.logout(withDefaults());
         http.csrf().disable();
         http.headers().frameOptions().disable();

@@ -106,17 +106,16 @@
     </tr>
 </table>
 <!-- Main Content -->
-<div class="container mt-4">
+<div "container-lg mx-auto px-3" style="max-width: 1000px;margin: 0 auto;">
     <div class="text-center">
-        <h2>Welcome to Faculty Page!!</h2>
-        <p>Welcome <strong>Professor PM Jat</strong></p>
+        <h2>Search Students</h2>
     </div>
     <hr>
 
     <!-- Student Search Form -->
     <div class="form-section mt-4">
         <div class="form-title">Search Students</div>
-        <form th:action="@{/students/search}" method="post">
+        <form th:action="@{/students/search}" method="get">
             <div class="row mb-3">
                 <div class="col-md-4">
                     <input type="text" class="form-control" name="fname" placeholder="First Name" />
@@ -133,31 +132,87 @@
             </div>
         </form>
 
-        <div th:if="${students != null}">
-            <h5 th:if="${#lists.isEmpty(students)}" class="text-danger text-center mt-3">No students found.</h5>
-            <div th:if="${!#lists.isEmpty(students)}">
-                <table class="table table-bordered table-striped mt-4">
-                    <thead class="table-dark">
-                        <tr>
-                            <th>Institute ID</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Details</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="student : ${students}">
-                            <td th:text="${student.stdinstid}">2022010468</td>
-                            <td th:text="${student.stdfirstname + ' ' + student.stdlastname}">John Doe</td>
-                            <td th:text="${student.stdemail}">john@example.com</td>
-                            <td>
-                                <a th:href="@{|/students/${student.stdinstid}|}" class="btn btn-info btn-sm">View Info</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+        <div th:if="${studentsPage != null}">
+    <h5 th:if="${studentsPage.empty}" class="text-danger text-center mt-3">No students found.</h5>
+    <div th:if="${!studentsPage.empty}">
+        <table class="table table-bordered table-striped mt-4">
+            <thead class="table-dark">
+                <tr>
+                    <th>Institute ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Details</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="student : ${studentsPage.content}">
+                    <td th:text="${student.stdinstid}"></td>
+                    <td th:text="${student.stdfirstname + ' ' + student.stdlastname}"></td>
+                    <td th:text="${student.stdemail}"></td>
+                    <td>
+                        <a th:href="@{|/students/${student.stdinstid}|}" class="btn btn-success btn-sm">View Info</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Pagination Controls -->
+        <nav>
+    <ul class="pagination justify-content-center">
+
+        <!-- Previous Button -->
+        <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+            <a class="page-link"
+               th:href="@{/students/search(page=${currentPage - 1}, size=${studentsPage.size}, fname=${param.fname}, lname=${param.lname}, instId=${param.instId})}">
+                Previous
+            </a>
+        </li>
+
+        <!-- First Page -->
+        <li class="page-item" th:if="${currentPage > 3}">
+            <a class="page-link"
+               th:href="@{/students/search(page=0, size=${studentsPage.size}, fname=${param.fname}, lname=${param.lname}, instId=${param.instId})}">1</a>
+        </li>
+
+        <!-- Dots Before Current Window -->
+        <li class="page-item disabled" th:if="${currentPage > 4}">
+            <span class="page-link">...</span>
+        </li>
+
+        <!-- Page Window (currentPage - 2 to currentPage + 2) -->
+        <li class="page-item"
+            th:each="i : ${#numbers.sequence((currentPage > 2 ? currentPage - 2 : 0), (currentPage + 2 < totalPages - 1 ? currentPage + 2 : totalPages - 1))}"
+            th:classappend="${i == currentPage} ? 'active'">
+            <a class="page-link"
+               th:href="@{/students/search(page=${i}, size=${studentsPage.size}, fname=${param.fname}, lname=${param.lname}, instId=${param.instId})}"
+               th:text="${i + 1}">1</a>
+        </li>
+
+        <!-- Dots After Current Window -->
+        <li class="page-item disabled" th:if="${currentPage + 3 < totalPages}">
+            <span class="page-link">...</span>
+        </li>
+
+        <!-- Last Page -->
+        <li class="page-item" th:if="${currentPage + 2 < totalPages - 1}">
+            <a class="page-link"
+               th:href="@{/students/search(page=${totalPages - 1}, size=${studentsPage.size}, fname=${param.fname}, lname=${param.lname}, instId=${param.instId})}"
+               th:text="${totalPages}"></a>
+        </li>
+
+        <!-- Next Button -->
+        <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+            <a class="page-link"
+               th:href="@{/students/search(page=${currentPage + 1}, size=${studentsPage.size}, fname=${param.fname}, lname=${param.lname}, instId=${param.instId})}">
+                Next
+            </a>
+        </li>
+    </ul>
+</nav>
+
+    </div>
+</div>
+
     </div>
     <!-- End Student Search Form -->
 </div>

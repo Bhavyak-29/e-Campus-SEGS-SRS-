@@ -21,6 +21,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 @Controller
 public class facultyController {
@@ -81,35 +84,42 @@ model.addAttribute("grades", distinctGrades);
         return "gradeOptions";
     }
   
-    @GetMapping("/students/search")
-    public String showStudentSearchForm() {
-        return "student_search"; // This will be your search form view (studentSearch.html)
+    // @GetMapping("/students/search")
+    // public String showStudentSearchForm() {
+    //     return "student_search"; // This will be your search form view (studentSearch.html)
+    // }
+
+   @GetMapping("/students/search")
+public String searchStudents(
+        @RequestParam(required = false) String fname,
+        @RequestParam(required = false) String lname,
+        @RequestParam(required = false) Long instId,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "5") int size,
+        ModelMap model) {
+
+    Pageable pageable = PageRequest.of(page, size);
+    Page<Student> studentsPage;
+
+    if (instId != null) {
+        studentsPage = studentRepository.findByStdinstidAndStdrowstateGreaterThan(instId, 0, pageable);
+    } else if (fname != null && lname != null) {
+        studentsPage = studentRepository.findByStdfirstnameContainingIgnoreCaseAndStdlastnameContainingIgnoreCaseAndStdrowstateGreaterThan(fname, lname, 0, pageable);
+    } else if (fname != null) {
+        studentsPage = studentRepository.findByStdfirstnameContainingIgnoreCaseAndStdrowstateGreaterThan(fname, 0, pageable);
+    } else if (lname != null) {
+        studentsPage = studentRepository.findByStdlastnameContainingIgnoreCaseAndStdrowstateGreaterThan(lname, 0, pageable);
+    } else {
+        studentsPage = Page.empty(pageable);
     }
 
-    @PostMapping("/students/search")
-    public String searchStudents(
-            @RequestParam(required = false) String fname,
-            @RequestParam(required = false) String lname,
-            @RequestParam(required = false) Long instId,
-            ModelMap model) {
+    model.addAttribute("studentsPage", studentsPage);
+    model.addAttribute("currentPage", page);
+    model.addAttribute("totalPages", studentsPage.getTotalPages());
+    model.addAttribute("totalItems", studentsPage.getTotalElements());
 
-        List<Student> students;
-
-        if (instId != null) {
-            students = studentRepository.findByStdinstidAndStdrowstateGreaterThan(instId, 0);
-        } else if (fname != null && lname != null) {
-            students = studentRepository.findByStdfirstnameContainingIgnoreCaseAndStdlastnameContainingIgnoreCaseAndStdrowstateGreaterThan(fname, lname, 0);
-        } else if (fname != null) {
-            students = studentRepository.findByStdfirstnameContainingIgnoreCaseAndStdrowstateGreaterThan(fname, 0);
-        } else if (lname != null) {
-            students = studentRepository.findByStdlastnameContainingIgnoreCaseAndStdrowstateGreaterThan(lname, 0);
-        } else {
-            students = Collections.emptyList();
-        }
-
-        model.addAttribute("students", students);
-        return "student_search"; // View: search results
-    }
+    return "student_search";
+}
 
     @GetMapping("/students/{id}")
     public String showStudentInfo(@PathVariable Long id, Model model) {
