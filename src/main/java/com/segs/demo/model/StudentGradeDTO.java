@@ -6,6 +6,7 @@ public class StudentGradeDTO {
     private String studentEmail;
     private String grade;
 
+    public StudentGradeDTO() {}
     public StudentGradeDTO(String studentId, String studentName, String studentEmail, String grade) {
         this.studentId = studentId;
         this.studentName = studentName;

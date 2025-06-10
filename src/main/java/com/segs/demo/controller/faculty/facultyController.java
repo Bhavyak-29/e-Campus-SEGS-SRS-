@@ -1,9 +1,12 @@
 package com.segs.demo.controller.faculty;
 
-import com.segs.demo.model.*;
-import com.segs.demo.repository.*;
-import com.segs.demo.service.facultyService;
-import com.segs.demo.service.GradeService;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,10 +15,32 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import com.segs.demo.model.AcademicYear;
+import com.segs.demo.model.Address;
+import com.segs.demo.model.Course;
+import com.segs.demo.model.Egcrstt1;
+import com.segs.demo.model.Grade;
+import com.segs.demo.model.Student;
+import com.segs.demo.model.StudentGradeDTO;
+import com.segs.demo.model.StudentRegistrations;
+import com.segs.demo.model.StudentSemesterResult;
+import com.segs.demo.model.Term;
+import com.segs.demo.repository.AddressRepository;
+import com.segs.demo.repository.StudentRegistrationCourseRepository;
+import com.segs.demo.repository.StudentRegistrationRepository;
+import com.segs.demo.repository.StudentRegistrationsRepository;
+import com.segs.demo.repository.StudentRepository;
+import com.segs.demo.repository.StudentSemesterResultRepository;
+import com.segs.demo.service.GradeService;
+import com.segs.demo.service.facultyService;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class facultyController {
@@ -58,32 +83,83 @@ public class facultyController {
 
         return "directGradeEntry";
     }
+    @PostMapping("/directGradeEntry/gradeLeftFrame")
+    public String showLeftFrame(
+            @RequestParam("AYRID") Long ayrid,
+            @RequestParam("TRMID") Long trmid,
+            @RequestParam("CRSID") Long crsid,
+            @RequestParam("examTypeId") Long examTypeId,
+            HttpSession session
+    ) {
+        session.setAttribute("AYRID", ayrid);
+        session.setAttribute("TRMID", trmid);
+        session.setAttribute("CRSID", crsid);
+        session.setAttribute("examTypeId", examTypeId);
 
+        return "gradeLeftFrame";
+    }
     @RequestMapping("/directGradeEntry/gradeOptions")
-    public String showGradeOptions(
-            @RequestParam(required = false) Long CRSID,
-            @RequestParam(required = false) Long examTypeId,
-            @RequestParam(required = false) List<String> selectedGrades,
-            ModelMap model) {
+    public String showGradeOptions(@RequestParam(required = false) List<String> selectedGrades,
+            ModelMap model,
+            HttpSession session) {
+                Long ayrid = (Long) session.getAttribute("AYRID"); // You might use this later
+                Long trmid = (Long) session.getAttribute("TRMID"); // Get TRMID from session
+                Long crsid = (Long) session.getAttribute("CRSID"); // Get CRSID from session
+                Long examTypeId = (Long) session.getAttribute("examTypeId"); // Get examTypeId from session
 
-        List<Grade> allGrades = gradeService.getAllGrades();
-        List<Grade> distinctGrades = allGrades.stream()
-                .collect(Collectors.collectingAndThen(
-                        Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(Grade::getGradeValue))),
-                        ArrayList::new));
+                List<Grade> allGrades = gradeService.getAllGrades();
+                List<Grade> distinctGrades = allGrades.stream()
+                        .collect(Collectors.collectingAndThen(
+                                Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(Grade::getGradeValue))),
+                                ArrayList::new));
 
-        model.addAttribute("grades", distinctGrades);
+                model.addAttribute("grades", distinctGrades);
 
-        if (CRSID != null && examTypeId != null) {
-            List<StudentGradeDTO> studentGrades = gradeService.getStudentGrades(CRSID, examTypeId, selectedGrades);
-            model.addAttribute("studentGrades", studentGrades);
-            model.addAttribute("selectedGrades", selectedGrades);
-        }
+                // Only fetch student grades if all required session attributes are available
+                if (crsid != null && trmid != null && examTypeId != null) {
+                    // Pass TRMID to the service method
+                    List<StudentGradeDTO> studentGrades = gradeService.getStudentGrades(crsid, trmid, examTypeId, selectedGrades);
+                    model.addAttribute("studentGrades", studentGrades);
+                    model.addAttribute("selectedGrades", selectedGrades);
+                } else {
+                    // If session attributes are missing, display an empty list or a message
+                    model.addAttribute("studentGrades", new ArrayList<StudentGradeDTO>());
+                    System.out.println("Required session attributes (CRSID, TRMID, examTypeId) are missing for grade display.");
+                }
 
-        model.addAttribute("CRSID", CRSID);
-        model.addAttribute("examTypeId", examTypeId);
+                model.addAttribute("CRSID", crsid); // Ensure CRSID is available for the form
+                model.addAttribute("examTypeId", examTypeId); // Ensure examTypeId is available for the form
 
-        return "gradeOptions";
+                return "gradeOptions";
+
+        //     // @RequestParam(required = false) Long CRSID,
+        //     // @RequestParam(required = false) Long examTypeId,
+        //     @RequestParam(required = false) List<String> selectedGrades,
+        //     ModelMap model,
+        //     HttpSession session) {
+        //         Long ayrid = (Long) session.getAttribute("AYRID");
+        //         Long trmid = (Long) session.getAttribute("TRMID");
+        //         Long crsid = (Long) session.getAttribute("CRSID");
+        //         Long examTypeId = (Long) session.getAttribute("examTypeId");
+
+        // List<Grade> allGrades = gradeService.getAllGrades();
+        // List<Grade> distinctGrades = allGrades.stream()
+        //         .collect(Collectors.collectingAndThen(
+        //                 Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(Grade::getGradeValue))),
+        //                 ArrayList::new));
+
+        // model.addAttribute("grades", distinctGrades);
+
+        // if (crsid != null && examTypeId != null) {
+        //     List<StudentGradeDTO> studentGrades = gradeService.getStudentGrades(crsid, examTypeId, selectedGrades);
+        //     model.addAttribute("studentGrades", studentGrades);
+        //     model.addAttribute("selectedGrades", selectedGrades);
+        // }
+
+        // model.addAttribute("CRSID", crsid);
+        // model.addAttribute("examTypeId", examTypeId);
+
+        // return "gradeOptions";
     }
 
     @GetMapping("/students/search")

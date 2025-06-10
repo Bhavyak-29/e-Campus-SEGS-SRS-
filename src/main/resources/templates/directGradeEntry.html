@@ -29,14 +29,7 @@
                             </button>
                             <ul class="dropdown-menu">
                                 <li class="dropdown-submenu position-relative">
-                                    <a class="dropdown-item dropdown-toggle" href="/directGradeEntry">Direct Grade Entry</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="/directGradeEntry">Grade View</a></li>
-                                        <li><a class="dropdown-item" href="/grades/upload">Grade Insert</a></li>
-                                        <li><a class="dropdown-item" href="#">Audit Grade Insert</a></li>
-                                        <li><a class="dropdown-item" href="#">Course Marks View</a></li>
-                                        <li><a class="dropdown-item" href="#">Compute Grade</a></li>
-                                    </ul>
+                                    <a class="dropdown-item" href="/directGradeEntry">Direct Grade Entry</a>
                                 </li>
                                 <li><a class="dropdown-item" href="#">Course Feedback</a></li>
                                 <li><a class="dropdown-item" href="#">Modify Grade</a></li>
@@ -106,7 +99,7 @@
     <td class="content">
         <h2 class="mb-4 text-center">Direct Grade Entry</h2>
 
-        <form method="post" th:action="@{/directGradeEntry/gradeOptions}">
+        <form method="post" th:action="@{/directGradeEntry/gradeLeftFrame}">
             <div class="d-flex flex-column align-items-center">
                 <!-- Academic Year -->
                 <div class="mb-3 w-50 text-start">

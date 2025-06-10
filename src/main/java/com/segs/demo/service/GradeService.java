@@ -1,15 +1,16 @@
 package com.segs.demo.service;
 
+import java.util.List;
+
 import com.segs.demo.model.Grade;
+import com.segs.demo.model.GradeUploadForm;
 import com.segs.demo.model.StudentGradeDTO;
 
 import jakarta.servlet.http.HttpSession;
 
-import java.util.List;
-import com.segs.demo.model.GradeUploadForm;
 public interface GradeService {
     List<Grade> getAllGrades();
-    List<StudentGradeDTO> getStudentGrades(Long CRSID, Long examTypeId, List<String> selectedGrades);
+    // Updated method signature to include trmid
+    List<StudentGradeDTO> getStudentGrades(Long CRSID, Long trmid, Long examTypeId, List<String> selectedGrades);
     String uploadGrades(GradeUploadForm form, HttpSession session);
-
 }
