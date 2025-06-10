@@ -71,7 +71,7 @@ public class GradeServiceImpl implements GradeService {
 
         // Add filter for selected grades if provided
         if (selectedGrades != null && !selectedGrades.isEmpty()) {
-            sqlBuilder.append(" AND g.grade_lt IN (:selectedGrades)");
+            sqlBuilder.append(" AND g.grad_lt IN (:selectedGrades)");
         }
 
         Query query = entityManager.createNativeQuery(sqlBuilder.toString());

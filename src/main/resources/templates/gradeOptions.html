@@ -115,7 +115,7 @@
 
         <!-- Grade Select -->
                 
-        <div class="container mt-4">
+       <div class="container mt-4">
             <div class="mb-4">
                 <h2 class="text-center mb-4" style="margin-top:-34px;">Grade View</h2>
                 <label for="grades" class="form-label fw-bold fs-5 text-primary" style="margin-top:-20px;">
@@ -125,11 +125,15 @@
                     <select id="grades" name="selectedGrades" multiple 
                             class="form-select border-0 bg-light" 
                             style="height: 180px; overflow-y: auto;">
-                        <option th:each="grade : ${grades}"
-                                th:value="${grade.gradeValue}"
-                                th:text="${grade.gradeValue}"
-                                th:selected="${selectedGrades != null} ? ${selectedGrades.contains(grade.gradeValue)} : false">
-                        </option>
+                        <option value="AA" th:selected="${selectedGrades != null} ? ${selectedGrades.contains('AA')} : false">AA</option>
+                        <option value="AB" th:selected="${selectedGrades != null} ? ${selectedGrades.contains('AB')} : false">AB</option>
+                        <option value="BB" th:selected="${selectedGrades != null} ? ${selectedGrades.contains('BB')} : false">BB</option>
+                        <option value="BC" th:selected="${selectedGrades != null} ? ${selectedGrades.contains('BC')} : false">BC</option>
+                        <option value="CC" th:selected="${selectedGrades != null} ? ${selectedGrades.contains('CC')} : false">CC</option>
+                        <option value="CD" th:selected="${selectedGrades != null} ? ${selectedGrades.contains('CD')} : false">CD</option>
+                        <option value="DD" th:selected="${selectedGrades != null} ? ${selectedGrades.contains('DD')} : false">DD</option>
+                        <option value="DE" th:selected="${selectedGrades != null} ? ${selectedGrades.contains('DE')} : false">DE</option>
+                        <option value="F" th:selected="${selectedGrades != null} ? ${selectedGrades.contains('F')} : false">F</option>
                     </select>
                 </div>
             </div>
