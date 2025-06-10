@@ -14,7 +14,7 @@ public class GradeUploadForm {
     private Long examtype;
 
     @NotBlank
-    private Long studentId;
+    private String studentId;
 
     @NotBlank
     private String grade;
@@ -45,11 +45,11 @@ public class GradeUploadForm {
         this.examtype = examtype;
     }
 
-    public Long getStudentId() {
+    public String getStudentId() {
         return studentId;
     }
 
-    public void setStudentId(Long studentId) {
+    public void setStudentId(String studentId) {
         this.studentId = studentId;
     }
 

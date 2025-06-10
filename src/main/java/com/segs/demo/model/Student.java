@@ -16,9 +16,9 @@ public class Student {
     @Column(name = "stdid")
     private Long stdid;
     
-
-    private Long stdinstid;
-
+    @Column(name = "stdinstid", nullable = false)
+    private String stdinstid;
+    
     private String stdfirstname;
     private String stdlastname;
     private int stdrowstate;
@@ -46,11 +46,11 @@ public class Student {
     public void setStdid(Long stdid) {
         this.stdid = stdid;
     }
-    public Long getStdinstid() {
+    public String getStdinstid() {
         return stdinstid;
     }
 
-    public void setStdinstid(Long stdinstid) {
+    public void setStdinstid(String stdinstid) {
         this.stdinstid = stdinstid;
     }
 

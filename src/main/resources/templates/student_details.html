@@ -1,26 +1,50 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
+    <meta charset="UTF-8">
     <title>Student Details</title>
-    <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
     <link rel="stylesheet" th:href="@{/css/ecampus.css}" />
+    <style>
+        .accordion-button:not(.collapsed) {
+            background-color: #f8f9fa;
+            color: #212529;
+        }
+        .accordion-button:focus {
+            box-shadow: none;
+            border-color: rgba(0,0,0,.125);
+        }
+        .profile-section {
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .semester-card {
+            margin-bottom: 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+        }
+        .semester-header {
+            background-color: #f8f9fa;
+            padding: 10px 15px;
+            border-bottom: 1px solid #dee2e6;
+        }
+    </style>
 </head>
 <body>
 
-<!-- Layout begins -->
+<!-- Header + Navbar (keep as is) -->
 <table style="width:100%;">
     <tr>
         <td colspan="3" class="top-bar">
             <a href="/" style="text-decoration: none; color: inherit;">
-                <span style="font-size: 24px; font-weight: bold; cursor: pointer;">DA-IICT</span>
+                <span style="font-size: 24px; font-weight: bold;">DA-IICT</span>
             </a>
             <span style="font-size: 16px;">&nbsp;Dhirubhai Ambani Institute of Information & Communication Technology</span>
         </td>
     </tr>
-
     <!-- Navbar -->
     <tr class="nav-bar">
         <td colspan="3">
@@ -104,73 +128,188 @@
             </table>
         </td>
     </tr>
+</table>
 
-    <!-- Main content -->
-    <tr>
-        <td class="sidemenu"></td>
-        <td class="content">
-            <div class="container py-4">
-                <h2 class="text-center mb-4">Student Profile</h2>
-                <div class="row justify-content-center">
-                    <div class="col-lg-10 bg-light p-4 rounded shadow d-flex align-items-start">
-                        <!-- Student Image -->
-                        <div class="me-4">
-                            <img th:src="@{/StudentImg.jpeg}" alt="Student Image" class="img-thumbnail" style="width:250px;">
+<!-- MAIN CONTENT -->
+<div class="container mt-5" style="max-width: 960px;">
+    <!-- Student Profile Section -->
+    <div class="profile-section">
+        <div class="text-center mb-4">
+            <h4>Student Profile</h4>
+            <img th:src="@{/StudentImg.jpeg}" class="img-thumbnail" style="width: 150px;">
+        </div>
+
+        <!-- Student Info Table -->
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th>Institute ID</th>
+                            <td th:text="${student.stdinstid}">-</td>
+                        </tr>
+                        <tr>
+                            <th>Name</th>
+                            <td th:text="${student.stdfirstname + ' ' + student.stdlastname}">-</td>
+                        </tr>
+                        <tr>
+                            <th>Email</th>
+                            <td th:text="${student.stdemail}">-</td>
+                        </tr>
+                        <tr>
+                            <th>Batch</th>
+                            <td th:text="${student.batch?.bchid}">-</td>
+                        </tr>
+                        <tr>
+                            <th>Program</th>
+                            <td th:text="${student.batch?.program?.prgname}">-</td>
+                        </tr>
+                        <tr>
+                            <th>Permanent Address</th>
+                            <td>
+                                <span th:if="${permAddress != null}">
+                                    <span th:text="${permAddress.adrline1}"></span><br/>
+                                    <span th:text="${permAddress.adrline2}"></span>
+                                </span>
+                                <span th:if="${permAddress == null}">Not Available</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>Current Address</th>
+                            <td>
+                                <span th:if="${currAddress != null}">
+                                    <span th:text="${currAddress.adrline1}"></span><br/>
+                                    <span th:text="${currAddress.adrline2}"></span>
+                                </span>
+                                <span th:if="${currAddress == null}">Not Available</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="text-center mb-4">
+                    <a th:href="@{/students/search}" class="btn btn-secondary">Back to Search</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- REGISTRATION INFO ACCORDION -->
+    <div class="accordion mb-4" id="registrationsAccordion">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRegistrations" aria-expanded="false" aria-controls="collapseRegistrations">
+                    <strong>Course Registrations</strong>
+                </button>
+            </h2>
+            <div id="collapseRegistrations" class="accordion-collapse collapse" data-bs-parent="#registrationsAccordion">
+                <div class="accordion-body">
+                    <div th:each="reg : ${registrations}" class="semester-card">
+                        <div class="semester-header">
+                            <h5 class="mb-0" th:text="${reg.semester.strname}">Semester I</h5>
                         </div>
-
-                        <!-- Student Info -->
-                        <div class="flex-grow-1">
-                            <table class="table table-bordered mb-3">
+                        <div class="p-3">
+                            <!-- Course Table -->
+                            <table class="table table-bordered">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Sr No.</th>
+                                        <th>Course Name (Credits)</th>
+                                        <th>Course Code</th>
+                                        <th>Reg. Type</th>
+                                        <th>Total Credits</th>
+                                    </tr>
+                                </thead>
                                 <tbody>
-                                    <tr>
-                                        <th>Institute ID</th>
-                                        <td th:text="${student.stdinstid}">N/A</td>
-                                    </tr>
-                                    <tr>
-                                        <th>First Name</th>
-                                        <td th:text="${student.stdfirstname}">N/A</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Last Name</th>
-                                        <td th:text="${student.stdlastname}">N/A</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Email</th>
-                                        <td th:text="${student.stdemail}">N/A</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Batch</th>
-                                        <td th:text="${student.batch?.bchid}">N/A</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Permanent Address</th>
-                                        <td th:text="${student.prmtAdrId}">N/A</td>
-                                    </tr>
-                                    <tr>
-                                        <th>Current Address</th>
-                                        <td th:text="${student.currAdrId}">N/A</td>
+                                    <tr th:each="course, iter : ${regCourses[reg.srgid]}">
+                                        <td th:text="${iter.index + 1}">1</td>
+                                        <td th:text="${course[1]}">Course Name</td>
+                                        <td th:text="${course[2]}">Code</td>
+                                        <td th:text="${course[3]}">Reg Type</td>
+                                        <td th:text="${course[4]}">Exam Type</td>
                                     </tr>
                                 </tbody>
                             </table>
-                            <a th:href="@{/students/search}" class="btn btn-secondary">Back to Search</a>
                         </div>
                     </div>
                 </div>
             </div>
-        </td>
-        <td class="sidemenu"></td>
-    </tr>
+        </div>
+    </div>
 
-    <!-- Footer -->
-    <tr>
-        <td class="sidemenu"></td>
-        <td class="footer mt-5" colspan="1">
-            &copy; 2002 DA-IICT, Near Indroda Circle, Ahmedabad-Gandhinagar Highway, Gandhinagar - 382 009, Gujarat, India.<br>
-            Designed, developed and maintained by Bhavya, Sumit & Harsh</a>
-        </td>
-        <td class="sidemenu"></td>
-    </tr>
-</table>
+        <!-- RESULTS ACCORDION -->
+    <div class="accordion mb-4" id="resultsAccordion">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseResults" aria-expanded="false" aria-controls="collapseResults">
+                    <strong>Academic Results</strong>
+                </button>
+            </h2>
+            <div id="collapseResults" class="accordion-collapse collapse" data-bs-parent="#resultsAccordion">
+                <div class="accordion-body">
+                    <div th:each="reg : ${registrations}" class="semester-card">
+                        <div class="semester-header">
+                            <h5 class="mb-0" th:text="${reg.semester.strname}">Semester I</h5>
+                        </div>
+                        <div class="p-3">
+                            <!-- Results Table -->
+                            <table class="table table-bordered">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Sr No.</th>
+                                        <th>Course Name</th>
+                                        <th>Course Code</th>
+                                        <th>Grade Obtained</th>
+                                        <th>Total Credits</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="course, iter : ${regCourses[reg.srgid]}">
+                                        <td th:text="${iter.index + 1}">1</td>
+                                        <td th:text="${course[1]}">Course Name</td>
+                                        <td th:text="${course[2]}">Code</td>
+                                        <td th:text="${regResults[reg.srgid][0]?.grade?.grdname != null ? regResults[reg.srgid][0]?.grade?.grdname : '-'}">-</td>
+                                        <td th:text="${course[4]}">-</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            
+                            <!-- Performance Summary Table -->
+                            <div th:if="${regResults[reg.srgid] != null and !regResults[reg.srgid].isEmpty()}" class="mt-3">
+                                <table class="table table-bordered">
+                                    <thead class="table-light text-center">
+                                        <tr>
+                                            <th>Credits Registered</th>
+                                            <th>Credits Earned</th>
+                                            <th>Grade Points Earned</th>
+                                            <th>SPI</th>
+                                            <th>CPI</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="text-center">
+                                        <tr th:with="res=${regResults[reg.srgid][0]}">
+                                            <td th:text="${res.creditsRegistered != null ? res.creditsRegistered : '-'}">-</td>
+                                            <td th:text="${res.creditsEarned != null ? res.creditsEarned : '-'}">-</td>
+                                            <td th:text="${res.gradePointsEarned != null ? res.gradePointsEarned : '-'}">-</td>
+                                            <td th:text="${res.spi != null ? res.spi : '-'}">-</td>
+                                            <td th:text="${res.cpi != null ? res.cpi : '-'}">-</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer mt-5 text-center p-3">
+    &copy; 2002 DA-IICT, Near Indroda Circle, Ahmedabad-Gandhinagar Highway, Gandhinagar - 382 009, Gujarat, India.<br>
+    Designed, developed and maintained by Bhavya, Sumit & Harsh
+</div>
 
 </body>
 </html>

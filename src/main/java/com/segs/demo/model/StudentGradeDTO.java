@@ -1,12 +1,12 @@
 package com.segs.demo.model;
 
 public class StudentGradeDTO {
-    private Long studentId;
+    private String studentId;
     private String studentName;
     private String studentEmail;
     private String grade;
 
-    public StudentGradeDTO(Long studentId, String studentName, String studentEmail, String grade) {
+    public StudentGradeDTO(String studentId, String studentName, String studentEmail, String grade) {
         this.studentId = studentId;
         this.studentName = studentName;
         this.studentEmail = studentEmail;
@@ -15,8 +15,8 @@ public class StudentGradeDTO {
 
     // Getters and setters
 
-    public Long getStudentId() { return studentId; }
-    public void setStudentId(Long studentId) { this.studentId = studentId; }
+    public String getStudentId() { return studentId; }
+    public void setStudentId(String studentId) { this.studentId = studentId; }
 
     public String getStudentName() { return studentName; }
     public void setStudentName(String studentName) { this.studentName = studentName; }
