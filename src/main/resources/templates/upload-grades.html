@@ -156,18 +156,24 @@
             </div>
 
             <!-- CSV Upload Form -->
-            <div class="tab-pane fade" id="csv" role="tabpanel">
-                <form th:action="@{/grades/uploadcsv}" method="post" enctype="multipart/form-data">
-                    <div class="mb-3">
-                        <label for="file" class="form-label">Select CSV File</label>
-                        <input type="file" id="file" name="file" class="form-control" accept=".csv" required />
-                        <small class="text-muted">Expected columns: studentid, grade</small>
-                    </div>
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-success">Upload CSV</button>
-                    </div>
-                </form>
-            </div>
+            <!-- Alert Message -->
+<div id="upload-alert" class="alert d-none" role="alert"></div>
+
+<!-- CSV Upload Form -->
+<div class="tab-pane fade" id="csv" role="tabpanel">
+    <form id="csvUploadForm" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="file" class="form-label">Select CSV File</label>
+            <input type="file" id="file" name="file" class="form-control" accept=".csv" required />
+            <small class="text-muted">Expected columns: studentid, grade</small>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-success">Upload CSV</button>
+        </div>
+    </form>
+</div>
+
+
 
         </div>
     </div>
@@ -177,6 +183,43 @@
     &copy; 2002 DA-IICT, Near Indroda Circle, Ahmedabad-Gandhinagar Highway, Gandhinagar - 382 009, Gujarat, India.<br>
     Designed, developed and maintained by Bhavya, Sumit & Harsh
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const form = document.getElementById('csvUploadForm');
+        const alertBox = document.getElementById('upload-alert');
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault(); // prevent form from submitting the normal way
+
+            const formData = new FormData(form);
+
+            fetch('/grades/uploadcsv', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json().then(data => ({ ok: res.ok, data })))
+            .then(({ ok, data }) => {
+                showAlert(data.message, ok ? 'success' : 'danger');
+            })
+            .catch(err => {
+                showAlert('Something went wrong. Please try again.', 'danger');
+            });
+        });
+
+        function showAlert(message, type) {
+            alertBox.className = `alert alert-${type}`;
+            alertBox.textContent = message;
+            alertBox.classList.remove('d-none');
+
+            setTimeout(() => {
+                alertBox.classList.add('d-none');
+            }, 8000); // hide after 4 seconds
+        }
+    });
+</script>
+
+
 
 </body>
 </html>
