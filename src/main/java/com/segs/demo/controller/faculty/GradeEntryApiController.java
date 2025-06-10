@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.segs.demo.model.CourseDTO;
-import com.segs.demo.model.Egcrstt1Id;
 import com.segs.demo.model.ExamType;
 import com.segs.demo.model.Term;
 import com.segs.demo.service.AcademicService;

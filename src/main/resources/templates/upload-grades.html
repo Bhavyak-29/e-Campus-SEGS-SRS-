@@ -157,11 +157,11 @@
 
             <!-- CSV Upload Form -->
             <div class="tab-pane fade" id="csv" role="tabpanel">
-                <form th:action="@{/grades/uploadCsv}" method="post" enctype="multipart/form-data">
+                <form th:action="@{/grades/uploadcsv}" method="post" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="file" class="form-label">Select CSV File</label>
                         <input type="file" id="file" name="file" class="form-control" accept=".csv" required />
-                        <small class="text-muted">Expected columns: termId, courseId, examTypeId, studentId, grade</small>
+                        <small class="text-muted">Expected columns: studentid, grade</small>
                     </div>
                     <div class="text-center">
                         <button type="submit" class="btn btn-success">Upload CSV</button>

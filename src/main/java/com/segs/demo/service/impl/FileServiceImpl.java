@@ -1,4 +1,11 @@
 package com.segs.demo.service.impl;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
@@ -6,16 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.segs.demo.service.FileService;
 import com.segs.demo.model.User2;
 import com.segs.demo.repository.User2Repository;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.List;
-import java.util.ArrayList;
+import com.segs.demo.service.FileService;
 
 @Service
 public class FileServiceImpl implements FileService{
@@ -48,9 +48,8 @@ public class FileServiceImpl implements FileService{
                 List<CSVRecord> records = csvParser.getRecords();
                 for(CSVRecord csvRecord : records){
                     User2 user = new User2(
-                        Long.parseLong(csvRecord.get("Index")),
-                        csvRecord.get("Height"),
-                        csvRecord.get("Weight")
+                        Long.parseLong(csvRecord.get("studentid")),
+                        csvRecord.get("grade")
                     );
                     users.add(user);
                 }
