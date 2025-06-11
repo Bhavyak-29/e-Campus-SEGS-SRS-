@@ -52,6 +52,12 @@ public class GradeController {
             gradeForm.setGradesList(new ArrayList<>());
         }
 
+        // Add the session attributes to the model so they can be accessed in the view
+        String termName = gradeService.getTermName(trmid);
+        String courseName = gradeService.getCourseName(crsid);
+        model.addAttribute("TermName", termName);
+        model.addAttribute("CourseName", courseName);
+
         //model.addAttribute("studentGrades", studentGrades);
         model.addAttribute("grades", grades);
         model.addAttribute("gradeForm", gradeForm); // Optional

@@ -14,4 +14,6 @@ public interface GradeService {
     List<StudentGradeDTO> getStudentGrades(Long CRSID, Long trmid, Long examTypeId, List<String> selectedGrades);
     String uploadGrades(GradeUploadForm form, HttpSession session);
     void saveOrUpdateGrades(List<StudentGradeDTO> gradesList, Long tcrid, Long examTypeId);
-}
+    String getTermName(Long termId);
+    String getCourseName(Long courseId);
+}   

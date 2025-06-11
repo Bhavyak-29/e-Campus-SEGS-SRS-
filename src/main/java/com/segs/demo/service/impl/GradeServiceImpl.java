@@ -21,12 +21,14 @@ import com.segs.demo.model.Student;
 import com.segs.demo.model.StudentGradeDTO;
 import com.segs.demo.model.Term;
 import com.segs.demo.model.Users;
+import com.segs.demo.repository.CourseRepository;
 import com.segs.demo.repository.Eggradm1Repository;
 import com.segs.demo.repository.EnrollmentRepository;
 import com.segs.demo.repository.GradeRepository;
 import com.segs.demo.repository.StudentRepository;
 import com.segs.demo.repository.TermCourseCreditsRepository;
 import com.segs.demo.repository.TermCourseRepository;
+import com.segs.demo.repository.TermRepository;
 import com.segs.demo.service.GradeService;
 
 import jakarta.persistence.EntityManager;
@@ -59,6 +61,11 @@ public class GradeServiceImpl implements GradeService {
     @Autowired
     private Eggradm1Repository eggradm1Repository;
 
+    @Autowired
+    private TermRepository termRepository;
+
+    @Autowired
+    private CourseRepository courseRepository;
 
     @Override
     public List<Grade> getAllGrades() {
@@ -107,6 +114,16 @@ public class GradeServiceImpl implements GradeService {
         }
 
         return studentGrades;
+    }
+    
+    public String getTermName(Long termId) {
+        Term term = termRepository.findById(termId).orElse(null);
+        return (term != null) ? term.getName() : "Unknown Term";
+    }
+
+    public String getCourseName(Long courseId) {
+        Course course = courseRepository.findById(courseId).orElse(null);
+        return (course != null) ? course.getName() : "Unknown Course";
     }
 
     @Override

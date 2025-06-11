@@ -146,11 +146,10 @@
             color: black;
         } */
         .btn-modern-nav {
-            background: linear-gradient(to right, #336699, #6699cc);
+            background: linear-gradient(to left, #336699, #6699cc);
             color: white;
             font-weight: bold;
-            border: none;
-            border-radius: 6px;
+            border-radius: 16px;
             transition: all 0.3s ease;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         }
