@@ -5,6 +5,7 @@ public class StudentGradeDTO {
     private String studentName;
     private String studentEmail;
     private String grade;
+    private boolean selectedForUpdate;
 
     public StudentGradeDTO() {}
     public StudentGradeDTO(String studentId, String studentName, String studentEmail, String grade) {
@@ -27,4 +28,12 @@ public class StudentGradeDTO {
 
     public String getGrade() { return grade; }
     public void setGrade(String grade) { this.grade = grade; }
+
+    public boolean isSelectedForUpdate() {
+        return selectedForUpdate;
+    }
+
+    public void setSelectedForUpdate(boolean selectedForUpdate) {
+        this.selectedForUpdate = selectedForUpdate;
+    }
 }

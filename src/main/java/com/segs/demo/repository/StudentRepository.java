@@ -59,5 +59,5 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     
     @Query("SELECT s.stdid FROM Student s WHERE s.stdinstid = :stdinstid ORDER BY stdid LIMIT 1")
-    Long findStudentIdByInstituteId(@Param("stdinstid") String stdinstid);
+    List<Long> findStudentIdByInstituteId(@Param("stdinstid") String stdinstid);
 }

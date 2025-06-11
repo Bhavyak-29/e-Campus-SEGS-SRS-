@@ -2,6 +2,7 @@ package com.segs.demo.controller.faculty;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,7 +36,6 @@ public class GradeController {
 
 
     @GetMapping("/upload")
-    
     public String showUploadForm(ModelMap model,HttpSession session) {
         // Get CRSID, TRMID, and EXAMTYPEID from session
         Long crsid = (Long) session.getAttribute("CRSID");
@@ -83,7 +83,10 @@ public class GradeController {
     
 
     @PostMapping("/upload")
-    public String saveGrades(@ModelAttribute("gradeForm") StudentGradeDTOWrapper gradeWrapper, HttpSession session, RedirectAttributes redirectAttributes) {
+    public String saveGrades(@ModelAttribute("gradeForm") StudentGradeDTOWrapper gradeWrapper,
+                             HttpSession session,
+                             RedirectAttributes redirectAttributes) {
+
         Long trmid = (Long) session.getAttribute("TRMID");
         Long crsid = (Long) session.getAttribute("CRSID");
         Long examTypeId = (Long) session.getAttribute("examTypeId");
@@ -99,8 +102,21 @@ public class GradeController {
             return "redirect:/directGradeEntry/gradeOptions";
         }
 
-        // Now, gradeWrapper.getGradesList() should be correctly populated
-        gradeService.saveOrUpdateGrades(gradeWrapper.getGradesList(), tcrid, examTypeId);
+        // --- IMPORTANT CHANGE STARTS HERE ---
+        // Filter the gradesList to include only students selected for update
+        List<StudentGradeDTO> gradesToProcess = gradeWrapper.getGradesList().stream()
+                                                    .filter(StudentGradeDTO::isSelectedForUpdate)
+                                                    .collect(Collectors.toList());
+
+        // Check if any grades were selected for update
+        if (gradesToProcess.isEmpty()) {
+            redirectAttributes.addFlashAttribute("warning", "No students were selected for grade update.");
+            return "redirect:/directGradeEntry/gradeOptions";
+        }
+        // --- IMPORTANT CHANGE ENDS HERE ---
+
+        // Pass the filtered list to the service
+        gradeService.saveOrUpdateGrades(gradesToProcess, tcrid, examTypeId);
         redirectAttributes.addFlashAttribute("success", "Grades updated successfully!");
 
         return "redirect:/directGradeEntry/gradeOptions";

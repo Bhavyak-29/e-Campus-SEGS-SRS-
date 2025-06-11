@@ -118,45 +118,46 @@
             <!-- Manual Entry Tab -->
             <div class="tab-pane fade show active" id="manual" role="tabpanel" aria-labelledby="manual-tab">
                 <form th:action="@{/grades/upload}" method="post" th:object="${gradeForm}">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Student ID</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Grade</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="student, iterStat : ${gradeForm.gradesList}" th:with="index=${iterStat.index}">
-                                <!-- Hidden fields for student data -->
-                                <input type="hidden" th:name="|gradesList[${index}].studentId|" th:value="${student.studentId}" />
-                                <input type="hidden" th:name="|gradesList[${index}].studentEmail|" th:value="${student.studentEmail}" />
-                                <input type="hidden" th:name="|gradesList[${index}].studentName|" th:value="${student.studentName}" />
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Select</th> <th>Student ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Grade</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="student, iterStat : ${gradeForm.gradesList}" th:with="index=${iterStat.index}">
+                <td>
+                    <input type="checkbox" th:field="*{gradesList[__${index}__].selectedForUpdate}" />
+                </td>
 
-                                <!-- Display student info -->
-                                <td th:text="${student.studentId}"></td>
-                                <td th:text="${student.studentName}"></td>
-                                <td th:text="${student.studentEmail}"></td>
+                <input type="hidden" th:name="|gradesList[${index}].studentId|" th:value="${student.studentId}" />
+                <input type="hidden" th:name="|gradesList[${index}].studentEmail|" th:value="${student.studentEmail}" />
+                <input type="hidden" th:name="|gradesList[${index}].studentName|" th:value="${student.studentName}" />
 
-                                <!-- Grade selection dropdown -->
-                                <td>
-                                    <select class="form-control" th:name="|gradesList[${index}].grade|">
-                                        <option value="AA" th:selected="${student.grade == 'AA'}">AA</option>
-                                        <option value="AB" th:selected="${student.grade == 'AB'}">AB</option>
-                                        <option value="BB" th:selected="${student.grade == 'BB'}">BB</option>
-                                        <option value="BC" th:selected="${student.grade == 'BC'}">BC</option>
-                                        <option value="CC" th:selected="${student.grade == 'CC'}">CC</option>
-                                        <option value="CD" th:selected="${student.grade == 'CD'}">CD</option>
-                                        <option value="DD" th:selected="${student.grade == 'DD'}">DD</option>
-                                        <option value="F" th:selected="${student.grade == 'F'}">F</option>
-                                    </select>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <button type="submit" class="btn btn-success mx-auto d-block" style="width:280px; font-size:20px;" >Save Grades</button>
-                </form>
+                <td th:text="${student.studentId}"></td>
+                <td th:text="${student.studentName}"></td>
+                <td th:text="${student.studentEmail}"></td>
+
+                <td>
+                    <select class="form-control" th:name="|gradesList[${index}].grade|">
+                        <option value="AA" th:selected="${student.grade == 'AA'}">AA</option>
+                        <option value="AB" th:selected="${student.grade == 'AB'}">AB</option>
+                        <option value="BB" th:selected="${student.grade == 'BB'}">BB</option>
+                        <option value="BC" th:selected="${student.grade == 'BC'}">BC</option>
+                        <option value="CC" th:selected="${student.grade == 'CC'}">CC</option>
+                        <option value="CD" th:selected="${student.grade == 'CD'}">CD</option>
+                        <option value="DD" th:selected="${student.grade == 'DD'}">DD</option>
+                        <option value="F" th:selected="${student.grade == 'F'}">F</option>
+                    </select>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <button type="submit" class="btn btn-success mx-auto d-block" style="width:280px; font-size:20px;">Save Grades</button>
+</form>
             </div>
 
             <!-- CSV Upload Tab -->
