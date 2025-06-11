@@ -111,64 +111,67 @@
                 <button class="nav5-link" id="csv-tab" data-bs-toggle="tab" data-bs-target="#csv" type="button" role="tab">Upload CSV</button>
             </li>
         </ul>
-
         <!-- Tab content -->
         <div class="tab-content mt-4" id="gradeUploadTabsContent">
-
             <!-- Manual Form -->
-            <div class="tab-pane fade show active" id="manual" role="tabpanel">
-                <form th:action="@{/grades/upload}" method="post">
-                    <div class="mb-3">
-                        <label for="term" class="form-label">Term ID</label>
-                        <input type="text" id="term" name="term" class="form-control" required />
-                    </div>
+            <form th:action="@{/grades/upload}" method="post" th:object="${gradeForm}">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Student ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Grade</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="student, iterStat : ${gradeForm.gradesList}" th:with="index=${iterStat.index}">
+                <!-- Hidden fields for student data -->
+                <input type="hidden" th:name="|gradesList[${index}].studentId|" th:value="${student.studentId}" />
+                <input type="hidden" th:name="|gradesList[${index}].studentEmail|" th:value="${student.studentEmail}" />
+                <input type="hidden" th:name="|gradesList[${index}].studentName|" th:value="${student.studentName}" />
 
-                    <div class="mb-3">
-                        <label for="course" class="form-label">Course ID</label>
-                        <input type="text" id="course" name="course" class="form-control" required />
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="examtype" class="form-label">Exam Type ID</label>
-                        <input type="text" id="examtype" name="examtype" class="form-control" required />
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="studentId" class="form-label">Student ID</label>
-                        <input type="text" id="studentId" name="studentId" class="form-control" required />
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="grade" class="form-label">Grade</label>
-                        <input type="text" id="grade" name="grade" class="form-control" required />
-                    </div>
-
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-success">Submit Grade</button>
-                    </div>
-                </form>
-            </div>
+                <!-- Display student info -->
+                <td th:text="${student.studentId}"></td>
+                <td th:text="${student.studentName}"></td>
+                <td th:text="${student.studentEmail}"></td>
+                
+                <!-- Grade selection dropdown with hardcoded options -->
+                <td>
+                    <select class="form-control" th:name="|gradesList[${index}].grade|">
+                        <option value="AA" th:selected="${student.grade == 'AA'}">AA</option>
+                        <option value="AB" th:selected="${student.grade == 'AB'}">AB</option>
+                        <option value="BB" th:selected="${student.grade == 'BB'}">BB</option>
+                        <option value="BC" th:selected="${student.grade == 'BC'}">BC</option>
+                        <option value="CC" th:selected="${student.grade == 'CC'}">CC</option>
+                        <option value="CD" th:selected="${student.grade == 'CD'}">CD</option>
+                        <option value="DD" th:selected="${student.grade == 'DD'}">DD</option>
+                        <option value="F" th:selected="${student.grade == 'F'}">F</option>
+                    </select>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <button type="submit" class="btn btn-primary">Save Grades</button>
+</form>
 
             <!-- CSV Upload Form -->
             <!-- Alert Message -->
-<div id="upload-alert" class="alert d-none" role="alert"></div>
+            <div id="upload-alert" class="alert d-none" role="alert"></div>
 
-<!-- CSV Upload Form -->
-<div class="tab-pane fade" id="csv" role="tabpanel">
-    <form id="csvUploadForm" method="post" enctype="multipart/form-data">
-        <div class="mb-3">
-            <label for="file" class="form-label">Select CSV File</label>
-            <input type="file" id="file" name="file" class="form-control" accept=".csv" required />
-            <small class="text-muted">Expected columns: studentid, grade</small>
-        </div>
-        <div class="text-center">
-            <button type="submit" class="btn btn-success">Upload CSV</button>
-        </div>
-    </form>
-</div>
-
-
-
+            <!-- CSV Upload Form -->
+            <div class="tab-pane fade" id="csv" role="tabpanel">
+                <form id="csvUploadForm" method="post" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="file" class="form-label">Select CSV File</label>
+                        <input type="file" id="file" name="file" class="form-control" accept=".csv" required />
+                        <small class="text-muted">Expected columns: studentid, grade</small>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-success">Upload CSV</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>

@@ -1,5 +1,7 @@
 package com.segs.demo.model;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -10,6 +12,7 @@ public class Eggradm1 {
     @Id
     private Long grad_id;
     private String grad_lt;
+    private BigDecimal grad_pt;
 
 
     public Long getGrad_id() {
@@ -25,5 +28,13 @@ public class Eggradm1 {
         this.grad_lt = grad_lt;
     }
     public Eggradm1() {
+    }
+
+    public BigDecimal getGrad_pt() {
+        return grad_pt;
+    }
+
+    public void setGrad_pt(BigDecimal grad_pt) {
+        this.grad_pt = grad_pt;
     }
 }

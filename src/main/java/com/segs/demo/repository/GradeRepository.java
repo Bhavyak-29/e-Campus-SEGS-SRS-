@@ -1,8 +1,10 @@
 package com.segs.demo.repository;
 
-import com.segs.demo.model.Grade;
-import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.segs.demo.model.Grade;
 
 public interface GradeRepository extends JpaRepository<Grade, Long> {
 

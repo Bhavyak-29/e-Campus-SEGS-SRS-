@@ -7,14 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.segs.demo.model.CourseDTO;
-import com.segs.demo.model.Egcrstt1Id;
 import com.segs.demo.model.ExamType;
 import com.segs.demo.model.Term;
 import com.segs.demo.model.TermCourse;
-import com.segs.demo.repository.TermCourseRepository;
-import com.segs.demo.repository.TermRepository;
 import com.segs.demo.repository.Egcrstt1Repository;
 import com.segs.demo.repository.ExamTypeRepository;
+import com.segs.demo.repository.TermCourseRepository;
+import com.segs.demo.repository.TermRepository;
 
 @Service
 public class AcademicService {
@@ -27,11 +26,10 @@ public class AcademicService {
 
     @Autowired
     private Egcrstt1Repository egcrstt1Repository;
+    
     @Autowired
     private ExamTypeRepository examTypeRepository;
 
-    // @Autowired
-    // private ExamTypeRepository examTypeRepo;
 
     public List<Term> getTermsByAcademicYear(Long AYRID) {
         return termRepo.findByAcademicYear_Id(AYRID);
@@ -42,11 +40,7 @@ public class AcademicService {
         return courses.stream().map(tc -> new CourseDTO(tc.getCourse().getId(), tc.getCourse().getCode(), tc.getCourse().getName())).toList();
     }
 
-    // public List<Egcrstt1Id> getEgcrstt1IdsByCourseAndTerm(Long crsId, Long tcrid) {
-    //     return egcrstt1Repository.findIdsByTcridAndCrsId(tcrid, crsId);
-    // }
-
-     public List<ExamType> getExamTypesByCourseAndTerm(Long crsid, Long trmid) {
+    public List<ExamType> getExamTypesByCourseAndTerm(Long crsid, Long trmid) {
         Long tcrid = termCourseRepo.findTcridByCrsidAndTrmid(crsid, trmid);
         if (tcrid == null) {
             return Collections.emptyList();

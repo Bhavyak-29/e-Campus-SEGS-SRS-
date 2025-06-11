@@ -13,4 +13,5 @@ public interface GradeService {
     // Updated method signature to include trmid
     List<StudentGradeDTO> getStudentGrades(Long CRSID, Long trmid, Long examTypeId, List<String> selectedGrades);
     String uploadGrades(GradeUploadForm form, HttpSession session);
+    void saveOrUpdateGrades(List<StudentGradeDTO> gradesList, Long tcrid, Long examTypeId);
 }

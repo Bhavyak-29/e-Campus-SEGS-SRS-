@@ -1,12 +1,17 @@
 package com.segs.demo.service.impl;
 
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.dao.IncorrectResultSizeDataAccessException;
+import org.springframework.stereotype.Service; // For current timestamp
 
-import com.segs.demo.model.Course;
+import com.segs.demo.model.Course; // For converting LocalDateTime to Timestamp if needed for NativeQuery
 import com.segs.demo.model.Egcrstt1;
 import com.segs.demo.model.Egcrstt1Id;
 import com.segs.demo.model.Enrollment;
@@ -16,25 +21,28 @@ import com.segs.demo.model.Student;
 import com.segs.demo.model.StudentGradeDTO;
 import com.segs.demo.model.Term;
 import com.segs.demo.model.Users;
+import com.segs.demo.repository.Eggradm1Repository;
 import com.segs.demo.repository.EnrollmentRepository;
 import com.segs.demo.repository.GradeRepository;
+import com.segs.demo.repository.StudentRepository;
+import com.segs.demo.repository.TermCourseCreditsRepository;
 import com.segs.demo.repository.TermCourseRepository;
 import com.segs.demo.service.GradeService;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext; // Import the TermCourseRepository
+import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
-import jakarta.servlet.http.HttpSession; // Import EntityManager
+import jakarta.servlet.http.HttpSession; // Import the TermCourseRepository
+import jakarta.transaction.Transactional;
 
 @Service
 public class GradeServiceImpl implements GradeService {
 
     @Autowired
-    private GradeRepository gradeRepository;
+    private TermCourseCreditsRepository termCourseCreditsRepository;
 
-    // We no longer need StudentGradeRepository for the getStudentGrades method
-    // @Autowired
-    // private StudentGradeRepository studentGradeRepository;
+    @Autowired
+    private GradeRepository gradeRepository;
 
     @Autowired
     private EnrollmentRepository enrollmentRepository;
@@ -45,6 +53,13 @@ public class GradeServiceImpl implements GradeService {
     @PersistenceContext
     private EntityManager entityManager; // Inject EntityManager for native queries
 
+    @Autowired
+    private StudentRepository StudentRepository;
+
+    @Autowired
+    private Eggradm1Repository eggradm1Repository;
+
+
     @Override
     public List<Grade> getAllGrades() {
         return gradeRepository.findAll();
@@ -52,7 +67,6 @@ public class GradeServiceImpl implements GradeService {
 
     @Override
     public List<StudentGradeDTO> getStudentGrades(Long CRSID, Long trmid, Long examTypeId, List<String> selectedGrades) {
-        // 1. Get tcrid using CRSID and TRMID
         Long tcrid = termCourseRepository.findTcridByCrsidAndTrmid(CRSID, trmid);
 
         if (tcrid == null) {
@@ -60,8 +74,6 @@ public class GradeServiceImpl implements GradeService {
             return new ArrayList<>(); // Return empty list if no term course is found
         }
 
-        // 2. Fetch stud_id and obtgr_id from egcrstt1 using tcrid and examTypeId
-        // We are building a native SQL query to join necessary tables and filter results.
         StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder.append("SELECT s.stdinstid, e.obtgr_id, s.stdfirstname, s.stdemail, g.grad_lt ");
         sqlBuilder.append("FROM ec2.egcrstt1 e ");
@@ -69,7 +81,6 @@ public class GradeServiceImpl implements GradeService {
         sqlBuilder.append("JOIN ec2.eggradm1 g ON e.obtgr_id = g.grad_id ");
         sqlBuilder.append("WHERE e.tcrid = :tcrid AND e.examtype_id = :examTypeId");
 
-        // Add filter for selected grades if provided
         if (selectedGrades != null && !selectedGrades.isEmpty()) {
             sqlBuilder.append(" AND g.grad_lt IN (:selectedGrades)");
         }
@@ -88,7 +99,6 @@ public class GradeServiceImpl implements GradeService {
         List<StudentGradeDTO> studentGrades = new ArrayList<>();
         for (Object[] row : results) {
             String studentId = ((String) row[0]);
-            // Long obtgrId = ((Number) row[1]).longValue(); // Not directly needed in DTO
             String studentName = (String) row[2];
             String studentEmail = (String) row[3];
             String gradeValue = (String) row[4];
@@ -109,12 +119,7 @@ public class GradeServiceImpl implements GradeService {
 
             Grade grade = new Grade();
 
-            // Directly map all values from GradeUploadForm
             Enrollment enrollment = new Enrollment();
-            // TODO: You must define a proper way to set Enrollment ID.
-            // For now, using a placeholder, but this needs to be a valid, existing enrollment ID
-            // or you need logic to create/find an enrollment.
-            enrollment.setId(Long.parseLong("100"));
 
             Student student = new Student();
             student.setStdinstid(form.getStudentId());
@@ -135,25 +140,18 @@ public class GradeServiceImpl implements GradeService {
             grade.setFaculty(faculty);
 
             Egcrstt1Id egcrstt1Id = new Egcrstt1Id();
-            // Assuming form.getTerm() maps to tcrid, and form.getStudentId() is for stud_id
             egcrstt1Id.setTcrid(Long.parseLong(form.getTerm()));
             egcrstt1Id.setExamtypeId(form.getExamtype());
             egcrstt1Id.setStudId(form.getStudentId());
 
             Egcrstt1 egcrstt1 = new Egcrstt1();
             egcrstt1.setId(egcrstt1Id);
-            // You might need to set other properties for Egcrstt1 like obtgr_id, etc.
-            // based on your Egcrstt1 entity and database design, if you plan to persist it.
 
             grade.setGradeValue(form.getGrade().trim().toUpperCase());
             grade.setRemarks(null);
             grade.setRowState(1);
-            // TODO: Ensure Grade ID is properly generated by the database or a sequence.
-            // Setting a fixed "100" is likely not correct for production.
             grade.setId(Long.parseLong("100"));
 
-            // Save enrollment (if it's a new one or needs updating) before saving grade
-            // Ensure enrollment.getId() is correctly handled (e.g., auto-generated or existing)
             Enrollment savedEnrollment = enrollmentRepository.save(grade.getEnrollment());
             grade.setEnrollment(savedEnrollment); // Link the grade to the persisted enrollment
 
@@ -163,6 +161,121 @@ public class GradeServiceImpl implements GradeService {
         } catch (Exception e) {
             e.printStackTrace();
             return "Error occurred: " + e.getMessage();
+        }
+    }
+
+    
+    @Transactional
+    @Override
+    public void saveOrUpdateGrades(List<StudentGradeDTO> gradesList, Long tcrid, Long examTypeId) {
+        Long createdBy = 7L;
+        Long updatedBy = 7L;
+        Integer rowStatus = 1;
+        BigDecimal tccCreditPoints = null;
+        try {
+            Optional<com.segs.demo.model.TermCourseCredits> termCourseCreditsOptional = termCourseCreditsRepository.findByTcctcrid(tcrid);
+            if (termCourseCreditsOptional.isPresent()) {
+                tccCreditPoints = termCourseCreditsOptional.get().getTcccreditpoints();
+            } else {
+                System.err.println("Warning: No TCC Credit Points entity found for TCID: " + tcrid + ". Will use null for obt_credits calculation.");
+            }
+        } catch (IncorrectResultSizeDataAccessException e) {
+            System.err.println("Error: Multiple TCC Credit Points entities found for TCID: " + tcrid + ". Will use null for obt_credits calculation.");
+        } catch (Exception e) {
+            System.err.println("Error retrieving TCC Credit Points for TCID: " + tcrid + " - " + e.getMessage() + ". Will use null for obt_credits calculation.");
+        }
+
+        for (StudentGradeDTO dto : gradesList) {
+            Long stdid = null;
+            try {
+                stdid = StudentRepository.findStudentIdByInstituteId(dto.getStudentId());
+            } catch (IncorrectResultSizeDataAccessException e) {
+                System.err.println("Error: Multiple student IDs found for institute ID: " + dto.getStudentId() + ". Skipping this student.");
+                continue;
+            } catch (Exception e) { 
+                System.err.println("Error retrieving student ID for institute ID: " + dto.getStudentId() + " - " + e.getMessage() + ". Skipping this student.");
+                continue;
+            }
+
+            Long gradeId = null;
+            BigDecimal gradPt = null; 
+            try {
+                gradeId = eggradm1Repository.findGradeIdByValue(dto.getGrade());
+                if (gradeId != null) {
+                    try {
+                        gradPt = eggradm1Repository.findGradPtByGradId(gradeId);
+                        if (gradPt == null) {
+                             System.err.println("Warning: No Grad Points found for Grade ID: " + gradeId + ". Will use null for obt_credits calculation.");
+                        }
+                    } catch (IncorrectResultSizeDataAccessException e) {
+                        System.err.println("Error: Multiple Grad Points found for Grade ID: " + gradeId + ". Will use null for obt_credits calculation.");
+                    } catch (Exception e) {
+                        System.err.println("Error retrieving Grad Points for Grade ID: " + gradeId + " - " + e.getMessage() + ". Will use null for obt_credits calculation.");
+                    }
+                } else {
+                    System.err.println("Error: No grade ID found for value: " + dto.getGrade() + ". Skipping this student.");
+                    continue; // Skip if grade ID is not found
+                }
+            } catch (IncorrectResultSizeDataAccessException e) {
+                System.err.println("Error: Multiple grade IDs found for value: " + dto.getGrade() + ". Skipping this student.");
+                continue;
+            } catch (Exception e) { // Catch other potential issues during grade ID retrieval
+                System.err.println("Error retrieving grade ID for value: " + dto.getGrade() + " - " + e.getMessage() + ". Skipping this student.");
+                continue;
+            }
+            if (stdid != null && gradeId != null) {
+                // Calculate obtCredits
+                BigDecimal obtCredits = null;
+                if (tccCreditPoints != null && gradPt != null) {
+                    obtCredits = tccCreditPoints.multiply(gradPt);
+                } else {
+                    System.out.println("Warning: Cannot calculate obt_credits for student " + dto.getStudentId() +
+                                       " (TCID: " + tcrid + ", Grade: " + dto.getGrade() +
+                                       ") due to missing tccCreditPoints (" + tccCreditPoints +
+                                       ") or gradPt (" + gradPt + "). obt_credits will be NULL.");
+                }
+
+                LocalDateTime now = LocalDateTime.now();
+                Timestamp currentTimestamp = Timestamp.valueOf(now);
+
+                int updated = entityManager.createNativeQuery(
+                    "UPDATE ec2.egcrstt1 " +
+                    "SET obtgr_id = :gradeId, " +
+                    "    obt_credits = :obtCredits, " + // Add obt_credits to update
+                    "    updat_by = :updatedBy, " +
+                    "    updat_dt = :updatedDt " +
+                    "WHERE stud_id = :stdid AND tcrid = :tcrid AND examtype_id = :examTypeId"
+                )
+                .setParameter("gradeId", gradeId)
+                .setParameter("obtCredits", obtCredits) // Pass the calculated obtCredits
+                .setParameter("stdid", stdid)
+                .setParameter("tcrid", tcrid)
+                .setParameter("examTypeId", examTypeId)
+                .setParameter("updatedBy", updatedBy)
+                .setParameter("updatedDt", currentTimestamp)
+                .executeUpdate();
+
+                if (updated == 0) {
+                    entityManager.createNativeQuery(
+                        "INSERT INTO ec2.egcrstt1 (stud_id, tcrid, examtype_id, obtgr_id, obt_mks, obt_credits, crst_field1, creat_by, creat_dt, updat_by, updat_dt, row_st, crsid) " +
+                        "VALUES (:stdid, :tcrid, :examTypeId, :gradeId, :obtMks, :obtCredits, :crstField1, :creatBy, :creatDt, :updatBy, :updatDt, :rowSt, :crsid)"
+                    )
+                    .setParameter("stdid", stdid)
+                    .setParameter("tcrid", tcrid)
+                    .setParameter("examTypeId", examTypeId)
+                    .setParameter("gradeId", gradeId)
+                    .setParameter("obtMks", null)      // obt_mark(null) - assuming obt_mks is the correct column name
+                    .setParameter("obtCredits", obtCredits)   // Use the calculated obtCredits
+                    .setParameter("crstField1", null)
+                    .setParameter("creatBy", createdBy)
+                    .setParameter("creatDt", currentTimestamp)
+                    .setParameter("updatBy", updatedBy)
+                    .setParameter("updatDt", null)
+                    .setParameter("rowSt", rowStatus)
+                    .setParameter("crsid", null)
+                    .executeUpdate();
+                }
+            }
         }
     }
 }

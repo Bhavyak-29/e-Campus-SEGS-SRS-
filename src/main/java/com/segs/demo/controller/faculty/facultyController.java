@@ -83,6 +83,7 @@ public class facultyController {
 
         return "directGradeEntry";
     }
+    
     @PostMapping("/directGradeEntry/gradeLeftFrame")
     public String showLeftFrame(
             @RequestParam("AYRID") Long ayrid,
@@ -98,14 +99,15 @@ public class facultyController {
 
         return "gradeLeftFrame";
     }
+
     @RequestMapping("/directGradeEntry/gradeOptions")
     public String showGradeOptions(@RequestParam(required = false) List<String> selectedGrades,
             ModelMap model,
             HttpSession session) {
-                Long ayrid = (Long) session.getAttribute("AYRID"); // You might use this later
-                Long trmid = (Long) session.getAttribute("TRMID"); // Get TRMID from session
-                Long crsid = (Long) session.getAttribute("CRSID"); // Get CRSID from session
-                Long examTypeId = (Long) session.getAttribute("examTypeId"); // Get examTypeId from session
+                Long ayrid = (Long) session.getAttribute("AYRID"); 
+                Long trmid = (Long) session.getAttribute("TRMID"); 
+                Long crsid = (Long) session.getAttribute("CRSID"); 
+                Long examTypeId = (Long) session.getAttribute("examTypeId"); 
 
                 List<Grade> allGrades = gradeService.getAllGrades();
                 List<Grade> distinctGrades = allGrades.stream()
@@ -115,51 +117,17 @@ public class facultyController {
 
                 model.addAttribute("grades", distinctGrades);
 
-                // Only fetch student grades if all required session attributes are available
                 if (crsid != null && trmid != null && examTypeId != null) {
-                    // Pass TRMID to the service method
                     List<StudentGradeDTO> studentGrades = gradeService.getStudentGrades(crsid, trmid, examTypeId, selectedGrades);
                     model.addAttribute("studentGrades", studentGrades);
                     model.addAttribute("selectedGrades", selectedGrades);
                 } else {
-                    // If session attributes are missing, display an empty list or a message
                     model.addAttribute("studentGrades", new ArrayList<StudentGradeDTO>());
-                    System.out.println("Required session attributes (CRSID, TRMID, examTypeId) are missing for grade display.");
                 }
-
-                model.addAttribute("CRSID", crsid); // Ensure CRSID is available for the form
-                model.addAttribute("examTypeId", examTypeId); // Ensure examTypeId is available for the form
+                model.addAttribute("CRSID", crsid); 
+                model.addAttribute("examTypeId", examTypeId); 
 
                 return "gradeOptions";
-
-        //     // @RequestParam(required = false) Long CRSID,
-        //     // @RequestParam(required = false) Long examTypeId,
-        //     @RequestParam(required = false) List<String> selectedGrades,
-        //     ModelMap model,
-        //     HttpSession session) {
-        //         Long ayrid = (Long) session.getAttribute("AYRID");
-        //         Long trmid = (Long) session.getAttribute("TRMID");
-        //         Long crsid = (Long) session.getAttribute("CRSID");
-        //         Long examTypeId = (Long) session.getAttribute("examTypeId");
-
-        // List<Grade> allGrades = gradeService.getAllGrades();
-        // List<Grade> distinctGrades = allGrades.stream()
-        //         .collect(Collectors.collectingAndThen(
-        //                 Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(Grade::getGradeValue))),
-        //                 ArrayList::new));
-
-        // model.addAttribute("grades", distinctGrades);
-
-        // if (crsid != null && examTypeId != null) {
-        //     List<StudentGradeDTO> studentGrades = gradeService.getStudentGrades(crsid, examTypeId, selectedGrades);
-        //     model.addAttribute("studentGrades", studentGrades);
-        //     model.addAttribute("selectedGrades", selectedGrades);
-        // }
-
-        // model.addAttribute("CRSID", crsid);
-        // model.addAttribute("examTypeId", examTypeId);
-
-        // return "gradeOptions";
     }
 
     @GetMapping("/students/search")
