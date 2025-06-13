@@ -305,4 +305,6 @@ public class facultyController {
         model.addAttribute("students", students);
         return "batchwise_details";
     }
+
+    
 }

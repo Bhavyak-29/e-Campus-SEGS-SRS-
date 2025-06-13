@@ -1,19 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Grade Options</title>
+    <title>Course Master List</title>
+    <meta charset="UTF-8">
     <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-
     <link rel="stylesheet" th:href="@{/css/ecampus.css}" />
-
 </head>
 <body>
 
-<table style="width:100%;">
+<table>
     <tr>
         <td colspan="3" class="top-bar">
             <a href="/" style="text-decoration: none; color: inherit;">
@@ -33,10 +31,7 @@
                                 Transaction
                             </button>
                             <ul class="dropdown-menu">
-                                <li class="dropdown-submenu position-relative">
-                                    <a class="dropdown-item" href="/directGradeEntry">Direct Grade Entry</a>
-                        
-                                </li>
+                                <li><a class="dropdown-item" href="/directGradeEntry">Direct Grade Entry</a></li>
                                 <li><a class="dropdown-item" href="#">Course Feedback</a></li>
                                 <li><a class="dropdown-item" href="#">Modify Grade</a></li>
                                 <li><a class="dropdown-item" href="#">Revise I Grade</a></li>
@@ -77,7 +72,7 @@
                                         <li><a class="dropdown-item" href="/courses/master-list">Master List</a></li>
                                         <li><a class="dropdown-item" href="/courses/term-courses">Term Courses</a></li>
                                     </ul>
-                                </li> 
+                                </li>                                
                                 <li><a class="dropdown-item" href="#">Registrations</a></li>
                                 <li><a class="dropdown-item" href="#">Attendance</a></li>
                                 <li><a class="dropdown-item" href="#">Result</a></li>
@@ -89,7 +84,7 @@
                             <button class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
                                 Help
                             </button>
-                            <ul class="dropdown-menu w-50">
+                            <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="#">About Application</a></li>
                                 <li><a class="dropdown-item" href="#">Workflow of SEGS</a></li>
                                 <li><a class="dropdown-item" href="#">Contact US</a></li>
@@ -97,95 +92,61 @@
                         </div>
                     </td>
                     <td>
-                        <a class="btn btn-logout-modern w-100" style="color:white;font-weight:bold;" href="/logout">
-                            Logout
-                        </a>
+                        <a class="btn btn-logout-modern w-100" style="color:white;font-weight:bold;" href="/logout">Logout</a>
                     </td>
                 </tr>
             </table>
         </td>
     </tr>
-</table>
 
-<!-- Main Content Area -->
-<div class="content container">
+    <tr>
+        <td class="sidemenu"></td>
+        <td class="content">
+            <h2 class="mt-4 mb-3 text-center">Course Master List</h2>
 
-    
-
-<div class="d-flex flex-column align-items-center">
-    <form th:action="@{/directGradeEntry/gradeOptions}" method="get" class="mb-4 w-50">
-        <input type="hidden" name="CRSID" th:value="${CRSID}" />
-        <input type="hidden" name="examTypeId" th:value="${examTypeId}" />
-
-        <!-- Grade Label -->
-
-        <!-- Grade Select -->
-                
-       <div class="container mt-4">
-            <div class="mb-4">
-                <h2 class="text-center mb-4" style="margin-top:-34px;">Grade View</h2>
-                <label for="grades" class="form-label fw-bold fs-5 text-primary" style="margin-top:-20px;">
-                    <i class="bi bi-award-fill me-1"></i> Select Grades:
-                </label>
-                <div class="border rounded shadow-sm p-2" style="background-color: #f8f9fa;">
-                    <select id="grades" name="selectedGrades" multiple 
-                            class="form-select border-0 bg-light" 
-                            style="height: 180px; overflow-y: auto;">
-                        <option value="AA" th:selected="${selectedGrades != null} ? ${selectedGrades.contains('AA')} : false">AA</option>
-                        <option value="AB" th:selected="${selectedGrades != null} ? ${selectedGrades.contains('AB')} : false">AB</option>
-                        <option value="BB" th:selected="${selectedGrades != null} ? ${selectedGrades.contains('BB')} : false">BB</option>
-                        <option value="BC" th:selected="${selectedGrades != null} ? ${selectedGrades.contains('BC')} : false">BC</option>
-                        <option value="CC" th:selected="${selectedGrades != null} ? ${selectedGrades.contains('CC')} : false">CC</option>
-                        <option value="CD" th:selected="${selectedGrades != null} ? ${selectedGrades.contains('CD')} : false">CD</option>
-                        <option value="DD" th:selected="${selectedGrades != null} ? ${selectedGrades.contains('DD')} : false">DD</option>
-                        <option value="DE" th:selected="${selectedGrades != null} ? ${selectedGrades.contains('DE')} : false">DE</option>
-                        <option value="F" th:selected="${selectedGrades != null} ? ${selectedGrades.contains('F')} : false">F</option>
-                    </select>
-                </div>
+            <div class="mb-3 text-end me-5">
+                <a th:href="@{/courses/excel}" class="btn btn-success">Download Excel</a>
             </div>
-        </div>
 
+            <div class="table-responsive px-5">
+                <table class="table table-striped table-bordered align-middle text-center">
+                    <thead class="table-dark">
+                        <tr>
+                            <th style="width: 5%;">S.No.</th>
+                            <th style="width: 20%;">Course Name</th>
+                            <th style="width: 25%;">Title</th>
+                            <th style="width: 10%;">Level</th>
+                            <th style="width: 10%;">Code</th>
+                            <th style="width: 15%;">Assessment Type</th>
+                            <th style="width: 15%;">L-T-P (C)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="course, iterStat : ${courses}">
+                            <td th:text="${iterStat.index + 1}">1</td>
+                            <td th:text="${course.name}">Course Name</td>
+                            <td th:text="${course.title}">Title</td>
+                            <td th:text="${course.discipline}">Level</td>
+                            <td th:text="${course.code}">Code</td>
+                            <td th:text="${course.assessmentType}">Assessment</td>
+                            <td th:text="${course.lectures + '-' + course.tutorials + '-' + course.practicals + ' (' + course.creditPoints + ')'}">L-T-P (C)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>            
+        </td>
+        <td class="sidemenu"></td>
+    </tr>
 
-        <!-- Buttons -->
-        <div class="d-flex flex-column align-items-center">
-            <button type="submit" class="btn btn-success mb-3 w-75">Show Selected Grades</button>
-            <button type="button" class="btn btn-secondary w-75" onclick="selectAllGrades()">Show All Grades</button>
-        </div>
-    </form>
-</div>
-
-    <table class="table table-bordered table-striped" style="width:90%;margin: 0 auto;">
-        <thead class="table-primary">
-        <tr>
-            <th>Sr No</th>
-            <th>Student Id</th>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Grade</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="student, iterStat : ${studentGrades}">
-            <td th:text="${iterStat.count}"></td>
-            <td th:text="${student.studentId}"></td>
-            <td th:text="${student.studentName}"></td>
-            <td th:text="${student.studentEmail}"></td>
-            <td th:text="${student.grade}"></td>
-        </tr>
-        </tbody>
-    </table>
-
-</div>
-
-<script>
-    function selectAllGrades() {
-        const select = document.getElementById('grades');
-        for(let i=0; i < select.options.length; i++) {
-            select.options[i].selected = true;
-        }
-        select.form.submit();
-    }
-</script>
+    <tr>
+        <td class="sidemenu"></td>
+        <td class="footer" colspan="1">
+            &copy; 2002 DA-IICT, Near Indroda Circle, Ahmedabad-Gandhinagar Highway, Gandhinagar - 382 009, Gujarat, India.<br>
+            Designed, developed and maintained by Bhavya, Sumit & Harsh
+        </td>
+        <td class="sidemenu"></td>
+    </tr>
+</table>
 
 </body>
 </html>
