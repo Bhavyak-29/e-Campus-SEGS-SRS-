@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.segs.demo.model.Student;
+import com.segs.demo.model.Batch;
 
 @Repository
 public interface StudentRepository extends JpaRepository<Student, Long> {
@@ -60,4 +61,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     
     @Query("SELECT s.stdid FROM Student s WHERE s.stdinstid = :stdinstid ORDER BY stdid LIMIT 1")
     List<Long> findStudentIdByInstituteId(@Param("stdinstid") String stdinstid);
+
+    List<Student> findByBatch(Batch batch);
 }

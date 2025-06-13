@@ -6,6 +6,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -37,6 +38,18 @@ public class Student {
     private Long emrgAdrId;
 
     private String stdemail;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "stdid", referencedColumnName = "stdid", insertable = false, updatable = false)
+    private StudentProfile studentProfile;
+
+    public StudentProfile getStudentProfile() {
+        return studentProfile;
+    }
+
+    public void setStudentProfile(StudentProfile studentProfile) {
+        this.studentProfile = studentProfile;
+    }
 
     // Getters and Setters
     public Long getStdid() {

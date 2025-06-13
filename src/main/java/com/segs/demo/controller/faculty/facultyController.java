@@ -2,11 +2,13 @@ package com.segs.demo.controller.faculty;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
+import java.util.Comparator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,17 +28,25 @@ import com.segs.demo.model.Address;
 import com.segs.demo.model.Course;
 import com.segs.demo.model.Egcrstt1;
 import com.segs.demo.model.Grade;
+import com.segs.demo.model.Program;
 import com.segs.demo.model.Student;
 import com.segs.demo.model.StudentGradeDTO;
+import com.segs.demo.model.StudentProfile;
 import com.segs.demo.model.StudentRegistrations;
 import com.segs.demo.model.StudentSemesterResult;
 import com.segs.demo.model.Term;
+import com.segs.demo.model.Batch;
+
 import com.segs.demo.repository.AddressRepository;
+import com.segs.demo.repository.BatchRepository;
+import com.segs.demo.repository.Egcrstt1Repository;
+import com.segs.demo.repository.ProgramRepository;
 import com.segs.demo.repository.StudentRegistrationCourseRepository;
 import com.segs.demo.repository.StudentRegistrationRepository;
 import com.segs.demo.repository.StudentRegistrationsRepository;
 import com.segs.demo.repository.StudentRepository;
 import com.segs.demo.repository.StudentSemesterResultRepository;
+import com.segs.demo.repository.StudentProfileRepository;
 import com.segs.demo.service.GradeService;
 import com.segs.demo.service.facultyService;
 
@@ -68,6 +78,19 @@ public class facultyController {
 
     @Autowired
     private StudentSemesterResultRepository studentSemesterResultRepository;
+
+    @Autowired
+    private ProgramRepository programRepository;
+
+    @Autowired
+    private BatchRepository batchRepository;
+
+    @Autowired
+    private StudentProfileRepository studentProfileRepository;
+
+    @Autowired
+    private Egcrstt1Repository Egcrstt1Repository;
+
 
     @RequestMapping("/directGradeEntry")
     public String directGradeEntry(ModelMap model) {
@@ -130,6 +153,8 @@ public class facultyController {
                 return "gradeOptions";
     }
 
+
+    //StudentInfo -> StudentWise
     @GetMapping("/students/search")
     public String searchStudents(
             @RequestParam(required = false) String fname,
@@ -163,10 +188,12 @@ public class facultyController {
     }
 
     @GetMapping("/students/{id}")
-    public String showStudentInfo(@PathVariable String id, Model model) {
+    public String showStudentInfo(@PathVariable String id, @RequestParam(value = "from", required = false) String from, Model model) {
         List<Student> students = studentRepository.findStudentByInstIdWithLatestRegistration(id);
         if (students.isEmpty()) return "error/404";
         Student student = students.get(0);
+
+        StudentProfile profile = studentProfileRepository.findBystdid(student.getStdid());
 
         List<Long> addressIds = new ArrayList<>();
         if (student.getPrmtAdrId() != null) addressIds.add(student.getPrmtAdrId());
@@ -194,13 +221,70 @@ public class facultyController {
                     .findByStudentRegistration_SrgidAndRowStateGreaterThan(reg.getSrgid(), (short) 0));
         }
 
+        Map<Long, String> courseGrades = new HashMap<>();
+
+        for (List<Object[]> courseList : regCourses.values()) {
+            for (Object[] course : courseList) {
+                Long termCourseId = (Long) course[0]; // assuming index 0 is tcrid
+                List<Object[]> gradeResult = Egcrstt1Repository.findGradeAndExamTitle(student.getStdinstid(), termCourseId);
+
+                // Pick the first grade if available
+                if (!gradeResult.isEmpty()) {
+                    Object[] result = gradeResult.get(0);
+                    String grade = (String) result[0];
+                    courseGrades.put(termCourseId, grade);
+                } else {
+                    courseGrades.put(termCourseId, "-");
+                }
+            }
+        }
+
+        model.addAttribute("courseGrades", courseGrades);
         model.addAttribute("student", student);
+        model.addAttribute("profile", profile);
         model.addAttribute("permAddress", permAddr);
         model.addAttribute("currAddress", currAddr);
         model.addAttribute("registrations", registrations);
         model.addAttribute("regCourses", regCourses);
         model.addAttribute("regResults", regResults);
-
+        model.addAttribute("fromPage", from);
         return "student_details";
+    }
+
+    // StudentInfo → Batchwise
+    @GetMapping("/students/batch")
+    public String showProgramAndBatchSelection(@RequestParam(value = "programId", required = false) Long programId,
+                                            Model model) {
+        List<Program> programs = programRepository.findAll();
+        programs.sort(Comparator.comparing(Program::getPrgname));
+        model.addAttribute("programs", programs);
+
+        if (programId != null) {
+            Program program = programRepository.findById(programId).orElse(null);
+            if (program != null) {
+                List<Batch> batches = batchRepository.findByProgram(program);
+                batches.sort(Comparator.comparing(Batch::getBchname).reversed());
+                model.addAttribute("selectedProgram", program);
+                model.addAttribute("batches", batches);
+            }
+        }
+
+        return "batchwise_search";
+    }
+    @GetMapping("/students/batch/list")
+    public String viewStudents(@RequestParam("programId") Long programId,
+                            @RequestParam("batchId") Long batchId,
+                            Model model) {
+        Program program = programRepository.findById(programId).orElse(null);
+        Batch batch = batchRepository.findById(batchId).orElse(null);
+        if (program == null || batch == null) return "redirect:/students/batch";
+
+
+        List<Student> students = studentRepository.findByBatch(batch);
+        students.sort(Comparator.comparing(Student::getStdinstid));
+        model.addAttribute("program", program);
+        model.addAttribute("batch", batch);
+        model.addAttribute("students", students);
+        return "batchwise_details";
     }
 }

@@ -67,7 +67,7 @@
                                     <a class="dropdown-item dropdown-toggle" href="#">Student Info</a>
                                     <ul class="dropdown-menu">
                                         <li><a class="dropdown-item" href="/students/search">Studentwise</a></li>
-                                        <li><a class="dropdown-item" href="#">Batchwise</a></li>
+                                        <li><a class="dropdown-item" href="/students/batch">Batchwise</a></li>
                                     </ul>
                                 </li>
                                 <li><a class="dropdown-item" href="#">Course</a></li>
@@ -125,8 +125,6 @@
 
     <!-- Search Results -->
     <div th:if="${studentsPage != null}">
-        <h5 th:if="${studentsPage.empty}" class="text-danger text-center">No students found.</h5>
-
         <div th:if="${!studentsPage.empty}">
             <table class="table table-bordered table-striped mt-3">
                 <thead class="table-dark">

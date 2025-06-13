@@ -29,5 +29,5 @@ public interface Egcrstt1Repository extends JpaRepository<Egcrstt1, Egcrstt1Id> 
                    "WHERE e.id.studId = :studentId AND e.id.tcrid = :termCourseId " +
                    "AND e.rowStatus > '0' AND et.row_st > 0 " + // Assuming row_st in eggradm1 is also checked
                    "ORDER BY e.id.examtypeId DESC", nativeQuery = true)
-    List<Object[]> findGradeAndExamTitle(@Param("studentId") Long studentId, @Param("termCourseId") Long termCourseId);
+    List<Object[]> findGradeAndExamTitle(@Param("studentId") String studentId, @Param("termCourseId") Long termCourseId);
 }

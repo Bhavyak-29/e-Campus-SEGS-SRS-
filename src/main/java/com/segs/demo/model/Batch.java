@@ -1,6 +1,7 @@
 package com.segs.demo.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.Column;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -17,6 +18,17 @@ public class Batch {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "bchprgid")
     private Program program;
+
+    @Column(name = "bchname")
+    private String bchname;
+
+    public String getBchname() {
+        return bchname;
+    }
+
+    public void setBchname(String bchname) {
+        this.bchname = bchname;
+    }
 
     public Long getBchid() {
         return bchid;
