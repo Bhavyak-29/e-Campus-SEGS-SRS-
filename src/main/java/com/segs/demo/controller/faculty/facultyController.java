@@ -220,26 +220,6 @@ public class facultyController {
             regResults.put(reg.getSrgid(), studentSemesterResultRepository
                     .findByStudentRegistration_SrgidAndRowStateGreaterThan(reg.getSrgid(), (short) 0));
         }
-
-        Map<Long, String> courseGrades = new HashMap<>();
-
-        for (List<Object[]> courseList : regCourses.values()) {
-            for (Object[] course : courseList) {
-                Long termCourseId = (Long) course[0]; // assuming index 0 is tcrid
-                List<Object[]> gradeResult = Egcrstt1Repository.findGradeAndExamTitle(student.getStdinstid(), termCourseId);
-
-                // Pick the first grade if available
-                if (!gradeResult.isEmpty()) {
-                    Object[] result = gradeResult.get(0);
-                    String grade = (String) result[0];
-                    courseGrades.put(termCourseId, grade);
-                } else {
-                    courseGrades.put(termCourseId, "-");
-                }
-            }
-        }
-
-        model.addAttribute("courseGrades", courseGrades);
         model.addAttribute("student", student);
         model.addAttribute("profile", profile);
         model.addAttribute("permAddress", permAddr);

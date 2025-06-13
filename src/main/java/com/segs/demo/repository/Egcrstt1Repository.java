@@ -13,21 +13,15 @@ import java.util.List;
 @Repository
 public interface Egcrstt1Repository extends JpaRepository<Egcrstt1, Egcrstt1Id> {
 
-    // --- Existing method (unchanged) ---
     @Query("SELECT DISTINCT e.id.examtypeId FROM Egcrstt1 e WHERE e.id.tcrid = :tcrid")
     List<Long> findDistinctExamTypeIdsByTcrid(@Param("tcrid") Long tcrid);
 
-    // --- New method added based on original SQL query ---
-    /**
-     * Corresponds to: select grad_lt, examtype_title from egcrstt1, eggradm1, egexamm1 ...
-     * This query should project its results into a DTO for type safety.
-     */
     @Query(value = "SELECT g.grad_lt, et.examtype_title " +
                    "FROM ec2.egcrstt1 e " +
                    "JOIN ec2.eggradm1 g ON e.obtgr_id = g.grad_id " +
                    "JOIN ec2.egexamm1 et ON e.examtype_id = et.examtype_id " +
                    "WHERE e.id.studId = :studentId AND e.id.tcrid = :termCourseId " +
-                   "AND e.rowStatus > '0' AND et.row_st > 0 " + // Assuming row_st in eggradm1 is also checked
+                   "AND e.rowStatus > '0' AND et.row_st > 0 " + 
                    "ORDER BY e.id.examtypeId DESC", nativeQuery = true)
     List<Object[]> findGradeAndExamTitle(@Param("studentId") String studentId, @Param("termCourseId") Long termCourseId);
 }
