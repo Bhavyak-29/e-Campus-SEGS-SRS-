@@ -159,7 +159,7 @@ public class GradeServiceImpl implements GradeService {
             Egcrstt1Id egcrstt1Id = new Egcrstt1Id();
             egcrstt1Id.setTcrid(Long.parseLong(form.getTerm()));
             egcrstt1Id.setExamtypeId(form.getExamtype());
-            egcrstt1Id.setStudId(form.getStudentId());
+            egcrstt1Id.setStudId(Long.parseLong(form.getStudentId()));
 
             Egcrstt1 egcrstt1 = new Egcrstt1();
             egcrstt1.setId(egcrstt1Id);

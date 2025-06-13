@@ -307,7 +307,13 @@
                                         <td th:text="${iter.index + 1}">1</td>
                                         <td th:text="${course[1]}">Course Name</td>
                                         <td th:text="${course[2]}">Code</td>
-                                        <td th:text="${regResults[reg.srgid][0]?.grade?.grdname != null ? regResults[reg.srgid][0]?.grade?.grdname : '-'}">-</td>
+                                        <td>
+                                            <div th:if="${gradeExamMap[course[0]] != null and !gradeExamMap[course[0]].isEmpty()}">
+                                                <div th:each="grade : ${gradeExamMap[course[0]]}"
+                                                     th:text="${grade[0]}"></div>
+                                            </div>
+                                            <div th:if="${gradeExamMap[course[0]] == null or gradeExamMap[course[0]].isEmpty()}">-</div>
+                                        </td>                                                                              
                                         <td th:text="${course[4]}">-</td>
                                     </tr>
                                 </tbody>

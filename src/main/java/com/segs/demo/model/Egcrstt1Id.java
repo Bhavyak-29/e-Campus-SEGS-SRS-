@@ -9,7 +9,7 @@ public class Egcrstt1Id implements Serializable {
 
     private Long tcrid;
     private Long examtypeId;
-    private String studId;
+    private Long studId;
 
     // Getters and setters
 
@@ -29,11 +29,11 @@ public class Egcrstt1Id implements Serializable {
         this.examtypeId = examtypeId;
     }
 
-    public String getStudId() {
+    public Long getStudId() {
         return studId;
     }
 
-    public void setStudId(String studId) {
+    public void setStudId(Long studId) {
         this.studId = studId;
     }
 

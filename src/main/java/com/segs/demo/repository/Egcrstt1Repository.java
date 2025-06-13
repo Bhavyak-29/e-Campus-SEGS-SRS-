@@ -16,12 +16,18 @@ public interface Egcrstt1Repository extends JpaRepository<Egcrstt1, Egcrstt1Id> 
     @Query("SELECT DISTINCT e.id.examtypeId FROM Egcrstt1 e WHERE e.id.tcrid = :tcrid")
     List<Long> findDistinctExamTypeIdsByTcrid(@Param("tcrid") Long tcrid);
 
-    @Query(value = "SELECT g.grad_lt, et.examtype_title " +
-                   "FROM ec2.egcrstt1 e " +
-                   "JOIN ec2.eggradm1 g ON e.obtgr_id = g.grad_id " +
-                   "JOIN ec2.egexamm1 et ON e.examtype_id = et.examtype_id " +
-                   "WHERE e.id.studId = :studentId AND e.id.tcrid = :termCourseId " +
-                   "AND e.rowStatus > '0' AND et.row_st > 0 " + 
-                   "ORDER BY e.id.examtypeId DESC", nativeQuery = true)
-    List<Object[]> findGradeAndExamTitle(@Param("studentId") String studentId, @Param("termCourseId") Long termCourseId);
+    List<Egcrstt1> findAllById_StudId(Long studId);
+
+    @Query(value = """
+    SELECT g.grad_lt, et.examtype_title
+    FROM ec2.egcrstt1 e
+    JOIN ec2.eggradm1 g ON e.obtgr_id = g.grad_id
+    JOIN ec2.egexamm1 et ON e.examtype_id = et.examtype_id
+    WHERE e.stud_id = :studentId
+      AND e.tcrid = :termCourseId
+      AND e.row_st <> 'D'
+      AND et.row_st > 0
+    ORDER BY e.examtype_id DESC
+    """, nativeQuery = true)
+    List<Object[]> findGradeAndExamTitle(@Param("studentId") Long studentId, @Param("termCourseId") Long termCourseId);
 }

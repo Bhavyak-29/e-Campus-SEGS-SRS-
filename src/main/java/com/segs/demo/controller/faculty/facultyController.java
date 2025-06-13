@@ -27,6 +27,7 @@ import com.segs.demo.model.AcademicYear;
 import com.segs.demo.model.Address;
 import com.segs.demo.model.Course;
 import com.segs.demo.model.Egcrstt1;
+import com.segs.demo.model.Eggradm1;
 import com.segs.demo.model.Grade;
 import com.segs.demo.model.Program;
 import com.segs.demo.model.Student;
@@ -40,6 +41,7 @@ import com.segs.demo.model.Batch;
 import com.segs.demo.repository.AddressRepository;
 import com.segs.demo.repository.BatchRepository;
 import com.segs.demo.repository.Egcrstt1Repository;
+import com.segs.demo.repository.Eggradm1Repository;
 import com.segs.demo.repository.ProgramRepository;
 import com.segs.demo.repository.StudentRegistrationCourseRepository;
 import com.segs.demo.repository.StudentRegistrationRepository;
@@ -90,6 +92,9 @@ public class facultyController {
 
     @Autowired
     private Egcrstt1Repository Egcrstt1Repository;
+
+    @Autowired
+    private Eggradm1Repository Eggradm1Repository;
 
 
     @RequestMapping("/directGradeEntry")
@@ -188,38 +193,65 @@ public class facultyController {
     }
 
     @GetMapping("/students/{id}")
-    public String showStudentInfo(@PathVariable String id, @RequestParam(value = "from", required = false) String from, Model model) {
+    public String showStudentInfo(
+            @PathVariable String id,
+            @RequestParam(value = "from", required = false) String from,
+            Model model) {
+    
         List<Student> students = studentRepository.findStudentByInstIdWithLatestRegistration(id);
         if (students.isEmpty()) return "error/404";
         Student student = students.get(0);
-
+    
         StudentProfile profile = studentProfileRepository.findBystdid(student.getStdid());
-
+    
         List<Long> addressIds = new ArrayList<>();
         if (student.getPrmtAdrId() != null) addressIds.add(student.getPrmtAdrId());
         if (student.getCurrAdrId() != null) addressIds.add(student.getCurrAdrId());
-
+    
         List<Address> addresses = addressRepository.findAddressesByIdsWithCustomOrder(
-                addressIds,
-                student.getCurrAdrId(),
-                student.getPrmtAdrId()
-        );
-
-        Address currAddr = addresses.stream().filter(a -> a.getAdrid().equals(student.getCurrAdrId())).findFirst().orElse(null);
-        Address permAddr = addresses.stream().filter(a -> a.getAdrid().equals(student.getPrmtAdrId())).findFirst().orElse(null);
-
+                addressIds, student.getCurrAdrId(), student.getPrmtAdrId());
+    
+        Address currAddr = addresses.stream()
+                .filter(a -> a.getAdrid().equals(student.getCurrAdrId()))
+                .findFirst().orElse(null);
+    
+        Address permAddr = addresses.stream()
+                .filter(a -> a.getAdrid().equals(student.getPrmtAdrId()))
+                .findFirst().orElse(null);
+    
         List<StudentRegistrations> registrations = studentRegistrationsRepository
                 .findAllRegistrationsByStudentIdOrderBySemesterSequence(student.getStdid());
-
+    
         Map<Long, List<Object[]>> regCourses = new LinkedHashMap<>();
         Map<Long, List<StudentSemesterResult>> regResults = new LinkedHashMap<>();
-
+    
         for (StudentRegistrations reg : registrations) {
             regCourses.put(reg.getSrgid(), studentRegistrationCourseRepository
                     .findActiveRegistrationCourseDetails(reg.getSrgid()));
             regResults.put(reg.getSrgid(), studentSemesterResultRepository
                     .findByStudentRegistration_SrgidAndRowStateGreaterThan(reg.getSrgid(), (short) 0));
         }
+    
+        // === Egcrstt1 Result Grouping ===
+        List<Egcrstt1> resultRecords = Egcrstt1Repository.findAllById_StudId(student.getStdid());
+    
+        Map<Long, List<Egcrstt1>> resultsGrouped = resultRecords.stream()
+                .filter(r -> !"D".equalsIgnoreCase(r.getRowStatus()))
+                .collect(Collectors.groupingBy(r -> r.getId().getTcrid(), LinkedHashMap::new, Collectors.toList()));
+    
+        // === Grade + Exam Title Table Data ===
+        Map<Long, List<Object[]>> gradeExamMap = new LinkedHashMap<>();
+        for (Long tcrid : resultsGrouped.keySet()) {
+            List<Object[]> gradeAndTitles = Egcrstt1Repository.findGradeAndExamTitle(student.getStdid(), tcrid);
+            gradeExamMap.put(tcrid, gradeAndTitles);
+        }
+    
+        // === Grade Info Map (ID to Grade Master) ===
+        Map<Integer, Eggradm1> gradeMap = Eggradm1Repository.findAll().stream()
+                .filter(g -> g.getGrad_id() != null)
+                .collect(Collectors.toMap(g -> g.getGrad_id().intValue(), g -> g));
+    
+        // === Model Attributes ===
         model.addAttribute("student", student);
         model.addAttribute("profile", profile);
         model.addAttribute("permAddress", permAddr);
@@ -228,8 +260,14 @@ public class facultyController {
         model.addAttribute("regCourses", regCourses);
         model.addAttribute("regResults", regResults);
         model.addAttribute("fromPage", from);
+    
+        model.addAttribute("egcrResults", resultsGrouped);          // grouped raw Egcrstt1 rows
+        model.addAttribute("gradeMap", gradeMap);                   // grade ID → object
+        model.addAttribute("gradeExamMap", gradeExamMap);           // tcrid → list of [grad_lt, examtype_title]
+    
         return "student_details";
     }
+    
 
     // StudentInfo → Batchwise
     @GetMapping("/students/batch")
