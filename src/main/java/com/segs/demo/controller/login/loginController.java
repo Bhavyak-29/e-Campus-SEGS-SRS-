@@ -1,6 +1,6 @@
 package com.segs.demo.controller.login;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -8,23 +8,36 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 public class loginController {
 
-    // @Autowired
-    // private loginservice loginService;
-
-    // This returns the login form at /login (GET)
-    @GetMapping("/login")
-    public String loginPage() {
-        return "login"; // Make sure login.html is inside /templates
+    private static final Map<String, Integer> userIdMap = new HashMap<>();
+    static {
+        userIdMap.put("admin", 2026);
+        userIdMap.put("faculty1", 687);
+        userIdMap.put("faculty2", 659);
+        userIdMap.put("faculty3", 688);
+        userIdMap.put("faculty4", 675);
+        userIdMap.put("faculty5", 1147);
     }
 
-    // This is the post-login landing page
+    @GetMapping("/login")
+    public String loginPage() {
+        return "login"; 
+    }
+
     @RequestMapping("/")
     public String postLoginRedirect(HttpServletRequest request, HttpSession session, Authentication authentication, ModelMap model) {
-        session.setAttribute("userid", 1001);
-        // Get the authenticated user's username
-        return "segsMenuFaculty"; // Your home page
+        if (authentication != null) {
+            String username = authentication.getName();
+
+            Integer userid = userIdMap.getOrDefault(username, -1);
+            session.setAttribute("username",username);
+            session.setAttribute("userid", userid);
+        }
+        return "segsMenuFaculty"; 
     }
 }

@@ -13,6 +13,8 @@ import com.segs.demo.model.ExamType;
 import com.segs.demo.model.Term;
 import com.segs.demo.service.AcademicService;
 
+import jakarta.servlet.http.HttpSession;
+
 
 
 @RestController
@@ -28,8 +30,17 @@ public class GradeEntryApiController {
     }
 
     @GetMapping("/courses")
-    public List<CourseDTO> getCoursesByTerm(@RequestParam Long TRMID) {
-        return academicService.getCoursesByTerm(TRMID);
+    public List<CourseDTO> getCoursesByTerm(
+            @RequestParam Long TRMID,
+            HttpSession session) {
+                
+        Integer userId = (Integer) session.getAttribute("userid"); // get userid from session
+
+        if (userId == null) {
+            throw new RuntimeException("User ID not found in session.");
+        }
+
+        return academicService.getCoursesByTermAndFaculty(TRMID, userId.longValue());
     }
 
     @GetMapping("/exam-types")

@@ -15,5 +15,7 @@ public interface TermCourseRepository extends JpaRepository<TermCourse, Long> {
     @Query("SELECT t.id FROM TermCourse t WHERE t.course.id = :crsid AND t.term.id = :trmid")
     Long findTcridByCrsidAndTrmid(@Param("crsid") Long crsid, @Param("trmid") Long trmid);
 
+    List<TermCourse> findByTerm_IdAndUser_UserId(Long trmId, Long userId);
+
 
 }

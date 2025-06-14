@@ -2,13 +2,11 @@ package com.segs.demo.controller.faculty;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
-import java.util.Comparator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.segs.demo.model.AcademicYear;
 import com.segs.demo.model.Address;
+import com.segs.demo.model.Batch;
 import com.segs.demo.model.Course;
 import com.segs.demo.model.Egcrstt1;
 import com.segs.demo.model.Eggradm1;
@@ -36,19 +35,17 @@ import com.segs.demo.model.StudentProfile;
 import com.segs.demo.model.StudentRegistrations;
 import com.segs.demo.model.StudentSemesterResult;
 import com.segs.demo.model.Term;
-import com.segs.demo.model.Batch;
-
 import com.segs.demo.repository.AddressRepository;
 import com.segs.demo.repository.BatchRepository;
 import com.segs.demo.repository.Egcrstt1Repository;
 import com.segs.demo.repository.Eggradm1Repository;
 import com.segs.demo.repository.ProgramRepository;
+import com.segs.demo.repository.StudentProfileRepository;
 import com.segs.demo.repository.StudentRegistrationCourseRepository;
 import com.segs.demo.repository.StudentRegistrationRepository;
 import com.segs.demo.repository.StudentRegistrationsRepository;
 import com.segs.demo.repository.StudentRepository;
 import com.segs.demo.repository.StudentSemesterResultRepository;
-import com.segs.demo.repository.StudentProfileRepository;
 import com.segs.demo.service.GradeService;
 import com.segs.demo.service.facultyService;
 
@@ -112,6 +109,12 @@ public class facultyController {
         return "directGradeEntry";
     }
     
+    @GetMapping("/directGradeEntry/gradeLeftFrame")
+    public String showGradeLeftFrame() {
+        return "gradeLeftFrame"; // make sure this matches your Thymeleaf template
+    }
+
+
     @PostMapping("/directGradeEntry/gradeLeftFrame")
     public String showLeftFrame(
             @RequestParam("AYRID") Long ayrid,

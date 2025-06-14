@@ -33,8 +33,6 @@ public class GradeController {
     @Autowired
     private TermCourseRepository termCourseRepository;
 
-
-
     @GetMapping("/upload")
     public String showUploadForm(ModelMap model,HttpSession session) {
         // Get CRSID, TRMID, and EXAMTYPEID from session
@@ -63,24 +61,7 @@ public class GradeController {
         model.addAttribute("gradeForm", gradeForm); // Optional
 
         return "upload-grades";
-    }
-
-    // @PostMapping("/upload")
-    // public String uploadGrades(@ModelAttribute("gradeForm") @Valid GradeUploadForm form,
-    //                            BindingResult result,
-    //                            HttpSession session,
-    //                            ModelMap model) {
-
-    //     if (result.hasErrors()) {
-    //         model.addAttribute("error", "Please fill all required fields correctly.");
-    //         return "upload-grades";
-    //     }
-
-    //     String responseMessage = gradeService.uploadGrades(form, session);
-    //     model.addAttribute("message", responseMessage);
-    //     return "upload-grades";
-    // }
-    
+    }    
 
     @PostMapping("/upload")
     public String saveGrades(@ModelAttribute("gradeForm") StudentGradeDTOWrapper gradeWrapper,
@@ -102,20 +83,15 @@ public class GradeController {
             return "redirect:/directGradeEntry/gradeOptions";
         }
 
-        // --- IMPORTANT CHANGE STARTS HERE ---
-        // Filter the gradesList to include only students selected for update
         List<StudentGradeDTO> gradesToProcess = gradeWrapper.getGradesList().stream()
                                                     .filter(StudentGradeDTO::isSelectedForUpdate)
                                                     .collect(Collectors.toList());
 
-        // Check if any grades were selected for update
         if (gradesToProcess.isEmpty()) {
             redirectAttributes.addFlashAttribute("warning", "No students were selected for grade update.");
             return "redirect:/directGradeEntry/gradeOptions";
         }
-        // --- IMPORTANT CHANGE ENDS HERE ---
-
-        // Pass the filtered list to the service
+        
         gradeService.saveOrUpdateGrades(gradesToProcess, tcrid, examTypeId);
         redirectAttributes.addFlashAttribute("success", "Grades updated successfully!");
 

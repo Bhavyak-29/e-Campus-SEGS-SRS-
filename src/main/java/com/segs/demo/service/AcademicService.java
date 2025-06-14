@@ -40,6 +40,14 @@ public class AcademicService {
         return courses.stream().map(tc -> new CourseDTO(tc.getCourse().getId(), tc.getCourse().getCode(), tc.getCourse().getName())).toList();
     }
 
+    public List<CourseDTO> getCoursesByTermAndFaculty(Long TRMID, Long userId) {
+        
+        List<TermCourse> courses = termCourseRepo.findByTerm_IdAndUser_UserId(TRMID, userId);
+            return courses.stream()
+                .map(tc -> new CourseDTO(tc.getCourse().getId(), tc.getCourse().getCode(), tc.getCourse().getName()))
+                .toList();
+    }
+
     public List<ExamType> getExamTypesByCourseAndTerm(Long crsid, Long trmid) {
         Long tcrid = termCourseRepo.findTcridByCrsidAndTrmid(crsid, trmid);
         if (tcrid == null) {

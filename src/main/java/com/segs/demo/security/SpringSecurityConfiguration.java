@@ -14,14 +14,18 @@ import static org.springframework.security.config.Customizer.withDefaults;
 
 @Configuration
 public class SpringSecurityConfiguration {
-    // LDAP or Database
     @Bean
     public InMemoryUserDetailsManager createUserDetailsManager(){
         
         UserDetails userDetails1 = createNewUser("admin", "admin");
         UserDetails userDetails2 = createNewUser("sumit", "vish");
-        
-        return new InMemoryUserDetailsManager(userDetails1,userDetails2);
+        UserDetails userDetails3 = createNewUser("faculty1", "faculty1");
+        UserDetails userDetails4 = createNewUser("faculty2", "faculty2");
+        UserDetails userDetails5 = createNewUser("faculty3", "faculty3");
+        UserDetails userDetails6 = createNewUser("faculty4", "faculty4");
+        UserDetails userDetails7 = createNewUser("faculty5", "faculty5");
+
+        return new InMemoryUserDetailsManager(userDetails1,userDetails2,userDetails3,userDetails4,userDetails5,userDetails6,userDetails7);
     }
     private UserDetails createNewUser(String username, String password) {
         Function<String,String> passwordEncoder = input -> passwordEncoder().encode(input);
@@ -37,22 +41,14 @@ public class SpringSecurityConfiguration {
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
-
-    // whenever a web request comes in it is processed by the chain first
     
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{  // we take HttpSecurity object to implement our own rules
-        
-        // this implements that whenever we refer to any url in our domain....it must
-        // be authenticated first, then only we would be able to see those webpages
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{  
         http.authorizeHttpRequests(
             auth -> auth
             .requestMatchers("/images/**", "/css/**", "/js/**").permitAll()
             .anyRequest().authenticated()
             );
-        //All incoming HTTP requests must be authenticated (i.e. logged in)
-        
-        
         http.formLogin(form -> form
             .loginPage("/login")
             .defaultSuccessUrl("/", true)

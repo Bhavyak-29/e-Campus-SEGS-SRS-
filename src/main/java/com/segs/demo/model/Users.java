@@ -1,22 +1,25 @@
 package com.segs.demo.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import jakarta.persistence.Column;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "users", schema = "ec2")
 public class Users {
 
     @Id
+    @Column(name= "uid")
     private int userId;
 
-    @Column(nullable = false)
+    @Column(name= "uname")
     private String userName;
 
-    @Column(nullable = false, unique = true)
+    @Column(name="uemail")
     private String userMailId;
 
-    @Column(nullable = false)
+    @Column(name="urole_0")
     private String userCategory;
 
     // Constructors
