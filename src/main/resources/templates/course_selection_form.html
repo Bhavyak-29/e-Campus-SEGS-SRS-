@@ -1,25 +1,28 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Student Registrations</title>
+    <title>Course-wise Registered Students</title>
+    <!-- Bootstrap CSS + JS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" th:href="@{/css/ecampus.css}" />
 </head>
 <body>
 
-<!-- Header & Navigation -->
-<table style="width:100%;">
+<table>
+    <!-- Top Bar -->
     <tr>
         <td colspan="3" class="top-bar">
-            <a href="/" style="text-decoration: none; color: inherit;">
-                <span style="font-size: 24px; font-weight: bold; cursor: pointer;">DA-IICT</span>
-            </a>
-            <span style="font-size: 16px;">&nbsp;Dhirubhai Ambani Institute of Information & Communication Technology</span>
+            <div class="top-bar-content">
+                <a href="/" class="brand-name">DA-IICT</a>
+                <span class="brand-description">
+                    Dhirubhai Ambani Institute of Information & Communication Technology
+                </span>
+            </div>
         </td>
     </tr>
-    
+
+    <!-- Navigation -->
     <tr class="nav-bar">
         <td colspan="3">
             <table width="100%">
@@ -105,46 +108,52 @@
             </table>
         </td>
     </tr>
+
+    <!-- Content -->
+    <tr>
+        <td class="sidemenu"></td>
+        <td class="content">
+
+            <div class="container mt-4">
+                <div th:if="${registeredCourses != null}">
+                    <hr class="my-4">
+                    <h5 th:text="'Academic Year: ' + ${ayrname} + ', Term: ' + ${trmname}"></h5>
+
+                    <form method="get" th:action="@{/registrations/courses/students}">
+                        <input type="hidden" name="academicYearId" th:value="${academicYearId}" />
+                        <input type="hidden" name="termId" th:value="${termId}" />
+
+                        <div class="mb-3">
+                            <label for="termCourseId" class="form-label">Select Course</label>
+                            <select id="termCourseId" name="termCourseId" class="form-select" required>
+                                <option value="">-- Select Course --</option>
+                                <option th:each="row : ${registeredCourses}" 
+                                        th:value="${row[3]}" 
+                                        th:text="${row[0]} + ' - ' + ${row[1]} + ' (Sem ' + ${row[2]} + ')'">
+                                </option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-success">View Registered Students</button>
+                    </form>
+                </div>
+
+            </div>
+
+        </td>
+        <td class="sidemenu"></td>
+    </tr>
+
+    <!-- Footer -->
+    <tr>
+        <td class="sidemenu"></td>
+        <td class="footer" colspan="1">
+            &copy; 2002 DA-IICT, Near Indroda Circle, Ahmedabad-Gandhinagar Highway, Gandhinagar - 382 009, Gujarat, India.<br>
+            Designed, developed and maintained by Bhavya, Sumit & Harsh
+        </td>
+        <td class="sidemenu"></td>
+    </tr>
 </table>
-
-<!-- Main Content -->
-<div class="container mt-5">
-    <div class="text-center mb-4">
-        <h2 th:text="'Registrations for ' + ${student.stdfirstname} + ' ' + ${student.stdlastname} + ' (' + ${student.stdinstid} + ')'">Student Registration Details</h2>
-    </div>
-
-    <div th:each="reg : ${registrations}" class="mb-4">
-        <h4 class="text-primary" th:text="'Semester: ' + ${reg.semester.strname}"></h4>
-
-        <table class="table table-bordered table-striped">
-            <thead class="table-dark">
-                <tr>
-                    <th>S.No</th>
-                    <th>Course Name</th>
-                    <th>Course Code</th>
-                    <th>Registration Type</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="course, stat : ${regCourses[reg.srgid]}">
-                    <td th:text="${stat.index + 1}">1</td>
-                    <td th:text="${course[1]} + ' ' + ${course[4]} + ' (' + ${course[5]} + '+' + ${course[6]} + '+' + ${course[7]} + ')'">Course Details</td>
-                    <td th:text="${course[2]}">Code</td>
-                    <td th:text="${#strings.equalsIgnoreCase(course[3], 'AUDIT') ? 'AUDIT' : 'REGULAR'}">REGULAR</td>
-                </tr>
-                <tr th:if="${#lists.isEmpty(regCourses[reg.srgid])}">
-                    <td colspan="4" class="text-center">No Registration</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
-
-<!-- Footer -->
-<div class="footer mt-5 text-center">
-    &copy; 2002 DA-IICT, Near Indroda Circle, Ahmedabad-Gandhinagar Highway, Gandhinagar - 382 009, Gujarat, India.<br>
-    Designed, developed and maintained by Bhavya, Sumit & Harsh
-</div>
 
 </body>
 </html>

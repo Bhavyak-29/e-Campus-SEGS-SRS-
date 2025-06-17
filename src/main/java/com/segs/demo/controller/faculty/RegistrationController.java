@@ -166,4 +166,50 @@ public class RegistrationController {
         model.addAttribute("students", students);
         return "registered_students"; // simple list table
     }
+
+    @GetMapping("/courses")
+    public String showCourseSelectorPage(@RequestParam(required = false) Long academicYearId,
+                                        Model model) {
+
+        List<AcademicYear> academicYears = academicYearRepository.findByRowStateGreaterThan(0);
+        model.addAttribute("academicYears", academicYears);
+        model.addAttribute("academicYearId", academicYearId);
+
+        // Load terms dynamically if academic year selected
+        List<Term> terms = new ArrayList<>();
+        if (academicYearId != null) {
+            terms = termRepository.findByAcademicYear_Id(academicYearId);
+            model.addAttribute("terms", terms);
+        }
+
+        return "course_selector"; // new Thymeleaf page
+    }
+    
+    @GetMapping("/courses/term")
+    public String showCoursesInTerm(
+        @RequestParam Long academicYearId,
+        @RequestParam Long termId,
+        Model model
+    ) {
+        List<Object[]> registeredCourses = studentRegistrationCourseRepository.findRegisteredCoursesForTerm(termId);
+        AcademicYear ay = academicYearRepository.findById(academicYearId).orElse(null);
+        Term term = termRepository.findById(termId).orElse(null);
+
+        model.addAttribute("registeredCourses", registeredCourses);
+        model.addAttribute("academicYearId", academicYearId);
+        model.addAttribute("termId", termId);
+        model.addAttribute("ayrname", ay != null ? ay.getName() : "");
+        model.addAttribute("trmname", term != null ? term.getName() : "");
+
+        return "course_selection_form"; // course dropdown + submit button
+    }
+
+    @GetMapping("/courses/students")
+    public String showStudentsForSelectedCourse(@RequestParam Long termCourseId, Model model) {
+        List<Object[]> students = studentRegistrationCourseRepository
+            .findActiveStudentsByTermCourseId(termCourseId);
+        model.addAttribute("students", students);
+        return "registered_students";
+    }
+
 }
