@@ -27,4 +27,5 @@ public interface StudentRegistrationCourseRepository extends JpaRepository<Stude
             //"AND (SELECT count(*) FROM ec2.work_trail wt WHERE wt.work_id = :registrationId AND wt.work_type_code = 21 AND wt.node_number = 3 AND wt.response_code = 1) > 0 " +
             "ORDER BY c.crsname", nativeQuery = true)
     List<Object[]> findActiveRegistrationCourseDetails(@Param("registrationId") Long registrationId);
+
 }
