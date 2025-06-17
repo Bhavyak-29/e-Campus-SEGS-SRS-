@@ -136,7 +136,15 @@
                         style="white-space: nowrap;">⬅ Back to Menu</a>
             </div>
             <h2 th:text="'Grades for ' + ${courseName} + ' (' + ${termName} + ')'"></h2>
-    <canvas id="gradeChart" width="800" height="400"></canvas>
+            <canvas id="gradeChart"
+                    width="650"
+                    height="650"
+                    style="max-width: 900px;
+                        margin: 30px auto;
+                        display: block;
+                        border-radius: 12px;
+                        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.52);">
+            </canvas>
         </td>
         <td class="sidemenu"></td>
     </tr>
@@ -157,9 +165,14 @@
     fetch('/grades/chart-data')
         .then(res => res.json())
         .then(data => {
-            const gradeMap = { "AA": "AA", "AB": "AB", "BB": "BB", "BC": "BC", "CC": "CC", "CD": "CD", "DD": "DD", "F": "F" };
+            const gradeMap = {
+                "AA": "AA", "AB": "AB", "BB": "BB", "BC": "BC",
+                "CC": "CC", "CD": "CD", "DD": "DD", "F": "F"
+            };
+
             const gradeCounts = {
-                "AA": 0, "AB": 0, "BB": 0, "BC": 0, "CC": 0, "CD": 0, "DE": 0, "F": 0
+                "AA": 0, "AB": 0, "BB": 0, "BC": 0,
+                "CC": 0, "CD": 0, "DD": 0, "F": 0
             };
 
             data.forEach(student => {
@@ -169,19 +182,33 @@
                 }
             });
 
-            const labels = Object.keys(gradeCounts).sort(); // Optional: Use fixed order instead of sorting alphabetically
+            const labels = Object.keys(gradeCounts); // preserve original grade order
             const counts = labels.map(grade => gradeCounts[grade]);
+
+            const backgroundColors = [
+                'rgb(23, 6, 178)', 
+                'rgba(237, 24, 24, 0.88)',  // Royal Blue
+                
+                'rgb(6, 139, 156)',  // Emerald Green
+                'rgb(170, 82, 0)',
+                'rgb(225, 9, 121)',  // Soft Orange   // Soft Red
+                 // Sky Blue
+                'rgb(128, 9, 9)',  // Soft Purple
+                'rgba(164, 175, 13, 0.74)',  // Rose Pink
+                'rgb(2, 90, 56)',  // Neon Cyan
+            ];  
+
+
 
             const ctx = document.getElementById('gradeChart').getContext('2d');
             new Chart(ctx, {
-                type: 'bar',
+                type: 'pie',
                 data: {
                     labels: labels,
                     datasets: [{
                         label: 'Number of Students',
                         data: counts,
-                        backgroundColor: 'rgba(7, 123, 152, 0.67)',
-                        borderRadius: 5,
+                        backgroundColor: backgroundColors,
                         borderWidth: 1
                     }]
                 },
@@ -190,49 +217,15 @@
                     plugins: {
                         title: {
                             display: true,
-                            text: 'Number of Students vs Grade ',
+                            text: 'Number of Students vs Grade',
                             font: {
-                                size: 20,
+                                size: 18,
                                 weight: 'bold'
                             }
                         },
                         legend: {
+                            position: 'bottom',
                             labels: {
-                                font: {
-                                    size: 14,
-                                    weight: 'bold'
-                                }
-                            }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            title: {
-                                display: true,
-                                text: 'Number of Students',
-                                font: {
-                                    size: 22,
-                                    weight: 'bold'
-                                }
-                            },
-                            ticks: {
-                                font: {
-                                    size: 14,
-                                    weight: 'bold'
-                                }
-                            }
-                        },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Grade ',
-                                font: {
-                                    size: 22,
-                                    weight: 'bold'
-                                }
-                            },
-                            ticks: {
                                 font: {
                                     size: 14,
                                     weight: 'bold'
@@ -244,6 +237,7 @@
             });
         });
 </script>
+
 
 
 </body>

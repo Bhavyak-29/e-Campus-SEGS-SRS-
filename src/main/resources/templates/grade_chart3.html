@@ -136,7 +136,9 @@
                         style="white-space: nowrap;">⬅ Back to Menu</a>
             </div>
             <h2 th:text="'Grades for ' + ${courseName} + ' (' + ${termName} + ')'"></h2>
-    <canvas id="gradeChart" width="800" height="400"></canvas>
+            <div style="width: 100%; max-width: 650px; height: 450px; margin: auto;">
+                <canvas id="gradeChart"></canvas>
+            </div>
         </td>
         <td class="sidemenu"></td>
     </tr>
@@ -157,52 +159,59 @@
     fetch('/grades/chart-data')
         .then(res => res.json())
         .then(data => {
-            const gradeMap = { "AA": "AA", "AB": "AB", "BB": "BB", "BC": "BC", "CC": "CC", "CD": "CD", "DD": "DD", "F": "F" };
+            const gradeOrder = ["AA", "AB", "BB", "BC", "CC", "CD", "DD", "F"];
             const gradeCounts = {
-                "AA": 0, "AB": 0, "BB": 0, "BC": 0, "CC": 0, "CD": 0, "DE": 0, "F": 0
+                "AA": 0, "AB": 0, "BB": 0, "BC": 0, "CC": 0, "CD": 0, "DD": 0, "F": 0
             };
 
             data.forEach(student => {
-                const point = gradeMap[student.grade];
-                if (point !== undefined) {
-                    gradeCounts[point]++;
+                const grade = student.grade;
+                if (gradeCounts.hasOwnProperty(grade)) {
+                    gradeCounts[grade]++;
                 }
             });
 
-            const labels = Object.keys(gradeCounts).sort(); // Optional: Use fixed order instead of sorting alphabetically
+            const labels = gradeOrder;
             const counts = labels.map(grade => gradeCounts[grade]);
 
             const ctx = document.getElementById('gradeChart').getContext('2d');
             new Chart(ctx, {
-                type: 'bar',
+                type: 'line',
                 data: {
                     labels: labels,
                     datasets: [{
                         label: 'Number of Students',
                         data: counts,
-                        backgroundColor: 'rgba(7, 123, 152, 0.67)',
-                        borderRadius: 5,
-                        borderWidth: 1
+                        fill: false,
+                        borderColor: 'rgba(7, 123, 152, 0.67)',
+                        backgroundColor: 'rgba(0, 0, 0, 0.67)',
+                        tension: 0.4,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        pointStyle: 'circle',
+                        borderWidth: 3
                     }]
                 },
                 options: {
                     responsive: true,
+                    maintainAspectRatio: false,
                     plugins: {
                         title: {
                             display: true,
-                            text: 'Number of Students vs Grade ',
+                            text: 'Grade Distribution',
                             font: {
                                 size: 20,
                                 weight: 'bold'
-                            }
+                            },
+                            padding: { top: 10, bottom: 20 }
                         },
                         legend: {
-                            labels: {
-                                font: {
-                                    size: 14,
-                                    weight: 'bold'
-                                }
-                            }
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(7, 123, 152, 0.67)',
+                            titleFont: { size: 14, weight: 'bold' },
+                            bodyFont: { size: 13 }
                         }
                     },
                     scales: {
@@ -211,32 +220,27 @@
                             title: {
                                 display: true,
                                 text: 'Number of Students',
-                                font: {
-                                    size: 22,
-                                    weight: 'bold'
-                                }
+                                font: { size: 22, weight: 'bold' }
+                            },
+                            grid: {
+                                color: '#e0e0e0',
+                                borderDash: [5, 5]
                             },
                             ticks: {
-                                font: {
-                                    size: 14,
-                                    weight: 'bold'
-                                }
+                                font: { size: 18 }
                             }
                         },
                         x: {
                             title: {
                                 display: true,
-                                text: 'Grade ',
-                                font: {
-                                    size: 22,
-                                    weight: 'bold'
-                                }
+                                text: 'Grade',
+                                font: { size: 22, weight: 'bold' }
+                            },
+                            grid: {
+                                display: false
                             },
                             ticks: {
-                                font: {
-                                    size: 14,
-                                    weight: 'bold'
-                                }
+                                font: { size: 18 }
                             }
                         }
                     }
@@ -244,6 +248,7 @@
             });
         });
 </script>
+
 
 
 </body>

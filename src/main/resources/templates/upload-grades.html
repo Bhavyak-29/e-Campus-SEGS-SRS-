@@ -53,11 +53,27 @@
                                     Reports (Your Course)
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">Marks</a></li>
-                                    <li><a class="dropdown-item" href="#">Results</a></li>
+                                <li><a class="dropdown-item" href="#">Marks</a></li>
+
+                                <li class="dropdown-submenu position-relative">
+                                    <a class="dropdown-item dropdown-toggle" href="#">Result</a>
+                                    <ul class="dropdown-menu">
+                                                
+                                                <li class="dropdown-submenu position-relative">
+                                                    <a class="dropdown-item dropdown-toggle" href="#">Grade Freq</a>
+                                                    <ul class="dropdown-menu">
+                                                        <li><a class="dropdown-item" href="/directGradeEntry/grades/chart-view">Bar Graph</a></li>
+                                                        <li><a class="dropdown-item" href="/directGradeEntry/grades/chart-view2">Pie Chart</a></li>
+                                                        <li><a class="dropdown-item" href="/directGradeEntry/grades/chart-view3">Line Graph</a></li>
+                                                    </ul>
+                                                </li>
+
+                                                <li><a class="dropdown-item" href="/directGradeEntry/gradeOptions">Grade List</a></li>
+                                            </ul>
+                                        </li>
+                                        
                                     <li><a class="dropdown-item" href="#">Course Evaluation</a></li>
-                                    <li><a class="dropdown-item" href="#">Attendance Report</a></li>
-                                </ul>
+                            </ul>
                             </div>
                         </td>
                         <td>
@@ -125,7 +141,7 @@
 
     <div class="container mt-5">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <a href="/directGradeEntry/gradeLeftFrame" class="btn btn-outline-primary ms-3"
+            <a href="/directGradeEntry/gradeLeftFrame" class="btn btn-dark ms-3"
                 style="white-space: nowrap;">⬅ Back to Menu</a>
         </div>
         <div class="w-75 mx-auto card shadow p-4">

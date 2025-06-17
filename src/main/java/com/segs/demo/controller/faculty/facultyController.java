@@ -148,6 +148,42 @@ public class facultyController {
 
         return "grade_chart"; 
     }
+     @GetMapping("/directGradeEntry/grades/chart-view2")
+    public String showChartView2(HttpSession session, ModelMap model) {
+        Long crsid = (Long) session.getAttribute("CRSID");
+        Long trmid = (Long) session.getAttribute("TRMID");
+        Long examTypeId = (Long) session.getAttribute("examTypeId");
+
+        if (crsid == null || trmid == null || examTypeId == null) {
+            model.addAttribute("error", "Session expired or missing data. Please reselect options.");
+            return "redirect:/directGradeEntry/gradeOptions";
+        }
+
+        String termName = gradeService.getTermName(trmid);
+        String courseName = gradeService.getCourseName(crsid);
+        model.addAttribute("termName", termName);
+        model.addAttribute("courseName", courseName);
+
+        return "grade_chart2"; 
+    }
+    @GetMapping("/directGradeEntry/grades/chart-view3")
+    public String showChartView3(HttpSession session, ModelMap model) {
+        Long crsid = (Long) session.getAttribute("CRSID");
+        Long trmid = (Long) session.getAttribute("TRMID");
+        Long examTypeId = (Long) session.getAttribute("examTypeId");
+
+        if (crsid == null || trmid == null || examTypeId == null) {
+            model.addAttribute("error", "Session expired or missing data. Please reselect options.");
+            return "redirect:/directGradeEntry/gradeOptions";
+        }
+
+        String termName = gradeService.getTermName(trmid);
+        String courseName = gradeService.getCourseName(crsid);
+        model.addAttribute("termName", termName);
+        model.addAttribute("courseName", courseName);
+
+        return "grade_chart3"; 
+    }
 
     @RequestMapping("/directGradeEntry/gradeOptions")
     public String showGradeOptions(@RequestParam(required = false) List<String> selectedGrades,
