@@ -1,5 +1,9 @@
 
-        body {
+       @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+       @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap');
+
+       
+       body {
             background-image: url('/images/segsimg2.png'); /* or use Thymeleaf: url([[@{/images/segsbgimg.jpg}]]) */
             background-repeat: no-repeat;
             background-size: cover;
@@ -18,14 +22,37 @@
             border-collapse: collapse;
         }
 /* ========== Top Bar ========== */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap');
+
 .top-bar {
-    background: linear-gradient(90deg, #004080 0%, #0078d7 50%, #66ccff 100%);
-    padding: 12px 20px;
+    background: linear-gradient(90deg, #002855 0%, #00509e 50%, #00b4d8 100%);
+    padding: 8px 32px;
     color: white;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    font-size: 16px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    font-family: 'Montserrat', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
+
+.top-bar-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-name {
+    font-size: 26px;
+    font-weight: 700;
+    color: white;
+    text-decoration: none;
+    letter-spacing: 1px;
+}
+
+.brand-description {
+    font-size: 15px;
+    font-weight: 400;
+    color: #e0f7fa;
+    white-space: nowrap;
+}
+
 
 /* ========== Navbar ========== */
 .nav-bar {
@@ -146,10 +173,10 @@
             color: black;
         } */
         .btn-modern-nav {
-            background: linear-gradient(to left, #336699, #6699cc);
+            font-family: 'Montserrat', sans-serif;
+            background: linear-gradient(to right, #336699, #4d8fd0);
             color: white;
             font-weight: bold;
-            border-radius: 16px;
             transition: all 0.3s ease;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         }
@@ -160,13 +187,16 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         }
         .btn-logout-modern {
-            background: linear-gradient(to right, #cc0000, #ff3333);
+            font-family: 'Montserrat', sans-serif;
+            height: 36px;
+            line-height: 14px;
+            background: linear-gradient(to right, #cc0000, #ef4d4d);
             color: white;
-            font-weight: bold;
-            border: none;
-            border-radius: 6px;
             transition: all 0.3s ease;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            margin-top: 7px;
+            margin-bottom: 7px;
+            border-radius: 4px;
         }
 
         .btn-logout-modern:hover {

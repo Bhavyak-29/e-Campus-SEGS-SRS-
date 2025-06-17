@@ -130,6 +130,24 @@ public class facultyController {
 
         return "gradeLeftFrame";
     }
+    @GetMapping("/directGradeEntry/grades/chart-view")
+    public String showChartView(HttpSession session, ModelMap model) {
+        Long crsid = (Long) session.getAttribute("CRSID");
+        Long trmid = (Long) session.getAttribute("TRMID");
+        Long examTypeId = (Long) session.getAttribute("examTypeId");
+
+        if (crsid == null || trmid == null || examTypeId == null) {
+            model.addAttribute("error", "Session expired or missing data. Please reselect options.");
+            return "redirect:/directGradeEntry/gradeOptions";
+        }
+
+        String termName = gradeService.getTermName(trmid);
+        String courseName = gradeService.getCourseName(crsid);
+        model.addAttribute("termName", termName);
+        model.addAttribute("courseName", courseName);
+
+        return "grade_chart"; 
+    }
 
     @RequestMapping("/directGradeEntry/gradeOptions")
     public String showGradeOptions(@RequestParam(required = false) List<String> selectedGrades,
@@ -308,6 +326,9 @@ public class facultyController {
         model.addAttribute("students", students);
         return "batchwise_details";
     }
+
+
+    
 
     
 }

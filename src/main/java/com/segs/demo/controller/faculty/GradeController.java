@@ -5,12 +5,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -97,5 +99,25 @@ public class GradeController {
 
         return "redirect:/directGradeEntry/gradeOptions";
     }
+    @GetMapping("/chart-data")
+    @ResponseBody
+    public ResponseEntity<List<StudentGradeDTO>> getChartData(HttpSession session) {
+        Long crsid = (Long) session.getAttribute("CRSID");
+        Long trmid = (Long) session.getAttribute("TRMID");
+        Long examTypeId = (Long) session.getAttribute("examTypeId");
+
+        if (crsid == null || trmid == null || examTypeId == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        List<String> selectedGrades = List.of("AA", "AB", "BB", "BC", "CC", "CD", "DD", "F");
+
+        List<StudentGradeDTO> studentGrades = gradeService.getStudentGrades(crsid, trmid, examTypeId, selectedGrades);
+
+        return ResponseEntity.ok(studentGrades);
+    }
+
+    
+
 
 }
