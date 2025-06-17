@@ -1,10 +1,15 @@
 package com.segs.demo.controller.faculty;
 
+import com.segs.demo.model.AcademicYear;
+import com.segs.demo.model.Semester;
 import com.segs.demo.model.Student;
 import com.segs.demo.model.StudentRegistrations;
+import com.segs.demo.model.Term;
+import com.segs.demo.repository.AcademicYearRepository;
 import com.segs.demo.repository.StudentRegistrationCourseRepository;
 import com.segs.demo.repository.StudentRegistrationsRepository;
 import com.segs.demo.repository.StudentRepository;
+import com.segs.demo.repository.TermRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,6 +18,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+
+
+
 
 import java.util.*;
 
@@ -28,6 +36,12 @@ public class RegistrationController {
 
     @Autowired
     private StudentRegistrationCourseRepository studentRegistrationCourseRepository;
+
+    @Autowired
+    private TermRepository termRepository; 
+
+    @Autowired
+    private AcademicYearRepository academicYearRepository;
 
     @GetMapping("/search")
     public String searchStudents(
@@ -86,5 +100,70 @@ public class RegistrationController {
         model.addAttribute("regCourses", regCourses);
 
         return "registrations_studentwise";
+    }
+
+    @GetMapping("/term")
+    public String showFacultyCourses(@RequestParam(name = "academicYearId", required = false) Long academicYearId,
+                                    @RequestParam(name = "termId", required = false) Long termId,
+                                    @RequestParam(name = "semesterId", required = false) String semesterId,
+                                    Model model) {
+
+        // 1. Load academic years always
+        List<AcademicYear> academicYears = academicYearRepository.findByRowStateGreaterThan(0);
+        model.addAttribute("academicYears", academicYears);
+        model.addAttribute("academicYearId", academicYearId); // keep selected
+        
+        
+        // 2. Load terms only if academic year is selected
+        List<Term> terms = new ArrayList<>();
+        if (academicYearId != null) {
+            terms = termRepository.findByAcademicYear_Id(academicYearId);
+        }
+        model.addAttribute("terms", terms);
+        model.addAttribute("termId", termId); // keep selected
+        
+        if (academicYearId != null) {
+            AcademicYear selectedYear = academicYearRepository.findById(academicYearId).orElse(null);
+            if (selectedYear != null)
+                model.addAttribute("ayrname", selectedYear.getName());
+            
+        }
+        
+        if (termId != null) {
+            Term selectedTerm = termRepository.findById(termId).orElse(null);
+            if (selectedTerm != null)
+                model.addAttribute("trmname", selectedTerm.getName());
+        }
+
+        
+        // 3. Load semesters if term is selected
+        List<Semester> semesters = new ArrayList<>();
+        if (termId != null) {
+            semesters = studentRegistrationsRepository.findSemestersByTerm(termId);
+        }
+        model.addAttribute("semesters", semesters);
+        model.addAttribute("semesterId", semesterId); // keep selected
+
+        // 4. Load courses only if term is selected
+        if (termId == null) {
+            model.addAttribute("message", "Please select an academic year and term.");
+            return "term_select";
+        }
+
+        List<Object[]> registeredCourses;
+        registeredCourses = studentRegistrationCourseRepository.findRegisteredCoursesForTerm(termId);
+
+        model.addAttribute("registeredCourses", registeredCourses);
+        return "registered_courses";
+    }
+
+    @GetMapping("/courses/{termCourseId}/students")
+    public String viewRegisteredStudentsForCourse(@PathVariable Long termCourseId, Model model) {
+
+        List<Object[]> students = studentRegistrationCourseRepository
+                .findActiveStudentsByTermCourseId(termCourseId);
+
+        model.addAttribute("students", students);
+        return "registered_students"; // simple list table
     }
 }

@@ -1,14 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Direct Grade Entry</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
+    <title>Registered Courses</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" th:href="@{/css/ecampus.css}" />
 </head>
 <body>
-<table style="width:100%;">
+
+<table>
     <tr>
         <td colspan="3" class="top-bar">
             <a href="/" style="text-decoration: none; color: inherit;">
@@ -18,7 +20,7 @@
         </td>
     </tr>
 
-   
+    
     <tr class="nav-bar">
         <td colspan="3">
             <table width="100%">
@@ -108,134 +110,57 @@
             </table>
         </td>
     </tr>
-<tr>
-    <td class="sidemenu"></td>
-    <td class="content">
-        <h2 class="mb-4 text-center">Direct Grade Entry</h2>
 
-        <form method="post" th:action="@{/directGradeEntry/gradeLeftFrame}">
-            <div class="d-flex flex-column align-items-center">
-                <!-- Academic Year -->
-                <div class="mb-3 w-50 text-start">
-                    <label for="academicYearSelect" class="form-label">Academic Year</label>
-                    <select id="academicYearSelect" class="form-select" name="AYRID" onchange="fetchTerms(this.value)">
-                        <option value="">-- Select Academic Year --</option>
-                        <option th:each="ay : ${academicYears}" th:value="${ay.id}" th:text="${ay.name}"></option>
-                    </select>
+    <tr>
+        <td class="sidemenu"></td>
+        <td class="content">
+            <div class="container mt-4">
+                <h2>
+                    <span th:text="'Courses for ' + ${trmname} + ' Term'"></span><br>
+                    <span th:text="'Academic Year: ' + ${ayrname}"></span>
+                </h2>
+                <div class="mb-3">
+                    <a th:href="@{/registrations/term}" class="btn btn-secondary">Change Term</a>
                 </div>
 
-                <!-- Term -->
-                <div class="mb-3 w-50 text-start">
-                    <label for="termSelect" class="form-label">Term</label>
-                    <select id="termSelect" class="form-select" name="TRMID" onchange="fetchCourses(this.value)">
-                        <option value="">-- Select Term --</option>
-                    </select>
-                </div>
-
-                <!-- Course -->
-                <div class="mb-3 w-50 text-start">
-                    <label for="courseSelect" class="form-label">Course</label>
-                    <select id="courseSelect" class="form-select" name="CRSID" onchange="fetchExamTypes(this.value)">
-                        <option value="">-- Select Course --</option>
-                    </select>
-                </div>
-
-                <!-- Exam Type -->
-                <div class="mb-4 w-50 text-start">
-                    <label for="examTypeSelect" class="form-label">Exam Type</label>
-                    <select id="examTypeSelect" class="form-select" name="examTypeId">
-                        <option value="">-- Select Exam Type --</option>
-                    </select>
-                </div>
-
-                <button type="submit" class="btn btn-primary" style="width:300px;">Proceed</button>
+                <table class="table table-bordered">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Course Code</th>
+                            <th>Course Name</th>
+                            <th>Student Count</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="course : ${registeredCourses}">
+                            <td th:text="${course[0]}">Course Code</td>
+                            <td th:text="${course[1]}">Course Name</td>
+                            <td th:text="${course[2]}">Total Students</td>
+                            <td>
+                                <a th:href="@{'/registrations/courses/' + ${course[3]} + '/students'}"
+                                   class="btn btn-sm btn-outline-primary">View Students</a>
+                            </td>
+                        </tr>            
+                        <tr th:if="${registeredCourses.isEmpty()}">
+                            <td colspan="4" class="text-center text-muted">No courses found.</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-        </form>
-    </td>
-    <td class="sidemenu"></td>
-</tr>
+        </td>
+        <td class="sidemenu"></td>
+    </tr>
 
-<tr>
-    <td class="sidemenu"></td>
-    <td class="footer mt-5" colspan="1">
-        &copy; 2002 DA-IICT, Near Indroda Circle, Ahmedabad-Gandhinagar Highway, Gandhinagar - 382 009, Gujarat, India.<br>
-        Designed, developed and maintained by Bhavya, Sumit & Harsh</a>
-    </td>
-    <td class="sidemenu"></td>
-</tr>
-
+    <tr>
+        <td class="sidemenu"></td>
+        <td class="footer" colspan="1">
+            &copy; 2002 DA-IICT, Near Indroda Circle, Ahmedabad-Gandhinagar Highway, Gandhinagar - 382 009, Gujarat, India.<br>
+            Designed, developed and maintained by Bhavya, Sumit & Harsh
+        </td>
+        <td class="sidemenu"></td>
+    </tr>
 </table>
-<script>
-    function fetchTerms(AYRID) {
-        fetch(`/api/terms?AYRID=${AYRID}`)
-            .then(response => response.json())
-            .then(data => {
-                const termSelect = document.getElementById("termSelect");
-                termSelect.innerHTML = '<option value="">-- Select Term --</option>';
-                data.forEach(term => {
-                    const option = document.createElement("option");
-                    option.value = term.id;
-                    option.text = term.name;
-                    termSelect.appendChild(option);
-                });
-
-                // Reset dependent selects
-                document.getElementById("courseSelect").innerHTML = '<option value="">-- Select Course --</option>';
-                document.getElementById("examTypeSelect").innerHTML = '<option value="">-- Select Exam Type --</option>';
-            });
-    }
-
-    function fetchCourses(TRMID) {
-        fetch(`/api/courses?TRMID=${TRMID}`)
-            .then(response => response.json())
-            .then(data => {
-                console.log("TRMID in fetchCourses:", TRMID);
-                const courseSelect = document.getElementById("courseSelect");
-                courseSelect.innerHTML = '<option value="">-- Select Course --</option>';
-                data.forEach(course => {
-                    const option = document.createElement("option");
-                    option.value = course.id;
-                    option.text = course.code + " - " + course.name;
-                    courseSelect.appendChild(option);
-                });
-
-                document.getElementById("examTypeSelect").innerHTML = '<option value="">-- Select Exam Type --</option>';
-            });
-    }
-
-    function fetchExamTypes(CRSID, TRMID) {
-        console.log("Inside fetchExamTypes: CRSID =", CRSID, ", TRMID =", TRMID);
-
-        if (!CRSID || !TRMID) {
-            console.warn("Missing CRSID or TRMID. Aborting fetchExamTypes.");
-            return;
-        }
-
-        fetch(`/api/exam-types?CRSID=${CRSID}&TRMID=${TRMID}`)
-            .then(response => response.json())
-            .then(data => {
-                const examTypeSelect = document.getElementById("examTypeSelect");
-                examTypeSelect.innerHTML = '<option value="">-- Select Exam Type --</option>';
-                data.forEach(exam => {
-                    const option = document.createElement("option");
-                    option.value = exam.id;
-                    option.text = exam.title;
-                    examTypeSelect.appendChild(option);
-                });
-            });
-    }
-
-    // Attach listener for course selection — make sure TRMID is fetched from termSelect directly
-    document.addEventListener("DOMContentLoaded", function () {
-        document.getElementById("courseSelect").addEventListener("change", function () {
-            const selectedCrsId = this.value;
-            const selectedTrmId = document.getElementById("termSelect").value;
-
-            console.log("Course selected:", selectedCrsId, " | Term selected:", selectedTrmId);
-            fetchExamTypes(selectedCrsId, selectedTrmId);
-        });
-    });
-</script>
 
 </body>
 </html>

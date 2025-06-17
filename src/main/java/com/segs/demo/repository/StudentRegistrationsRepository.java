@@ -1,5 +1,6 @@
 package com.segs.demo.repository;
 
+import com.segs.demo.model.Semester;
 import com.segs.demo.model.StudentRegistrations;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -7,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public interface StudentRegistrationsRepository extends JpaRepository<StudentRegistrations, Long> {
@@ -21,6 +23,9 @@ public interface StudentRegistrationsRepository extends JpaRepository<StudentReg
     List<StudentRegistrations> findAllRegistrationsByStudentIdOrderBySemesterSequence(@Param("studentId") Long studentId);
 
     
+   @Query(value = "SELECT * FROM ec2.semesters WHERE strtrmid = :termId", nativeQuery = true)
+    List<Semester> findSemestersByTerm(@Param("termId") Long termId);
+
 }
 
  

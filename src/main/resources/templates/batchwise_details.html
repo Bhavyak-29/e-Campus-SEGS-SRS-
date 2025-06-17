@@ -19,6 +19,7 @@
         </td>
     </tr>
 
+    
     <tr class="nav-bar">
         <td colspan="3">
             <table width="100%">
@@ -30,7 +31,7 @@
                             </button>
                             <ul class="dropdown-menu">
                                 <li class="dropdown-submenu position-relative">
-                                    <a class="dropdown-item" href="#">Direct Grade Entry</a>
+                                    <a class="dropdown-item" href="/directGradeEntry">Direct Grade Entry</a>
                             
                                 </li>
                                 <li><a class="dropdown-item" href="#">Course Feedback</a></li>
@@ -73,8 +74,15 @@
                                         <li><a class="dropdown-item" href="/courses/master-list">Master List</a></li>
                                         <li><a class="dropdown-item" href="/courses/term-courses">Term Courses</a></li>
                                     </ul>
-                                </li> 
-                                <li><a class="dropdown-item" href="#">Registrations</a></li>
+                                </li>                                
+                                <li class="dropdown-submenu position-relative">
+                                    <a class="dropdown-item dropdown-toggle" href="#">Registrations</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="/registrations/search">Student-wise</a></li>
+                                        <li><a class="dropdown-item" href="/registrations/term">Term-wise</a></li>
+                                        <li><a class="dropdown-item" href="/registrations/courses">Course-wise</a></li>
+                                    </ul>
+                                </li>                                                                                              
                                 <li><a class="dropdown-item" href="#">Attendance</a></li>
                                 <li><a class="dropdown-item" href="#">Result</a></li>
                             </ul>
@@ -85,7 +93,7 @@
                             <button class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
                                 Help
                             </button>
-                            <ul class="dropdown-menu w-50">
+                            <ul class="dropdown-menu">
                                 <li><a class="dropdown-item" href="#">About Application</a></li>
                                 <li><a class="dropdown-item" href="#">Workflow of SEGS</a></li>
                                 <li><a class="dropdown-item" href="#">Contact US</a></li>
@@ -93,9 +101,9 @@
                         </div>
                     </td>
                     <td>
-                        <a class="btn btn-logout-modern w-100" style="color:white;font-weight:bold;" href="/logout">
-                            Logout
-                        </a>
+                    <a class="btn btn-logout-modern w-100" style="color:white;font-weight:bold;" href="/logout">
+                        Logout
+                    </a>
                     </td>
                 </tr>
             </table>

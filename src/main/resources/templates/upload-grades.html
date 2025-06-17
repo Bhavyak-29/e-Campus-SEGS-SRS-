@@ -1,23 +1,27 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>Upload Grades</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" th:href="@{/css/ecampus.css}" />
 </head>
+
 <body>
     <table style="width:100%;">
 
-    <!-- Top Header -->
+        <!-- Top Header -->
         <tr>
             <td colspan="3" class="top-bar">
                 <a href="/" style="text-decoration: none; color: inherit;">
                     <span style="font-size: 24px; font-weight: bold; cursor: pointer;">DA-IICT</span>
                 </a>
-                <span style="font-size: 16px;">&nbsp;Dhirubhai Ambani Institute of Information & Communication Technology</span>
+                <span style="font-size: 16px;">&nbsp;Dhirubhai Ambani Institute of Information & Communication
+                    Technology</span>
             </td>
         </tr>
+
 
         <tr class="nav-bar">
             <td colspan="3">
@@ -25,13 +29,14 @@
                     <tr>
                         <td>
                             <div class="dropdown">
-                                <button class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
+                                <button class="btn btn-modern-nav dropdown-toggle w-100"
+                                    style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
                                     Transaction
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li class="dropdown-submenu position-relative">
                                         <a class="dropdown-item" href="/directGradeEntry">Direct Grade Entry</a>
-                
+
                                     </li>
                                     <li><a class="dropdown-item" href="#">Course Feedback</a></li>
                                     <li><a class="dropdown-item" href="#">Modify Grade</a></li>
@@ -43,7 +48,8 @@
                         </td>
                         <td>
                             <div class="dropdown">
-                                <button class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
+                                <button class="btn btn-modern-nav dropdown-toggle w-100"
+                                    style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
                                     Reports (Your Course)
                                 </button>
                                 <ul class="dropdown-menu">
@@ -56,7 +62,8 @@
                         </td>
                         <td>
                             <div class="dropdown">
-                                <div class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" data-bs-toggle="dropdown">
+                                <div class="btn btn-modern-nav dropdown-toggle w-100"
+                                    style="color:white;font-weight:bold;" data-bs-toggle="dropdown">
                                     Reports (All Courses)
                                 </div>
                                 <ul class="dropdown-menu">
@@ -70,11 +77,22 @@
                                     <li class="dropdown-submenu position-relative">
                                         <a class="dropdown-item dropdown-toggle" href="#">Course</a>
                                         <ul class="dropdown-menu">
-                                            <li><a class="dropdown-item" href="/courses/master-list">Master List</a></li>
-                                            <li><a class="dropdown-item" href="/courses/term-courses">Term Courses</a></li>
+                                            <li><a class="dropdown-item" href="/courses/master-list">Master List</a>
+                                            </li>
+                                            <li><a class="dropdown-item" href="/courses/term-courses">Term Courses</a>
+                                            </li>
                                         </ul>
-                                    </li> 
-                                    <li><a class="dropdown-item" href="#">Registrations</a></li>
+                                    </li>
+                                    <li class="dropdown-submenu position-relative">
+                                        <a class="dropdown-item dropdown-toggle" href="#">Registrations</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" href="/registrations/search">Student-wise</a>
+                                            </li>
+                                            <li><a class="dropdown-item" href="/registrations/term">Term-wise</a></li>
+                                            <li><a class="dropdown-item" href="/registrations/courses">Course-wise</a>
+                                            </li>
+                                        </ul>
+                                    </li>
                                     <li><a class="dropdown-item" href="#">Attendance</a></li>
                                     <li><a class="dropdown-item" href="#">Result</a></li>
                                 </ul>
@@ -82,10 +100,11 @@
                         </td>
                         <td>
                             <div class="dropdown">
-                                <button class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
+                                <button class="btn btn-modern-nav dropdown-toggle w-100"
+                                    style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
                                     Help
                                 </button>
-                                <ul class="dropdown-menu w-50">
+                                <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="#">About Application</a></li>
                                     <li><a class="dropdown-item" href="#">Workflow of SEGS</a></li>
                                     <li><a class="dropdown-item" href="#">Contact US</a></li>
@@ -102,143 +121,154 @@
             </td>
         </tr>
     </table>
-<!-- Header and Navbar remain unchanged -->
+    <!-- Header and Navbar remain unchanged -->
 
-<div class="container mt-5">
-    <div class="d-flex justify-content-between align-items-center mb-3">
-        <a href="/directGradeEntry/gradeLeftFrame" class="btn btn-outline-primary ms-3" style="white-space: nowrap;">⬅ Back to Menu</a>
-    </div>
-    <div class="w-75 mx-auto card shadow p-4">
-        <h2 class="text-center mb-4">Upload Grades</h2>
+    <div class="container mt-5">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <a href="/directGradeEntry/gradeLeftFrame" class="btn btn-outline-primary ms-3"
+                style="white-space: nowrap;">⬅ Back to Menu</a>
+        </div>
+        <div class="w-75 mx-auto card shadow p-4">
+            <h2 class="text-center mb-4">Upload Grades</h2>
 
-        <!-- Tab navigation -->
-        <ul class="nav nav-tabs" id="gradeUploadTabs" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav5-link active" id="manual-tab" data-bs-toggle="tab" data-bs-target="#manual" type="button" role="tab">Manual Entry</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav5-link" id="csv-tab" data-bs-toggle="tab" data-bs-target="#csv" type="button" role="tab">Upload CSV</button>
-            </li>
-        </ul>
+            <!-- Tab navigation -->
+            <ul class="nav nav-tabs" id="gradeUploadTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav5-link active" id="manual-tab" data-bs-toggle="tab" data-bs-target="#manual"
+                        type="button" role="tab">Manual Entry</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav5-link" id="csv-tab" data-bs-toggle="tab" data-bs-target="#csv" type="button"
+                        role="tab">Upload CSV</button>
+                </li>
+            </ul>
 
-        <!-- Tab content -->
-        <div class="tab-content mt-4" id="gradeUploadTabsContent">
-            
-            <!-- Manual Entry Tab -->
-            <div class="tab-pane fade show active" id="manual" role="tabpanel" aria-labelledby="manual-tab">
-                <form th:action="@{/grades/upload}" method="post" th:object="${gradeForm}">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Student ID</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Grade</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr th:each="student, iterStat : ${gradeForm.gradesList}" th:with="index=${iterStat.index}">
-                                
-                                <!-- Hidden fields for student data -->
-                                <input type="hidden" th:name="|gradesList[${index}].studentId|" th:value="${student.studentId}" />
-                                <input type="hidden" th:name="|gradesList[${index}].studentEmail|" th:value="${student.studentEmail}" />
-                                <input type="hidden" th:name="|gradesList[${index}].studentName|" th:value="${student.studentName}" />
+            <!-- Tab content -->
+            <div class="tab-content mt-4" id="gradeUploadTabsContent">
 
-                                <!-- Display student info -->
-                                <td th:text="${student.studentId}"></td>
-                                <td th:text="${student.studentName}"></td>
-                                <td th:text="${student.studentEmail}"></td>
+                <!-- Manual Entry Tab -->
+                <div class="tab-pane fade show active" id="manual" role="tabpanel" aria-labelledby="manual-tab">
+                    <form th:action="@{/grades/upload}" method="post" th:object="${gradeForm}">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Student ID</th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Grade</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="student, iterStat : ${gradeForm.gradesList}"
+                                    th:with="index=${iterStat.index}">
 
-                                <!-- Grade selection dropdown -->
-                                <td>
-                                    <select class="form-control" th:name="|gradesList[${index}].grade|">
-                                        <option value="AA" th:selected="${student.grade == 'AA'}">AA</option>
-                                        <option value="AB" th:selected="${student.grade == 'AB'}">AB</option>
-                                        <option value="BB" th:selected="${student.grade == 'BB'}">BB</option>
-                                        <option value="BC" th:selected="${student.grade == 'BC'}">BC</option>
-                                        <option value="CC" th:selected="${student.grade == 'CC'}">CC</option>
-                                        <option value="CD" th:selected="${student.grade == 'CD'}">CD</option>
-                                        <option value="DD" th:selected="${student.grade == 'DD'}">DD</option>
-                                        <option value="F" th:selected="${student.grade == 'F'}">F</option>
-                                    </select>
-                                </td>
-                                <td>
-                                    <input type="checkbox" th:field="*{gradesList[__${index}__].selectedForUpdate}" />
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <button type="submit" class="btn btn-success mx-auto d-block" style="width:280px; font-size:20px;" >Save Grades</button>
-                </form>
-            </div>
+                                    <!-- Hidden fields for student data -->
+                                    <input type="hidden" th:name="|gradesList[${index}].studentId|"
+                                        th:value="${student.studentId}" />
+                                    <input type="hidden" th:name="|gradesList[${index}].studentEmail|"
+                                        th:value="${student.studentEmail}" />
+                                    <input type="hidden" th:name="|gradesList[${index}].studentName|"
+                                        th:value="${student.studentName}" />
 
-            <!-- CSV Upload Tab -->
-            <div id="upload-alert" class="alert d-none" role="alert"></div>
+                                    <!-- Display student info -->
+                                    <td th:text="${student.studentId}"></td>
+                                    <td th:text="${student.studentName}"></td>
+                                    <td th:text="${student.studentEmail}"></td>
 
-            <!-- CSV Upload Form -->
-            <div class="tab-pane fade" id="csv" role="tabpanel">
-                <form id="csvUploadForm" method="post" enctype="multipart/form-data">
-                    <div class="mb-3">
-                        <label for="file" class="form-label">Your Course Details :
-                            Term - <span th:text="${TermName}"></span> | 
-                            Course - <span th:text="${CourseName}"></span>
-                        </label>
-                    </div>
-                    <div class="mb-3">
-                        <label for="file" class="form-label">Select CSV File</label>
-                        <input type="file" id="file" name="file" class="form-control" accept=".csv" required />
-                        <small class="text-muted">Expected columns: studentid, grade</small>
-                    </div>
-                    <div class="text-center">
-                        <button type="submit" class="btn btn-success">Upload CSV</button>
-                    </div>
-                </form>
+                                    <!-- Grade selection dropdown -->
+                                    <td>
+                                        <select class="form-control" th:name="|gradesList[${index}].grade|">
+                                            <option value="AA" th:selected="${student.grade == 'AA'}">AA</option>
+                                            <option value="AB" th:selected="${student.grade == 'AB'}">AB</option>
+                                            <option value="BB" th:selected="${student.grade == 'BB'}">BB</option>
+                                            <option value="BC" th:selected="${student.grade == 'BC'}">BC</option>
+                                            <option value="CC" th:selected="${student.grade == 'CC'}">CC</option>
+                                            <option value="CD" th:selected="${student.grade == 'CD'}">CD</option>
+                                            <option value="DD" th:selected="${student.grade == 'DD'}">DD</option>
+                                            <option value="F" th:selected="${student.grade == 'F'}">F</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="checkbox"
+                                            th:field="*{gradesList[__${index}__].selectedForUpdate}" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <button type="submit" class="btn btn-success mx-auto d-block"
+                            style="width:280px; font-size:20px;">Save Grades</button>
+                    </form>
+                </div>
+
+                <!-- CSV Upload Tab -->
+                <div id="upload-alert" class="alert d-none" role="alert"></div>
+
+                <!-- CSV Upload Form -->
+                <div class="tab-pane fade" id="csv" role="tabpanel">
+                    <form id="csvUploadForm" method="post" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label for="file" class="form-label">Your Course Details :
+                                Term - <span th:text="${TermName}"></span> |
+                                Course - <span th:text="${CourseName}"></span>
+                            </label>
+                        </div>
+                        <div class="mb-3">
+                            <label for="file" class="form-label">Select CSV File</label>
+                            <input type="file" id="file" name="file" class="form-control" accept=".csv" required />
+                            <small class="text-muted">Expected columns: studentid, grade</small>
+                        </div>
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-success">Upload CSV</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
-<div class="footer mt-5 text-center">
-    &copy; 2002 DA-IICT, Near Indroda Circle, Ahmedabad-Gandhinagar Highway, Gandhinagar - 382 009, Gujarat, India.<br>
-    Designed, developed and maintained by Bhavya, Sumit & Harsh
-</div>
+    <div class="footer mt-5 text-center">
+        &copy; 2002 DA-IICT, Near Indroda Circle, Ahmedabad-Gandhinagar Highway, Gandhinagar - 382 009, Gujarat,
+        India.<br>
+        Designed, developed and maintained by Bhavya, Sumit & Harsh
+    </div>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const form = document.getElementById('csvUploadForm');
-        const alertBox = document.getElementById('upload-alert');
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const form = document.getElementById('csvUploadForm');
+            const alertBox = document.getElementById('upload-alert');
 
-        form.addEventListener('submit', function (e) {
-            e.preventDefault(); // prevent form from submitting the normal way
+            form.addEventListener('submit', function (e) {
+                e.preventDefault(); // prevent form from submitting the normal way
 
-            const formData = new FormData(form);
+                const formData = new FormData(form);
 
-            fetch('/grades/uploadcsv', {
-                method: 'POST',
-                body: formData
-            })
-            .then(res => res.json().then(data => ({ ok: res.ok, data })))
-            .then(({ ok, data }) => {
-                showAlert(data.message, ok ? 'success' : 'danger');
-            })
-            .catch(err => {
-                showAlert('Something went wrong. Please try again.', 'danger');
+                fetch('/grades/uploadcsv', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(res => res.json().then(data => ({ ok: res.ok, data })))
+                    .then(({ ok, data }) => {
+                        showAlert(data.message, ok ? 'success' : 'danger');
+                    })
+                    .catch(err => {
+                        showAlert('Something went wrong. Please try again.', 'danger');
+                    });
             });
+
+            function showAlert(message, type) {
+                alertBox.className = `alert alert-${type}`;
+                alertBox.textContent = message;
+                alertBox.classList.remove('d-none');
+
+                setTimeout(() => {
+                    alertBox.classList.add('d-none');
+                }, 8000); // hide after 4 seconds
+            }
         });
-
-        function showAlert(message, type) {
-            alertBox.className = `alert alert-${type}`;
-            alertBox.textContent = message;
-            alertBox.classList.remove('d-none');
-
-            setTimeout(() => {
-                alertBox.classList.add('d-none');
-            }, 8000); // hide after 4 seconds
-        }
-    });
-</script>
+    </script>
 
 
 
 </body>
+
 </html>
