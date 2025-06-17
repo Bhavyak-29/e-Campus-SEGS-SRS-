@@ -17,5 +17,6 @@ public interface TermCourseRepository extends JpaRepository<TermCourse, Long> {
 
     List<TermCourse> findByTerm_IdAndUser_UserId(Long trmId, Long userId);
 
+    List<TermCourse> findByTerm_AcademicYear_IdAndTerm_Id(Long academicYearId, Long termId);
 
 }

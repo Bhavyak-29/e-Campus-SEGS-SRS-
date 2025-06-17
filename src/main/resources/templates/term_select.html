@@ -70,7 +70,7 @@
                                     <a class="dropdown-item dropdown-toggle" href="#">Course</a>
                                     <ul class="dropdown-menu">
                                         <li><a class="dropdown-item" href="/courses/master-list">Master List</a></li>
-                                        <li><a class="dropdown-item" href="/courses/term-courses">Term Courses</a></li>
+                                        <li><a class="dropdown-item" href="/courses/term">Term Courses</a></li>
                                     </ul>
                                 </li>                                
                                 <li class="dropdown-submenu position-relative">
@@ -110,42 +110,42 @@
     <tr>
         <td class="sidemenu"></td>
         <td class="content">
-            <div class="container mt-4">
-                <h2 class="mb-4">Select Academic Year and Term</h2>
-
-                <div th:if="${message}" class="alert alert-warning" th:text="${message}"></div>
-
-                <form th:action="@{/registrations/term}" method="get" class="row g-3">
-
-                    <!-- Academic Year Dropdown -->
-                    <div class="col-md-6">
-                        <label for="academicYearId" class="form-label">Academic Year</label>
-                        <select class="form-select" id="academicYearId" name="academicYearId"
-                                onchange="this.form.submit()">
-                            <option value="" disabled th:selected="${academicYearId == null}">Select Academic Year</option>
-                            <option th:each="ayr : ${academicYears}"
-                                    th:value="${ayr.id}"
-                                    th:text="${ayr.name}"
-                                    th:selected="${ayr.id == academicYearId}">Academic Year Name</option>
-                        </select>
-                    </div>
-
-                    <!-- Term Dropdown -->
-                    <div class="col-md-6">
-                        <label for="termId" class="form-label">Term</label>
-                        <select class="form-select" id="termId" name="termId"
-                                th:disabled="${academicYearId == null}"
-                                onchange="this.form.submit()">
-                            <option value="" disabled th:selected="${termId == null}">Select Term</option>
-                            <option th:each="term : ${terms}"
-                                    th:value="${term.id}"
-                                    th:text="${term.name}"
-                                    th:selected="${term.id == termId}">Term Name</option>
-                        </select>
-                    </div>
-                </form>
+            <div class="container mt-4" th:if="${termCourses == null}">
+                <div class="card p-4 shadow-sm border-0 rounded-4">
+                    <h5 class="text-center fw-bold mb-3">Select Academic Year and Term</h5>
+        
+                    <form th:action="@{/registrations/term}" method="get" class="row gy-3 gx-4 justify-content-center align-items-end">
+                        <!-- Academic Year Dropdown -->
+                        <div class="col-md-4">
+                            <label for="academicYearId" class="form-label fw-semibold">Academic Year</label>
+                            <select class="form-select" id="academicYearId" name="academicYearId" onchange="this.form.submit()">
+                                <option value="" disabled th:selected="${academicYearId == null}">Select Academic Year</option>
+                                <option th:each="ayr : ${academicYears}"
+                                        th:value="${ayr.id}"
+                                        th:text="${ayr.name}"
+                                        th:selected="${ayr.id == academicYearId}">
+                                </option>
+                            </select>
+                        </div>
+        
+                        <!-- Term Dropdown -->
+                        <div class="col-md-4">
+                            <label for="termId" class="form-label fw-semibold">Term</label>
+                            <select class="form-select" id="termId" name="termId"
+                                    th:disabled="${academicYearId == null}" onchange="this.form.submit()">
+                                <option value="" disabled th:selected="${termId == null}">Select Term</option>
+                                <option th:each="term : ${terms}"
+                                        th:value="${term.id}"
+                                        th:text="${term.name}"
+                                        th:selected="${term.id == termId}">
+                                </option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
             </div>
         </td>
+        
         <td class="sidemenu"></td>
     </tr>
 

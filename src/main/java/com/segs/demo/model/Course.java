@@ -53,7 +53,7 @@ public class Course {
 
     @Column(name = "crscreditpoints")
     private BigDecimal creditPoints;
-
+ 
     @Column(name = "crsmarks")
     private Short marks;
 
