@@ -110,7 +110,21 @@ public class facultyController {
     }
     
     @GetMapping("/directGradeEntry/gradeLeftFrame")
-    public String showGradeLeftFrame() {
+    public String showGradeLeftFrame(HttpSession session, ModelMap model) {
+        Long crsid = (Long) session.getAttribute("CRSID");
+        Long trmid = (Long) session.getAttribute("TRMID");
+        Long examTypeId = (Long) session.getAttribute("examTypeId");
+
+        if (crsid == null || trmid == null || examTypeId == null) {
+            model.addAttribute("error", "Session expired or missing data. Please reselect options.");
+            return "redirect:/directGradeEntry/gradeOptions";
+        }
+
+        String termName = gradeService.getTermName(trmid);
+        String courseName = gradeService.getCourseName(crsid);
+
+        model.addAttribute("termName", termName);
+        model.addAttribute("courseName", courseName);
         return "gradeLeftFrame"; // make sure this matches your Thymeleaf template
     }
 
@@ -121,13 +135,18 @@ public class facultyController {
             @RequestParam("TRMID") Long trmid,
             @RequestParam("CRSID") Long crsid,
             @RequestParam("examTypeId") Long examTypeId,
-            HttpSession session
+            HttpSession session,
+            ModelMap model
     ) {
         session.setAttribute("AYRID", ayrid);
         session.setAttribute("TRMID", trmid);
         session.setAttribute("CRSID", crsid);
         session.setAttribute("examTypeId", examTypeId);
+        String termName = gradeService.getTermName(trmid);
+        String courseName = gradeService.getCourseName(crsid);
 
+        model.addAttribute("termName", termName);
+        model.addAttribute("courseName", courseName);
         return "gradeLeftFrame";
     }
     @GetMapping("/directGradeEntry/grades/chart-view")

@@ -10,23 +10,26 @@
     <style>
         /* Add these new styles */
         body {
+            
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
+            min-height: 100vh !important;
             margin: 0;
+            background-image: url('/images/segsimg2.png') !important; /* or use Thymeleaf: url([[@{/images/segsbgimg.jpg}]]) */
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
         }
         
         .content-wrapper {
             display: flex;
             flex: 1;
+            height: 100%;
+            min-height: calc(100vh - 160px);
         }
         
-        .sidebar {
-            width: 250px;
-            background-color: #f8f9fa;
-            padding: 20px;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
-        }
+        
         
         .sidebar a {
             display: block;
@@ -46,7 +49,7 @@
         .main-content2 {
             flex: 1;
             padding: 20px;
-            background-color: #fff;
+            background-color: transparent;
         }
         
         
@@ -91,7 +94,19 @@
                                 </button>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="#">Marks</a></li>
-                                    <li><a class="dropdown-item" href="#">Results</a></li>
+                                    <li class="dropdown-submenu position-relative">
+                                    <a class="dropdown-item dropdown-toggle" href="#">Result</a>
+                                        <ul class="dropdown-menu">
+                                                <li class="dropdown-submenu position-relative">
+                                                    <a class="dropdown-item dropdown-toggle" href="#">Grade Freq</a>
+                                                    <ul class="dropdown-menu">
+                                                        <li><a class="dropdown-item" href="/directGradeEntry/grades/chart-view">Bar Graph</a></li>
+                                                        <li><a class="dropdown-item" href="/directGradeEntry/grades/chart-view2">Pie Chart</a></li>
+                                                        <li><a class="dropdown-item" href="/directGradeEntry/grades/chart-view3">Line Graph</a></li>
+                                                    </ul>
+                                                </li>
+                                                <li><a class="dropdown-item" href="/directGradeEntry/gradeOptions">Grade List</a></li>
+                                            </ul>
                                     <li><a class="dropdown-item" href="#">Course Evaluation</a></li>
                                 </ul>
                             </div>
@@ -155,19 +170,43 @@
         <div class="sidebar">
             <a th:href="@{/directGradeEntry/gradeOptions}">Grade View</a>
             <a th:href="@{/grades/upload}">Grade Insert</a>
-            <a th:href="@{/grades/submit}">Submit Grades</a>
-            <a th:href="@{/grades/report}">Grade Report</a>
+            <a th:href="@{/grades/upload}">Course Marks</a>
+            <a th:href="@{/directGradeEntry/grades/chart-view3}">Grades - Line Graph</a>
+            <a th:href="@{/directGradeEntry/grades/chart-view}">Grades - Bar Graph</a>
+            <a th:href="@{/directGradeEntry/grades/chart-view2}">Grades - Pie Chart</a>
+
         </div>
 
-        <div class="main-content2 d-flex justify-content-center align-items-center" style="height: 80vh;">
-            <h3 class="text-center">Choose an option from the left side bar</h3>
-        </div>
+    <div class="main-content2 d-flex flex-column justify-content-center align-items-center text-center" style="height: 70vh; background-color:transparent; border-radius: 12px; ">
 
+    <h3 class="mb-4 fw-semibold" style="color: #003f7d;font-family: 'Montserrat', sans-serif;">
+    Welcome,
+    <span th:text="${session.username}" >
+    </span> !
+</h3>
+    <div class="card course-info-card shadow p-4 mx-auto">
+        <div class="card-body text-white">
+            <h5 class="card-title mb-4">
+                <span class="emoji">🎓</span>
+                <span class="gradient-text">Your Course Details </span>
+            </h5>
+            <p class="card-text fs-5 mb-2">
+                <i class="bi bi-calendar3 me-2"></i><strong>Term :</strong> 
+                <span th:text="${termName}" class="ms-1 text-green-emphasis"></span>
+            </p>
+            <p class="card-text fs-5">
+                <i class="bi bi-book me-2"></i><strong>Course :</strong> 
+                <span th:text="${courseName}" class="ms-1 text-green-emphasis"></span>
+            </p>
+                <br>
+                <span class="gradient-text2">Note : Use the sidebar on the left for grade entry and reports.</span>
+        </div>
     </div>
 
-    <div class="footer">
-        &copy; 2002 DA-IICT, Near Indroda Circle, Ahmedabad-Gandhinagar Highway, Gandhinagar - 382 009, Gujarat, India.<br>
-        Designed, developed and maintained by Bhavya, Sumit & Harsh
+
+</div>
+
+
     </div>
 </body>
 </html>
