@@ -10,6 +10,7 @@ import com.segs.demo.repository.StudentRegistrationCourseRepository;
 import com.segs.demo.repository.StudentRegistrationsRepository;
 import com.segs.demo.repository.StudentRepository;
 import com.segs.demo.repository.TermRepository;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
