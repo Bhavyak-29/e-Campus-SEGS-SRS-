@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SPI/CPI List</title>
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    
+
+</head>
+
+<body>
+
+    <div class="container-fluid">
+
+        <h2 class="mb-4 text-center">SPI / CPI List</h2>
+
+
+
+        <div class="mb-3">
+
+            <a th:href="@{/results/spicpi/selector}" class="btn btn-secondary">
+
+                <i class="fas fa-arrow-left"></i> Back to Selector
+
+            </a>
+
+        </div>
+
+
+
+        <div class="filter-form">
+
+            <h5 class="mb-3">Filter Results</h5>
+
+            <form th:action="@{/results/spicpi/list}" method="get" class="form-row align-items-end">
+
+                <input type="hidden" name="semesterId" th:value="${session.currentSemesterId}" />
+
+
+
+                <div class="form-group col-md-3">
+
+                    <label for="cpiOperator">CPI Operator:</label>
+
+                    <select id="cpiOperator" name="operator" class="form-control">
+
+                        <option value="">-- Select --</option>
+
+                        <option value="=" th:selected="${cpiOperator == '='}">=</option>
+
+                        <option value=">" th:selected="${cpiOperator == '>'}">></option>
+
+                        <option value=">=" th:selected="${cpiOperator == '>='}">>=</option>
+
+                        <option value="<" th:selected="${cpiOperator == '<'}">
+                            << /option>
+
+                        <option value="<=" th:selected="${cpiOperator == '<='}">
+
+                            <= </option>
+
+                        <option value="BETWEEN" th:selected="${cpiOperator == 'BETWEEN'}">BETWEEN</option>
+
+                    </select>
+
+                </div>
+
+                <div class="form-group col-md-2">
+
+                    <label for="cpiFromValue">CPI Value (From):</label>
+
+                    <input type="number" step="0.01" id="cpiFromValue" name="fromValue" class="form-control"
+                        th:value="${cpiFromValue}">
+
+                </div>
+
+                <div class="form-group col-md-2" id="cpiToValueContainer"
+                    th:style="${cpiOperator == 'BETWEEN' ? '' : 'display:none;'}">
+
+                    <label for="cpiToValue">CPI Value (To):</label>
+
+                    <input type="number" step="0.01" id="cpiToValue" name="toValue" class="form-control"
+                        th:value="${cpiToValue}">
+
+                </div>
+
+
+
+                <div class="form-group col-md-3">
+
+                    <label for="spiOperator">SPI Operator:</label>
+
+                    <select id="spiOperator" name="spiOperator" class="form-control">
+
+                        <option value="">-- Select --</option>
+
+                        <option value="=" th:selected="${spiOperator == '='}">=</option>
+
+                        <option value=">" th:selected="${spiOperator == '>'}">></option>
+
+                        <option value=">=" th:selected="${spiOperator == '>='}">>=</option>
+
+                        <option value="<" th:selected="${spiOperator == '<'}">
+                            << /option>
+
+                        <option value="<=" th:selected="${spiOperator == '<='}">
+
+                            <= </option>
+
+                        <option value="BETWEEN" th:selected="${spiOperator == 'BETWEEN'}">BETWEEN</option>
+
+                    </select>
+
+                </div>
+
+                <div class="form-group col-md-2">
+
+                    <label for="spiFromValue">SPI Value (From):</label>
+
+                    <input type="number" step="0.01" id="spiFromValue" name="spiFromValue" class="form-control"
+                        th:value="${spiFromValue}">
+
+                </div>
+
+                <div class="form-group col-md-2" id="spiToValueContainer"
+                    th:style="${spiOperator == 'BETWEEN' ? '' : 'display:none;'}">
+
+                    <label for="spiToValue">SPI Value (To):</label>
+
+                    <input type="number" step="0.01" id="spiToValue" name="spiToValue" class="form-control"
+                        th:value="${spiToValue}">
+
+                </div>
+
+
+
+                <div class="form-group col-md-2">
+
+                    <label for="condition">Combine With:</label>
+
+                    <select id="condition" name="condition" class="form-control">
+
+                        <option value="and" th:selected="${condition == 'and'}">AND</option>
+
+                        <option value="or" th:selected="${condition == 'or'}">OR</option>
+
+                    </select>
+
+                </div>
+
+
+
+                <div class="form-group col-md-2">
+
+                    <button type="submit" class="btn btn-primary btn-block">Apply Filters</button>
+
+                </div>
+
+                <div class="form-group col-md-2">
+
+                    <a th:href="@{/results/spicpi/list(semesterId=${session.currentSemesterId})}"
+                        class="btn btn-info btn-block">Clear Filters</a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+
+
+        <div class="table-container">
+
+            <table class="table table-striped table-hover">
+
+                <thead class="thead-dark">
+
+                    <tr>
+
+                        <th>Sr No</th>
+
+                        <th>
+
+                            <a th:href="@{/results/spicpi/list(semesterId=${session.currentSemesterId},operator=${cpiOperator}, fromValue=${cpiFromValue}, toValue=${cpiToValue},spiOperator=${spiOperator}, spiFromValue=${spiFromValue}, spiToValue=${spiToValue},condition=${condition},orderBy='STDINSTID',orderType=${(orderBy == 'STDINSTID' and orderType == 'ASC') ? 'DESC' : 'ASC'})}">
+
+                                Student ID
+
+                                <i th:if="${orderBy == 'STDINSTID' and orderType == 'ASC'}" class="fas fa-sort-up"></i>
+
+                                <i th:if="${orderBy == 'STDINSTID' and orderType == 'DESC'}"
+                                    class="fas fa-sort-down"></i>
+
+                                <i th:unless="${orderBy == 'STDINSTID'}" class="fas fa-sort"></i>
+
+                            </a>
+
+                        </th>
+
+                        <th>
+
+                            <a th:href="@{/results/spicpi/list(
+
+semesterId=${session.currentSemesterId},
+
+operator=${cpiOperator}, fromValue=${cpiFromValue}, toValue=${cpiToValue},
+
+spiOperator=${spiOperator}, spiFromValue=${spiFromValue}, spiToValue=${spiToValue},
+
+condition=${condition},
+
+orderBy='STDFIRSTNAME',
+
+orderType=${(orderBy == 'STDFIRSTNAME' and orderType == 'ASC') ? 'DESC' : 'ASC'}
+
+)}">
+
+                                Student Name
+
+                                <i th:if="${orderBy == 'STDFIRSTNAME' and orderType == 'ASC'}"
+                                    class="fas fa-sort-up"></i>
+
+                                <i th:if="${orderBy == 'STDFIRSTNAME' and orderType == 'DESC'}"
+                                    class="fas fa-sort-down"></i>
+
+                                <i th:unless="${orderBy == 'STDFIRSTNAME'}" class="fas fa-sort"></i>
+
+                            </a>
+
+                        </th>
+
+                        <th>
+
+                            <a th:href="@{/results/spicpi/list(
+
+semesterId=${session.currentSemesterId},
+
+operator=${cpiOperator}, fromValue=${cpiFromValue}, toValue=${cpiToValue},
+
+spiOperator=${spiOperator}, spiFromValue=${spiFromValue}, spiToValue=${spiToValue},
+
+condition=${condition},
+
+orderBy='SSRSPI',
+
+orderType=${(orderBy == 'SSRSPI' and orderType == 'ASC') ? 'DESC' : 'ASC'}
+
+)}">
+
+                                SPI
+
+                                <i th:if="${orderBy == 'SSRSPI' and orderType == 'ASC'}" class="fas fa-sort-up"></i>
+
+                                <i th:if="${orderBy == 'SSRSPI' and orderType == 'DESC'}" class="fas fa-sort-down"></i>
+
+                                <i th:unless="${orderBy == 'SSRSPI'}" class="fas fa-sort"></i>
+
+                            </a>
+
+                        </th>
+
+                        <th>
+
+                            <a th:href="@{/results/spicpi/list(
+
+semesterId=${session.currentSemesterId},
+
+operator=${cpiOperator}, fromValue=${cpiFromValue}, toValue=${cpiToValue},
+
+spiOperator=${spiOperator}, spiFromValue=${spiFromValue}, spiToValue=${spiToValue},
+
+condition=${condition},
+
+orderBy='SSRCPI',
+
+orderType=${(orderBy == 'SSRCPI' and orderType == 'ASC') ? 'DESC' : 'ASC'}
+
+)}">
+
+                                CPI
+
+                                <i th:if="${orderBy == 'SSRCPI' and orderType == 'ASC'}" class="fas fa-sort-up"></i>
+
+                                <i th:if="${orderBy == 'SSRCPI' and orderType == 'DESC'}" class="fas fa-sort-down"></i>
+
+                                <i th:unless="${orderBy == 'SSRCPI'}" class="fas fa-sort"></i>
+
+                            </a>
+
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody>
+
+                    <tr th:if="${#lists.isEmpty(studentSemesterResultsCollection)}">
+
+                        <td colspan="5" class="text-center">No results found for the selected criteria.</td>
+
+                    </tr>
+
+                    <tr th:each="result, stat : ${studentSemesterResultsCollection}">
+
+                        <td th:text="${stat.count}">1</td>
+
+                        <td th:text="${result[0]}">STDINSTID</td>
+                        <td th:text="${result[1]}">Student Name</td>
+                        <td th:text="${#numbers.formatDecimal(result[2], 0, 2)}">SPI</td>
+                        <td th:text="${#numbers.formatDecimal(result[3], 0, 2)}">CPI</td>
+                    </tr>
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+
+        <form th:action="@{/results/spicpi/list}" method="get" class="excel-export-btn">
+
+            <input type="hidden" name="semesterId" th:value="${session.currentSemesterId}" />
+
+            <input type="hidden" name="operator" th:value="${cpiOperator}" />
+
+            <input type="hidden" name="fromValue" th:value="${cpiFromValue}" />
+
+            <input type="hidden" name="toValue" th:value="${cpiToValue}" />
+
+            <input type="hidden" name="spiOperator" th:value="${spiOperator}" />
+
+            <input type="hidden" name="spiFromValue" th:value="${spiFromValue}" />
+
+            <input type="hidden" name="spiToValue" th:value="${spiToValue}" />
+
+            <input type="hidden" name="condition" th:value="${condition}" />
+
+            <input type="hidden" name="orderBy" th:value="${orderBy}" />
+
+            <input type="hidden" name="orderType" th:value="${orderType}" />
+
+            <input type="hidden" name="generateExcelSheet" value="True" />
+
+            <button type="submit" class="btn btn-success">
+
+                <i class="fas fa-file-excel"></i> Export to Excel
+
+            </button>
+
+        </form>
+
+
+
+    </div>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+
+
+    <script>
+
+        $(document).ready(function () {
+
+            // Function to toggle 'To' value input visibility for BETWEEN operator
+
+            function toggleBetweenInput(operatorSelectId, toValueContainerId) {
+
+                var operator = $(operatorSelectId).val();
+
+                if (operator === 'BETWEEN') {
+
+                    $(toValueContainerId).show();
+
+                } else {
+
+                    $(toValueContainerId).hide();
+
+                    $(toValueContainerId).find('input').val(''); // Clear the value if hidden
+
+                }
+
+            }
+
+
+
+            // Initial call on page load for both CPI and SPI
+
+            toggleBetweenInput('#cpiOperator', '#cpiToValueContainer');
+
+            toggleBetweenInput('#spiOperator', '#spiToValueContainer');
+
+
+
+            // Event listener for CPI operator change
+
+            $('#cpiOperator').change(function () {
+
+                toggleBetweenInput('#cpiOperator', '#cpiToValueContainer');
+
+            });
+
+
+
+            // Event listener for SPI operator change
+
+            $('#spiOperator').change(function () {
+
+                toggleBetweenInput('#spiOperator', '#spiToValueContainer');
+
+            });
+
+        });
+
+    </script>
+
+</body>
+
+</html>

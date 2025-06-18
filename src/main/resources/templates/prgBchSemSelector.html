@@ -2,11 +2,33 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Student Page</title>
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" th:href="@{/css/ecampus.css}" />
+
+    <style>
+        /* Styles from your original form, adapted for this layout */
+        .criteria-container { /* Renamed from .container to avoid conflict with bootstrap */
+            max-width: 700px;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            margin: 20px auto; /* Add margin-top and center horizontally */
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+            margin-top: 20px;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
 
@@ -34,7 +56,6 @@
                             <ul class="dropdown-menu">
                                 <li class="dropdown-submenu position-relative">
                                     <a class="dropdown-item" href="/directGradeEntry">Direct Grade Entry</a>
-                            
                                 </li>
                                 <li><a class="dropdown-item" href="#">Modify Grade</a></li>
                                 <li><a class="dropdown-item" href="#">Revise I Grade</a></li>
@@ -125,10 +146,44 @@
     <tr>
         <td class="sidemenu"></td>
         <td class="content">
-            <h2>Welcome to Faculty Page!!</h2>
-            <hr style="width: 70%;margin-left:220px;">
-            <p style="font-size: 16px;">Welcome <strong><span th:text="${session.username}"></span></strong></p>
-        </td>
+            <div class="criteria-container">
+                <h2 class="mb-4 text-center">Select Academic Criteria</h2>
+
+                <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+                    <p th:text="${errorMessage}"></p>
+                </div>
+
+                <form th:action="@{${session.targetUrl}}" method="get">
+                    <div class="form-group">
+                        <label for="programSelect">Program:</label>
+                        <select id="programSelect" name="programId" class="form-control">
+                            <option value="">-- Select Program --</option>
+                            <option th:each="program : ${programs}"
+                                    th:value="${program.prgid}"
+                                    th:text="${program.prgname}">Program Name</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="batchSelect">Batch:</label>
+                        <select id="batchSelect" name="batchId" class="form-control" disabled>
+                            <option value="">-- Select Batch --</option>
+                            </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="semesterSelect">Semester:</label>
+                        <select id="semesterSelect" name="semesterId" class="form-control" disabled>
+                            <option value="">-- Select Semester --</option>
+                            </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary btn-block" id="submitButton" disabled>
+                        <span th:text="${session.actionText ?: 'View List'}">View List</span>
+                    </button>
+                </form>
+            </div>
+            </td>
         <td class="sidemenu"></td>
     </tr>
     
@@ -141,6 +196,119 @@
         <td class="sidemenu"></td>
     </tr>
 </table>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+<script>
+    $(document).ready(function() {
+        var $programSelect = $('#programSelect');
+        var $batchSelect = $('#batchSelect');
+        var $semesterSelect = $('#semesterSelect');
+        var $submitButton = $('#submitButton');
+
+        // Function to enable/disable controls based on selection
+        function updateControls() {
+            if ($semesterSelect.val()) {
+                $submitButton.prop('disabled', false);
+            } else {
+                $submitButton.prop('disabled', true);
+            }
+
+            if ($programSelect.val()) {
+                $batchSelect.prop('disabled', false);
+            } else {
+                $batchSelect.prop('disabled', true);
+                $batchSelect.html('<option value="">-- Select Batch --</option>'); // Clear batches
+            }
+
+            if ($batchSelect.val()) {
+                $semesterSelect.prop('disabled', false);
+            } else {
+                $semesterSelect.prop('disabled', true);
+                $semesterSelect.html('<option value="">-- Select Semester --</option>'); // Clear semesters
+            }
+        }
+
+        // Initial state
+        updateControls();
+
+        // Program selection change
+        $programSelect.change(function() {
+            var programId = $(this).val();
+            $batchSelect.html('<option value="">Loading Batches...</option>').prop('disabled', true);
+            $semesterSelect.html('<option value="">-- Select Semester --</option>').prop('disabled', true);
+            updateControls();
+
+            if (programId) {
+                $.get('/results/spicpi/api/batches', { programId: programId }, function(data) {
+                    $batchSelect.html('<option value="">-- Select Batch --</option>');
+                    $.each(data, function(index, batch) {
+                        $batchSelect.append($('<option></option>').val(batch.bchid).text(batch.bchname));
+                    });
+                    $batchSelect.prop('disabled', false);
+                    updateControls();
+                }).fail(function() {
+                    $batchSelect.html('<option value="">Error loading batches</option>');
+                    updateControls();
+                });
+            } else {
+                updateControls(); // If program cleared, disable batch/semester
+            }
+        });
+
+        // Batch selection change
+        $batchSelect.change(function() {
+            var batchId = $(this).val();
+            $semesterSelect.html('<option value="">Loading Semesters...</option>').prop('disabled', true);
+            updateControls();
+
+            if (batchId) {
+                $.get('/results/spicpi/api/semesters', { batchId: batchId }, function(data) {
+                    $semesterSelect.html('<option value="">-- Select Semester --</option>');
+                    $.each(data, function(index, semester) {
+                        $semesterSelect.append($('<option></option>').val(semester.strid).text(semester.strname));
+                    });
+                    $semesterSelect.prop('disabled', false);
+                    updateControls();
+                }).fail(function() {
+                    $semesterSelect.html('<option value="">Error loading semesters</option>');
+                    updateControls();
+                });
+            } else {
+                updateControls(); // If batch cleared, disable semester
+            }
+        });
+
+        // Semester selection change (just to update submit button)
+        $semesterSelect.change(function() {
+            updateControls();
+        });
+
+        // Bootstrap 5 dropdown fix for nested submenus (if using dropdown-submenu classes)
+        // This is a common pattern for multi-level Bootstrap dropdowns
+        $('.dropdown-menu a.dropdown-toggle').on('click', function(e) {
+            var $el = $(this);
+            var $parent = $(this).offsetParent(".dropdown-menu");
+            if (!$el.next().hasClass('show')) {
+                $el.parents('.dropdown-menu').first().find('.show').removeClass("show");
+            }
+            var $subMenu = $el.next(".dropdown-menu");
+            $subMenu.toggleClass('show');
+
+            $el.parent("li").toggleClass('show');
+
+            $el.parents('li.nav-item.dropdown.show').on('hidden.bs.dropdown', function(e) {
+                $('.dropdown-menu .show').removeClass("show");
+            });
+
+            if (!$parent.parent().hasClass('navbar-nav')) {
+                $el.next().css({ "top": $el[0].offsetTop, "left": $parent.outerWidth() - 4 });
+            }
+
+            return false;
+        });
+    });
+</script>
 
 </body>
 </html>

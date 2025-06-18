@@ -39,6 +39,34 @@ public class Student {
 
     private String stdemail;
 
+    private String stdfield1;
+    private String stdfield2;
+    private String stdfield3;
+
+    public String getStdfield1() {
+        return stdfield1;
+    }
+
+    public void setStdfield1(String stdfield1) {
+        this.stdfield1 = stdfield1;
+    }
+
+    public String getStdfield2() {
+        return stdfield2;
+    }
+
+    public void setStdfield2(String stdfield2) {
+        this.stdfield2 = stdfield2;
+    }
+
+    public String getStdfield3() {
+        return stdfield3;
+    }
+
+    public void setStdfield3(String stdfield3) {
+        this.stdfield3 = stdfield3;
+    }
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "stdid", referencedColumnName = "stdid", insertable = false, updatable = false)
     private StudentProfile studentProfile;

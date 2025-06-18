@@ -3,6 +3,8 @@ package com.segs.demo.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "semesters", schema = "ec2")
 public class Semester {
@@ -15,10 +17,12 @@ public class Semester {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "strbchid", referencedColumnName = "bchid")
+    @JsonIgnore
     private Batch batch;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "strtrmid", referencedColumnName = "trmid")
+    @JsonIgnore
     private Term term; // Assuming you have a 'Term' entity
 
     // --- Other columns from your table ---

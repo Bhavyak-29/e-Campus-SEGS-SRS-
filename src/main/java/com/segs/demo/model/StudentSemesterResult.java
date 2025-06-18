@@ -68,9 +68,32 @@ public class StudentSemesterResult {
     @Column(name = "ssrrowstate")
     private Short rowState;
 
+    @Column(name = "ssrcpi_numeric")
+    private BigDecimal cpiNumeric;
+
+    @Column(name = "ssrspi_numeric")
+    private BigDecimal spiNumeric;
+
+
 
 
     // Getters and Setters
+
+    public BigDecimal getCpiNumeric() {
+        return cpiNumeric;
+    }
+
+    public void setCpiNumeric(BigDecimal cpiNumeric) {
+        this.cpiNumeric = cpiNumeric;
+    }
+
+    public BigDecimal getSpiNumeric() {
+        return spiNumeric;
+    }
+
+    public void setSpiNumeric(BigDecimal spiNumeric) {
+        this.spiNumeric = spiNumeric;
+    }
 
     public StudentGrade getGrade() {
         return grade;
