@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Grade Options</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <link rel="stylesheet" th:href="@{/css/ecampus.css}" />
+
+</head>
+<body>
+
+<table style="width:100%;">
+    <tr>
+        <td colspan="3" class="top-bar">
+            <a href="/" style="text-decoration: none; color: inherit;">
+                <span style="font-size: 24px; font-weight: bold; cursor: pointer;">DA-IICT</span>
+            </a>
+            <span style="font-size: 16px;">&nbsp;Dhirubhai Ambani Institute of Information & Communication Technology</span>
+        </td>
+    </tr>
+
+   
+    <tr class="nav-bar">
+        <td colspan="3">
+            <table width="100%">
+                <tr>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
+                                Transaction
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li class="dropdown-submenu position-relative">
+                                    <a class="dropdown-item" href="/directGradeEntry">Direct Grade Entry</a>
+                            
+                                </li>
+                                <li><a class="dropdown-item" href="#">Modify Grade</a></li>
+                                <li><a class="dropdown-item" href="#">Revise I Grade</a></li>
+                                <li><a class="dropdown-item" href="#">Approval Status</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
+                                Reports (Your Course)
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">Marks</a></li>
+                                <li><a class="dropdown-item" href="#">Results</a></li>
+                                <li><a class="dropdown-item" href="#">Course Evaluation</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <div class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" data-bs-toggle="dropdown">
+                                Reports (All Courses)
+                            </div>
+                            <ul class="dropdown-menu">
+                                <li class="dropdown-submenu position-relative">
+                                    <a class="dropdown-item dropdown-toggle" href="#">Student Info</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="/students/search">Studentwise</a></li>
+                                        <li><a class="dropdown-item" href="/students/batch">Batchwise</a></li>
+                                    </ul>
+                                </li>
+                                <li class="dropdown-submenu position-relative">
+                                    <a class="dropdown-item dropdown-toggle" href="#">Course</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="/courses/master-list">Master List</a></li>
+                                        <li><a class="dropdown-item" href="/courses/term">Term Courses</a></li>
+                                    </ul>
+                                </li>                                
+                                <li class="dropdown-submenu position-relative">
+                                    <a class="dropdown-item dropdown-toggle" href="#">Registrations</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" href="/registrations/search">Student-wise</a></li>
+                                        <li><a class="dropdown-item" href="/registrations/term">Term-wise</a></li>
+                                        <li><a class="dropdown-item" href="/registrations/courses">Course-wise</a></li>
+                                    </ul>
+                                </li>                                                                                              
+                                <li><a class="dropdown-item" href="#">Result</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="dropdown">
+                            <button class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
+                                Help
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="#">About Application</a></li>
+                                <li><a class="dropdown-item" href="#">Workflow of SEGS</a></li>
+                                <li><a class="dropdown-item" href="#">Contact US</a></li>
+                            </ul>
+                        </div>
+                    </td>
+                    <td>
+                    <a class="btn btn-logout-modern w-100" style="color:white;font-weight:bold;" href="/logout">
+                        Logout
+                    </a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<!-- Main Content Area -->
+<!-- <div class="content container">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a href="/directGradeEntry/gradeLeftFrame" class="btn btn-dark ms-3" style="white-space: nowrap;">⬅ Back to Menu</a>
+    </div>
+
+    <h2 class="text-center mb-4">Updated Grades Only</h2>
+
+    <table class="table table-bordered table-striped" style="width:90%;margin: 0 auto;">
+        <thead class="table-primary">
+        <tr>
+            <th>Sr No</th>
+            <th>Student Id</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Updated Grade</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="student, iterStat : ${updatedGrades}">
+            <td th:text="${iterStat.count}"></td>
+            <td th:text="${student.studentId}"></td>
+            <td th:text="${student.studentName}"></td>
+            <td th:text="${student.studentEmail}"></td>
+            <td th:text="${student.grade}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div> -->
+
+
+
+
+<div class="content container">
+
+    
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <a href="/directGradeEntry/gradeLeftFrame" class="btn btn-dark ms-3" style="white-space: nowrap;">⬅ Back to Menu</a>
+</div>
+<div class="d-flex flex-column align-items-center">
+    
+    <form th:action="@{/directGradeEntry/updatedGrades}" method="get" class="mb-4 w-50">
+        <input type="hidden" name="CRSID" th:value="${CRSID}" />
+        <input type="hidden" name="examTypeId" th:value="${examTypeId}" />
+
+        <!-- Grade Label -->
+
+        <!-- Grade Select -->
+                
+       <div class="container mt-4">
+            <div class="mb-4">
+                <h2 class="text-center mb-4" style="margin-top:-34px;">Updated Grade List</h2>
+                <label for="grades" class="form-label fw-bold fs-5 text-primary" style="margin-top:-20px;">
+                    <i class="bi bi-award-fill me-1"></i> Select Grades:
+                </label>
+                <div class="border rounded shadow-sm p-2" style="background-color: #f8f9fa;">
+                    <select id="grades" name="selectedGrades" multiple 
+                            class="form-select border-0 bg-light" 
+                            style="height: 180px; overflow-y: auto;">
+                        <option value="AA" th:selected="${selectedGrades != null} ? ${selectedGrades.contains('AA')} : false">AA</option>
+                        <option value="AB" th:selected="${selectedGrades != null} ? ${selectedGrades.contains('AB')} : false">AB</option>
+                        <option value="BB" th:selected="${selectedGrades != null} ? ${selectedGrades.contains('BB')} : false">BB</option>
+                        <option value="BC" th:selected="${selectedGrades != null} ? ${selectedGrades.contains('BC')} : false">BC</option>
+                        <option value="CC" th:selected="${selectedGrades != null} ? ${selectedGrades.contains('CC')} : false">CC</option>
+                        <option value="CD" th:selected="${selectedGrades != null} ? ${selectedGrades.contains('CD')} : false">CD</option>
+                        <option value="DD" th:selected="${selectedGrades != null} ? ${selectedGrades.contains('DD')} : false">DD</option>
+                        <option value="DE" th:selected="${selectedGrades != null} ? ${selectedGrades.contains('DE')} : false">DE</option>
+                        <option value="F" th:selected="${selectedGrades != null} ? ${selectedGrades.contains('F')} : false">F</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Buttons -->
+        <div class="d-flex flex-column align-items-center">
+            <button type="submit" class="btn btn-success mb-3 w-75">Show Selected Grades</button>
+            <button type="button" class="btn btn-secondary w-75" onclick="selectAllGrades()">Show All Grades</button>
+        </div>
+    </form>
+</div>
+
+    <table class="table table-bordered table-striped" style="width:90%;margin: 0 auto;">
+        <thead class="table-primary">
+        <tr>
+            <th>Sr No</th>
+            <th>Student Id</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Updated Grade</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="student, iterStat : ${updatedGrades}">
+            <td th:text="${iterStat.count}"></td>
+            <td th:text="${student.studentId}"></td>
+            <td th:text="${student.studentName}"></td>
+            <td th:text="${student.studentEmail}"></td>
+            <td th:text="${student.grade}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+</div>
+
+
+<script>
+    function selectAllGrades() {
+        const select = document.getElementById('grades');
+        for(let i=0; i < select.options.length; i++) {
+            select.options[i].selected = true;
+        }
+        select.form.submit();
+    }
+</script>
+
+</body>
+</html>

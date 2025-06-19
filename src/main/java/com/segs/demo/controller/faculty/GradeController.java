@@ -117,7 +117,4 @@ public class GradeController {
         return ResponseEntity.ok(studentGrades);
     }
 
-    
-
-
 }

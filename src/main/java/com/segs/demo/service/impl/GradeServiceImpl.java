@@ -78,6 +78,54 @@ public class GradeServiceImpl implements GradeService {
         return gradeRepository.findAll();
     }
 
+
+    @Override
+public List<StudentGradeDTO> getUpdatedStudentGrades(Long CRSID, Long trmid, Long examTypeId, List<String> selectedGrades) {
+    Long tcrid = termCourseRepository.findTcridByCrsidAndTrmid(CRSID, trmid);
+
+    if (tcrid == null) {
+        System.out.println("No tcrid found for CRSID: " + CRSID + " and TRMID: " + trmid);
+        return new ArrayList<>();
+    }
+
+    StringBuilder sqlBuilder = new StringBuilder();
+    sqlBuilder.append("SELECT s.stdinstid, e.obtgr_id, s.stdfirstname, s.stdemail, g.grad_lt ");
+    sqlBuilder.append("FROM ec2.egcrstt1 e ");
+    sqlBuilder.append("JOIN ec2.students s ON e.stud_id = s.stdid ");
+    sqlBuilder.append("JOIN ec2.eggradm1 g ON e.obtgr_id = g.grad_id ");
+    sqlBuilder.append("WHERE e.tcrid = :tcrid AND e.examtype_id = :examTypeId ");
+    sqlBuilder.append("AND e.updat_by IS NOT NULL AND e.updat_dt IS NOT NULL");
+
+    if (selectedGrades != null && !selectedGrades.isEmpty()) {
+        sqlBuilder.append(" AND g.grad_lt IN (:selectedGrades)");
+    }
+
+    Query query = entityManager.createNativeQuery(sqlBuilder.toString());
+    query.setParameter("tcrid", tcrid);
+    query.setParameter("examTypeId", examTypeId);
+
+    if (selectedGrades != null && !selectedGrades.isEmpty()) {
+        query.setParameter("selectedGrades", selectedGrades);
+    }
+
+    @SuppressWarnings("unchecked")
+    List<Object[]> results = query.getResultList();
+
+    List<StudentGradeDTO> updatedGrades = new ArrayList<>();
+    for (Object[] row : results) {
+        String studentId = ((String) row[0]);
+        String studentName = (String) row[2];
+        String studentEmail = (String) row[3];
+        String gradeValue = (String) row[4];
+
+        updatedGrades.add(new StudentGradeDTO(studentId, studentName, studentEmail, gradeValue));
+    }
+
+    return updatedGrades;
+}
+
+
+
     @Override
     public List<StudentGradeDTO> getStudentGrades(Long CRSID, Long trmid, Long examTypeId, List<String> selectedGrades) {
         Long tcrid = termCourseRepository.findTcridByCrsidAndTrmid(CRSID, trmid);

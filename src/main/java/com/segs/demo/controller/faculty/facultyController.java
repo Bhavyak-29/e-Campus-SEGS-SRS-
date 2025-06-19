@@ -108,6 +108,38 @@ public class facultyController {
 
         return "directGradeEntry";
     }
+
+    @GetMapping("/directGradeEntry/updatedGrades")
+public String showUpdatedGrades(@RequestParam(required = false) List<String> selectedGrades,
+                                ModelMap model,
+                                HttpSession session) {
+    Long trmid = (Long) session.getAttribute("TRMID");
+    Long crsid = (Long) session.getAttribute("CRSID");
+    Long examTypeId = (Long) session.getAttribute("examTypeId");
+
+    // Load all distinct grades for the filter dropdown
+    List<Grade> allGrades = gradeService.getAllGrades();
+    List<Grade> distinctGrades = allGrades.stream()
+            .collect(Collectors.collectingAndThen(
+                    Collectors.toCollection(() -> new TreeSet<>(Comparator.comparing(Grade::getGradeValue))),
+                    ArrayList::new));
+
+    model.addAttribute("grades", distinctGrades);
+
+    if (crsid != null && trmid != null && examTypeId != null) {
+        List<StudentGradeDTO> updatedGrades = gradeService.getUpdatedStudentGrades(crsid, trmid, examTypeId, selectedGrades);
+        model.addAttribute("updatedGrades", updatedGrades);
+        model.addAttribute("selectedGrades", selectedGrades);
+    } else {
+        model.addAttribute("updatedGrades", new ArrayList<StudentGradeDTO>());
+    }
+
+    model.addAttribute("CRSID", crsid);
+    model.addAttribute("examTypeId", examTypeId);
+
+    return "updatedGradesView";
+}
+
     
     @GetMapping("/directGradeEntry/gradeLeftFrame")
     public String showGradeLeftFrame(HttpSession session, ModelMap model) {
