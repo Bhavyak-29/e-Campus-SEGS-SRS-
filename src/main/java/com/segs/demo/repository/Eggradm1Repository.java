@@ -21,4 +21,6 @@ public interface Eggradm1Repository extends JpaRepository<Eggradm1, Long> {
 
     @Query("SELECT e.grad_id, e.grad_lt FROM Eggradm1 e")
     List<Object[]> getGradeIdToLetterMap();
+
+    List<Eggradm1> findByRowstateGreaterThan(short rowState);
 }

@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import com.segs.demo.model.DropdownItem;
 import com.segs.demo.model.TermCourse;
 
 public interface TermCourseRepository extends JpaRepository<TermCourse, Long> {
@@ -18,5 +19,14 @@ public interface TermCourseRepository extends JpaRepository<TermCourse, Long> {
     List<TermCourse> findByTerm_IdAndUser_UserId(Long trmId, Long userId);
 
     List<TermCourse> findByTerm_AcademicYear_IdAndTerm_Id(Long academicYearId, Long termId);
+
+     @Query("SELECT NEW com.segs.demo.model.DropdownItem(CAST(tc.id AS string), CONCAT(c.name, '-(', c.code, ')')) " +
+           "FROM TermCourse tc JOIN Course c ON tc.course.id = c.id " + 
+           "WHERE (tc.rowState > 0 OR tc.rowState IS NULL) " +
+           "AND (c.rowState > 0 OR c.rowState IS NULL) " +
+           "AND tc.term.id = :termId " + 
+           "AND EXISTS (SELECT 1 FROM Egcrstt1 e WHERE e.id.tcrid = tc.id AND e.rowStatus = '1') " +
+           "ORDER BY c.name")
+    List<DropdownItem> findSubmittedTermCoursesByTermId(@Param("termId") Long termId);
 
 }

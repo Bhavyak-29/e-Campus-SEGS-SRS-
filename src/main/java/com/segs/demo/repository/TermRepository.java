@@ -14,4 +14,6 @@ public interface TermRepository extends JpaRepository<Term, Long> {
     
     @Query("SELECT DISTINCT t FROM Term t WHERE t.rowState > 0 ORDER BY t.name")
     List<Term> findDistinctByRowStateGreaterThan(int rowState);
+
+    List<Term> findByAcademicYear_IdAndRowStateGreaterThanOrderByField1Asc(Long ayrId, int rowState);
 }

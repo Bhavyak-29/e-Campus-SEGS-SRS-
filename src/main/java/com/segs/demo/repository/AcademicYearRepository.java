@@ -10,4 +10,6 @@ import java.util.List;
 public interface AcademicYearRepository extends JpaRepository<AcademicYear, Long> {
     
     List<AcademicYear> findByRowStateGreaterThan(int rowState);
+
+    List<AcademicYear> findByRowStateGreaterThanOrderByField1Asc(int rowState);
 }

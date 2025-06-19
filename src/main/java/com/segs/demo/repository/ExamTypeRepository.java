@@ -3,13 +3,22 @@ package com.segs.demo.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import com.segs.demo.model.DropdownItem;
 import com.segs.demo.model.ExamType;
 
 @Repository
 public interface ExamTypeRepository extends JpaRepository<ExamType, Long> {
     List<ExamType> findByCourse_Id(Long crsId);
     List<ExamType> findByIdIn(List<Long> examtypeIds);
+
+    // ExamTypeRepository.java
+    @Query("SELECT NEW com.segs.demo.model.DropdownItem(CAST(et.id AS string), et.title) " +
+           "FROM ExamType et WHERE et.rowState > 0 " +
+           "AND EXISTS (SELECT 1 FROM Egcrstt1 e WHERE e.id.examtypeId = et.id AND e.id.tcrid = :termCourseId AND e.rowStatus = '1')")
+    List<DropdownItem> findExamTypesWithGradesByTermCourseId(@Param("termCourseId") Long termCourseId);
 
 }

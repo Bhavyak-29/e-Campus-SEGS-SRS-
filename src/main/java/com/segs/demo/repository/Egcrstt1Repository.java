@@ -2,6 +2,8 @@ package com.segs.demo.repository;
 
 import com.segs.demo.model.Egcrstt1;
 import com.segs.demo.model.Egcrstt1Id;
+import com.segs.demo.model.StudentGradeReportDTO;
+
 // Import your DTO here, e.g., import com.segs.demo.dto.GradeResultDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -33,4 +35,14 @@ public interface Egcrstt1Repository extends JpaRepository<Egcrstt1, Egcrstt1Id> 
     ORDER BY e.examtype_id DESC
     """, nativeQuery = true)
     List<Object[]> findGradeAndExamTitle(@Param("studentId") Long studentId, @Param("termCourseId") Long termCourseId);
+
+    boolean existsById_TcridAndId_ExamtypeIdAndRowStatusGreaterThan(Long tcrid, Long examtypeId,String rowState);
+
+    // Method to fetch student grades for the report
+    @Query("SELECT NEW com.segs.demo.model.StudentGradeReportDTO(s.stdinstid, CONCAT(s.stdfirstname, ' ', s.stdlastname), gm.grad_lt) " +
+           "FROM Egcrstt1 e JOIN Student s ON e.id.studId = s.stdid " +
+           "JOIN Eggradm1 gm ON e.obtainedGradeId = gm.grad_id " + 
+           "WHERE e.id.tcrid = :termCourseId AND e.id.examtypeId = :examTypeId AND e.rowStatus = '1' " + 
+           "AND s.stdrowstate > 0 ORDER BY s.stdinstid")
+    List<StudentGradeReportDTO> findStudentGradesForReport(@Param("termCourseId") Long termCourseId, @Param("examTypeId") Long examTypeId);
 }

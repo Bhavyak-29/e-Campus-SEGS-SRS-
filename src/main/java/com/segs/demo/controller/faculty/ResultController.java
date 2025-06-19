@@ -1,23 +1,8 @@
 package com.segs.demo.controller.faculty;
 
-import com.segs.demo.model.Egcrstt1;
-import com.segs.demo.model.Eggradm1;
-import com.segs.demo.model.Student;
-import com.segs.demo.model.StudentRegistrations;
-import com.segs.demo.model.StudentSemesterResult;
-import com.segs.demo.model.Program;
-import com.segs.demo.model.Batch;
-import com.segs.demo.model.Semester;
+import com.segs.demo.model.*; // Assuming AcademicYear, Term, Course, TermCourse, ExamType are here
 
-import com.segs.demo.repository.Egcrstt1Repository;
-import com.segs.demo.repository.Eggradm1Repository;
-import com.segs.demo.repository.StudentRegistrationCourseRepository;
-import com.segs.demo.repository.StudentRegistrationsRepository;
-import com.segs.demo.repository.StudentRepository;
-import com.segs.demo.repository.StudentSemesterResultRepository;
-import com.segs.demo.repository.ProgramRepository;
-import com.segs.demo.repository.BatchRepository;
-import com.segs.demo.repository.SemesterRepository;
+import com.segs.demo.repository.*; // Assuming new repositories are in this package
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -41,6 +26,7 @@ import java.math.BigDecimal;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 // Apache POI for Excel export
 import org.apache.poi.ss.usermodel.Row;
@@ -53,7 +39,7 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 @RequestMapping("/results") // Base path for all result-related functionalities
 public class ResultController {
 
-    // Repositories
+    // Repositories (Existing)
     @Autowired
     private StudentRepository studentRepository;
     @Autowired
@@ -65,13 +51,23 @@ public class ResultController {
     @Autowired
     private StudentRegistrationCourseRepository studentRegistrationCourseRepository;
     @Autowired
-    private StudentSemesterResultRepository studentSemesterResultRepository; // Note: This repository now has a custom implementation for SPI/CPI list
+    private StudentSemesterResultRepository studentSemesterResultRepository;
     @Autowired
     private ProgramRepository programRepository;
     @Autowired
     private BatchRepository batchRepository;
     @Autowired
     private SemesterRepository semesterRepository;
+
+    // New Repositories for CourseWise -> Exam Specific
+    @Autowired
+    private AcademicYearRepository academicYearRepository; // Assuming this is your AcademicYear entity repository
+    @Autowired
+    private TermRepository termRepository;               // Assuming this is your Term entity repository
+    @Autowired
+    private TermCourseRepository termCourseRepository;   // Assuming this is your TermCourse entity repository
+    @Autowired
+    private ExamTypeRepository examTypeRepository;       // Assuming this is your ExamType entity (for EGEXAMM1) repository
 
 
     // --- Existing Student-wise Result Methods (No Changes) ---
@@ -154,7 +150,7 @@ public class ResultController {
     }
 
 
-    // --- SPI-CPI List Functionality ---
+    // --- SPI-CPI List Functionality (Existing) ---
 
     /**
      * Displays the Program, Batch, and Semester selection page for SPI-CPI list.
@@ -220,7 +216,7 @@ public class ResultController {
                                  @RequestParam(name = "generateExcelSheet", required = false) String excelFlag, // Simpler name
                                  RedirectAttributes redirectAttributes) throws IOException {
 
-        
+
         Long semesterId; // Declare semesterId as Long
 
         // 1. Try to get it from the request parameter first
@@ -249,8 +245,8 @@ public class ResultController {
                 return "redirect:/results/spicpi/selector";
             }
         }
-                            
-        if (semesterId == null) { // This check is redundant if previous blocks handle null/empty, but good for safety
+
+        if (semesterId == null) {
             redirectAttributes.addFlashAttribute("errorMessage", "Please select a semester before viewing the list.");
             return "redirect:/results/spicpi/selector";
         }
@@ -332,6 +328,184 @@ public class ResultController {
                     row.createCell(4).setCellValue(rowData[3].toString());
                 }
             }
+        }
+
+        workbook.write(response.getOutputStream());
+        workbook.close();
+
+        return null; // No view name needed as content is written directly to response
+    }
+
+    // --- NEW: Coursewise -> Exam Specific Functionality ---
+
+    /**
+     * Displays the Academic Year, Term, Course, Exam Type selection page.
+     * Corresponds to SegsSubmittedTermCourseExamSelector servlet.
+     */
+    @GetMapping("/coursewise/exam-specific/selector")
+    public String showCourseExamSelector(Model model, HttpSession session,
+                                         @RequestParam(name = "actiontext", required = false) String actionText,
+                                         @RequestParam(name = "target", required = false, defaultValue = "/results/coursewise/exam-specific/list") String targetUrl,
+                                         @RequestParam(name = "fromWhichSystem", required = false) String fromWhichSystem) {
+
+        // Store session attributes from the original servlet logic
+        if (fromWhichSystem != null) {
+            session.setAttribute("fromWhichSystem", fromWhichSystem);
+        } else {
+            fromWhichSystem = (String) session.getAttribute("fromWhichSystem");
+        }
+
+        if (actionText != null) {
+            session.setAttribute("actionText", actionText);
+        } else {
+            actionText = (String) session.getAttribute("actionText");
+        }
+
+        if (targetUrl != null) {
+            session.setAttribute("target", targetUrl);
+        } else {
+            targetUrl = (String) session.getAttribute("target");
+        }
+
+        // Fetch initial data for Academic Year dropdown
+        List<AcademicYear> academicYears = academicYearRepository.findByRowStateGreaterThanOrderByField1Asc((int) 0);
+
+        // Convert to List<DropdownItem> to match the JSP's expected format (id^name)
+        List<DropdownItem> academicYearDropdown = academicYears.stream()
+            .map(ay -> new DropdownItem(String.valueOf(ay.getId()), ay.getName()))
+            .collect(Collectors.toList());
+
+        model.addAttribute("academicYears", academicYearDropdown);
+        model.addAttribute("actionText", actionText); // For display on JSP
+        model.addAttribute("targetUrl", targetUrl);   // For form action on JSP
+
+        // The other dropdowns (Term, Course, Exam Type) will be populated via AJAX
+        return "courseExamSelector"; // Thymeleaf template for selection
+    }
+
+    /**
+     * AJAX endpoint to get terms based on selected academic year.
+     */
+    @GetMapping("/coursewise/exam-specific/api/terms")
+    @ResponseBody
+    public List<DropdownItem> getTermsByAcademicYear(@RequestParam Long academicYearId) {
+        List<Term> terms = termRepository.findByAcademicYear_IdAndRowStateGreaterThanOrderByField1Asc(academicYearId, (int) 0);
+        return terms.stream()
+            .map(term -> new DropdownItem(String.valueOf(term.getId()), term.getName()))
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * AJAX endpoint to get courses based on selected term.
+     * This specifically fetches courses that have 'T' (submitted) grades.
+     */
+    @GetMapping("/coursewise/exam-specific/api/courses")
+    @ResponseBody
+    public List<DropdownItem> getCoursesByTerm(@RequestParam Long termId) {
+        return termCourseRepository.findSubmittedTermCoursesByTermId(termId);
+    }
+
+    /**
+     * AJAX endpoint to get exam types based on selected course (TermCourseId).
+     * This specifically fetches exam types for which grades exist for the given course.
+     */
+    @GetMapping("/coursewise/exam-specific/api/examtypes")
+    @ResponseBody
+    public List<DropdownItem> getExamTypesByCourse(@RequestParam Long termCourseId) {
+        return examTypeRepository.findExamTypesWithGradesByTermCourseId(termCourseId);
+    }
+
+    /**
+     * Displays the grade list report based on selected Academic Year, Term, Course, and Exam Type.
+     * Corresponds to GradeListServlet and defaultGradeListReport.jsp.
+     */
+    @GetMapping("/coursewise/exam-specific/list")
+    public String showGradeListReport(Model model, HttpSession session, HttpServletResponse response,
+                                      @RequestParam(name = "academicYearId", required = false) Long academicYearId,
+                                      @RequestParam(name = "termId", required = false) Long termId,
+                                      @RequestParam(name = "termCourseId", required = false) Long termCourseId,
+                                      @RequestParam(name = "examTypeId", required = false) Long examTypeId,
+                                      @RequestParam(name = "grade", required = false) String[] selectedGrades, // For multi-select filter
+                                      @RequestParam(name = "generateExcelSheet", required = false) String generateExcelSheet,
+                                      RedirectAttributes redirectAttributes) throws IOException {
+
+        // Retrieve from session if not present in request (mimics old servlet behavior)
+        academicYearId = (academicYearId != null) ? academicYearId : (Long) session.getAttribute("academicYearId");
+        termId = (termId != null) ? termId : (Long) session.getAttribute("termId");
+        termCourseId = (termCourseId != null) ? termCourseId : (Long) session.getAttribute("termCourseId");
+        examTypeId = (examTypeId != null) ? examTypeId : (Long) session.getAttribute("examTypeId");
+
+        // Store in session for subsequent requests (e.g., Excel export, Back button)
+        session.setAttribute("academicYearId", academicYearId);
+        session.setAttribute("termId", termId);
+        session.setAttribute("termCourseId", termCourseId);
+        session.setAttribute("examTypeId", examTypeId);
+
+        // Basic validation (mimics sumbitIt() from JSP)
+        if (academicYearId == null || termId == null || termCourseId == null || examTypeId == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Please select all required fields (Academic Year, Term Name, Course Name, Exam Type).");
+            return "redirect:/results/coursewise/exam-specific/selector";
+        }
+
+        // Check if grade is computed/submitted (mimics !lSegsTermCourseGradingBn.getIsNotSubmittedFlag())
+        boolean isGradeSubmitted = egcrstt1Repository.existsById_TcridAndId_ExamtypeIdAndRowStatusGreaterThan(termCourseId, examTypeId, "0");
+
+        if (!isGradeSubmitted) {
+            model.addAttribute("errorMessage", "Grade is not computed for the course.");
+            return "processStatusPage"; // Thymeleaf template for error message
+        }
+
+        // Fetch all possible grades for the filter dropdown
+        List<Eggradm1> allGrades = eggradm1Repository.findByRowstateGreaterThan((short) 0);
+        model.addAttribute("allGrades", allGrades);
+
+        // Fetch the actual student grades for the report
+        List<StudentGradeReportDTO> studentGrades = egcrstt1Repository.findStudentGradesForReport(termCourseId, examTypeId);
+
+        // Apply grade-based filtering if selectedGrades are provided
+        if (selectedGrades != null && selectedGrades.length > 0) {
+            List<String> gradeFilterList = java.util.Arrays.asList(selectedGrades);
+            studentGrades = studentGrades.stream()
+                .filter(sg -> gradeFilterList.contains(sg.getObtainedGrade().trim()))
+                .collect(Collectors.toList());
+            model.addAttribute("selectedGrades", selectedGrades); // Keep selected grades for pre-selection in JSP
+        }
+
+        if ("True".equalsIgnoreCase(generateExcelSheet)) {
+            return generateGradeListExcel(studentGrades, response);
+        } else {
+            model.addAttribute("studentGrades", studentGrades);
+            return "gradeListReport"; // Thymeleaf template for the grade list
+        }
+    }
+
+    /**
+     * Generates an Excel sheet for the Grade List Report.
+     */
+    private String generateGradeListExcel(List<StudentGradeReportDTO> data, HttpServletResponse response) throws IOException {
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=grade_list_" + System.currentTimeMillis() + ".xlsx";
+        response.setHeader(headerKey, headerValue);
+
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Grade List");
+
+        // Create header row
+        Row headerRow = sheet.createRow(0);
+        headerRow.createCell(0).setCellValue("Sr No");
+        headerRow.createCell(1).setCellValue("Student Id");
+        headerRow.createCell(2).setCellValue("Student Name");
+        headerRow.createCell(3).setCellValue("Grade");
+
+        int rowNum = 1;
+
+        for (StudentGradeReportDTO studentGrade : data) {
+            Row row = sheet.createRow(rowNum++);
+            row.createCell(0).setCellValue(rowNum - 1); // Sr No
+            row.createCell(1).setCellValue(studentGrade.getStudentInstituteId());
+            row.createCell(2).setCellValue(studentGrade.getStudentName());
+            row.createCell(3).setCellValue(studentGrade.getObtainedGrade());
         }
 
         workbook.write(response.getOutputStream());

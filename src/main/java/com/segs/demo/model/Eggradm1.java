@@ -2,6 +2,7 @@ package com.segs.demo.model;
 
 import java.math.BigDecimal;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -14,7 +15,16 @@ public class Eggradm1 {
     private String grad_lt;
     private BigDecimal grad_pt;
 
+    @Column(name = "row_st")
+    private short rowstate;
 
+
+    public short getRowstate() {
+        return rowstate;
+    }
+    public void setRowstate(short rowstate) {
+        this.rowstate = rowstate;
+    }
     public Long getGrad_id() {
         return grad_id;
     }
