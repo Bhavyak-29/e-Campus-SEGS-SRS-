@@ -18,19 +18,9 @@
                 style="white-space: nowrap;">⬅ Back to Menu</a>
         </div>
         <div class="w-75 mx-auto card shadow p-4">
-            <h2 class="text-center mb-4">Upload Grades</h2>
+            <h2 class="text-center mb-4">Revise I Grade</h2>
 
             <!-- Tab navigation -->
-            <ul class="nav nav-tabs" id="gradeUploadTabs" role="tablist">
-                <li class="nav-item" role="presentation">
-                    <button class="nav5-link active" id="manual-tab" data-bs-toggle="tab" data-bs-target="#manual"
-                        type="button" role="tab">Manual Entry</button>
-                </li>
-                <li class="nav-item" role="presentation">
-                    <button class="nav5-link" id="csv-tab" data-bs-toggle="tab" data-bs-target="#csv" type="button"
-                        role="tab">Upload CSV</button>
-                </li>
-            </ul>
 
             <!-- Tab content -->
             <div class="tab-content mt-4" id="gradeUploadTabsContent">
@@ -75,7 +65,7 @@
                                             <option value="CD" th:selected="${student.grade == 'CD'}">CD</option>
                                             <option value="DD" th:selected="${student.grade == 'DD'}">DD</option>
                                             <option value="F" th:selected="${student.grade == 'F'}">F</option>
-                                            <!-- <option value="I" th:selected="${student.grade == 'I'}">I</option> -->
+                                            <option value="I" th:selected="${student.grade == 'I'}">I</option>
                                         </select>
                                     </td>
                                     <td>
@@ -91,27 +81,10 @@
                 </div>
 
                 <!-- CSV Upload Tab -->
-                <div id="upload-alert" class="alert d-none" role="alert"></div>
+                
 
                 <!-- CSV Upload Form -->
-                <div class="tab-pane fade" id="csv" role="tabpanel">
-                    <form id="csvUploadForm" method="post" enctype="multipart/form-data">
-                        <div class="mb-3">
-                            <label for="file" class="form-label">Your Course Details :
-                                Term - <span th:text="${TermName}"></span> |
-                                Course - <span th:text="${CourseName}"></span>
-                            </label>
-                        </div>
-                        <div class="mb-3">
-                            <label for="file" class="form-label">Select CSV File</label>
-                            <input type="file" id="file" name="file" class="form-control" accept=".csv" required />
-                            <small class="text-muted">Expected columns: studentid, grade</small>
-                        </div>
-                        <div class="text-center">
-                            <button type="submit" class="btn btn-success">Upload CSV</button>
-                        </div>
-                    </form>
-                </div>
+                
             </div>
         </div>
     </div>

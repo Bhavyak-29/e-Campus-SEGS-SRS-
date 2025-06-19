@@ -30,15 +30,20 @@
         }
         
         
-        
         .sidebar a {
             display: block;
             padding: 10px 15px;
-            margin-bottom: 5px;
+            margin-bottom: 2px;
             color: #333;
             text-decoration: none;
             border-radius: 4px;
             transition: all 0.3s;
+        }
+
+        .sidebar h6,
+        .sidebar li,
+        .sidebar a {
+            font-size: 0.85rem !important;
         }
         
         .sidebar a:hover {
@@ -52,7 +57,6 @@
             background-color: transparent;
         }
         
-        
     </style>
 </head>
 <body>
@@ -62,15 +66,48 @@
     
     <div class="content-wrapper">
         <div class="sidebar">
-            <a th:href="@{/directGradeEntry/gradeOptions}">Grade View</a>
-            <a th:href="@{/grades/upload}">Grade Insert</a>
-            <!-- <a th:href="@{/grades/upload}">Course Marks</a> -->
-            <a th:href="@{/directGradeEntry/grades/chart-view3}">Grades - Line Graph</a>
-            <a th:href="@{/directGradeEntry/grades/chart-view}">Grades - Bar Graph</a>
-            <a th:href="@{/directGradeEntry/grades/chart-view2}">Grades - Pie Chart</a>
-            <a th:href="@{/directGradeEntry/updatedGrades}">Grade List - Updated</a>
-
+            <style>
+                .sidebar ul {
+                    list-style-type: none;
+                    padding-left: 15px;
+                }
+            </style>
+        <div class="menu-section">
+            <h6>Transaction ▷</h6>
+            <ul>
+                <li><a th:href="@{/grades/upload}">Grade Entry</a></li>
+                <li><a th:href="@{/directGradeEntry/gradeOptions}">Grade View</a></li>
+                <li><a th:href="@{/grades/reviseIGrade}">Revise I Grade</a></li>
+            </ul>
         </div>
+
+        <div class="menu-section">
+            <h6>Reports (Your Courses) ▷</h6>
+            <ul>
+                <li>
+                    <h6>Results ▷</h6>
+                    <ul>
+                        <li>
+                            <h6>Grade Frequency ▷</h6>
+                            <ul>
+                                <li><a th:href="@{/directGradeEntry/grades/chart-view3}">Line Graph</a></li>
+                                <li><a th:href="@{/directGradeEntry/grades/chart-view}">Bar Graph</a></li>
+                                <li><a th:href="@{/directGradeEntry/grades/chart-view2}">Pie Chart</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <h6>Grade List ▷</h6>
+                            <ul>
+                                <li><a th:href="@{/directGradeEntry/gradeOptions}">Exam Specific</a></li>
+                                <li><a th:href="@{/directGradeEntry/updatedGrades}">Updated Grades</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+
 
     <div class="main-content2 d-flex flex-column justify-content-center align-items-center text-center" style="height: 70vh; background-color:transparent; border-radius: 12px; ">
 

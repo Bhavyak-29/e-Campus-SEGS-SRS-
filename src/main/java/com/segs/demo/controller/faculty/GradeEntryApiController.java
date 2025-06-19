@@ -1,7 +1,6 @@
 package com.segs.demo.controller.faculty;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +12,6 @@ import com.segs.demo.model.CourseDTO;
 import com.segs.demo.model.ExamType;
 import com.segs.demo.model.Term;
 import com.segs.demo.service.AcademicService;
-import com.segs.demo.service.GradeService;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -25,9 +23,6 @@ public class GradeEntryApiController {
 
     @Autowired
     private AcademicService academicService;
-
-    @Autowired
-    private GradeService gradeService;
 
     @GetMapping("/terms")
     public List<Term> getTermsByAcademicYear(@RequestParam Long AYRID) {

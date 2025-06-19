@@ -42,7 +42,6 @@ import com.segs.demo.repository.Eggradm1Repository;
 import com.segs.demo.repository.ProgramRepository;
 import com.segs.demo.repository.StudentProfileRepository;
 import com.segs.demo.repository.StudentRegistrationCourseRepository;
-import com.segs.demo.repository.StudentRegistrationRepository;
 import com.segs.demo.repository.StudentRegistrationsRepository;
 import com.segs.demo.repository.StudentRepository;
 import com.segs.demo.repository.StudentSemesterResultRepository;
@@ -65,9 +64,6 @@ public class facultyController {
 
     @Autowired
     private AddressRepository addressRepository;
-
-    @Autowired
-    private StudentRegistrationRepository studentRegistrationRepository;
 
     @Autowired
     private StudentRegistrationsRepository studentRegistrationsRepository;
@@ -116,7 +112,10 @@ public String showUpdatedGrades(@RequestParam(required = false) List<String> sel
     Long trmid = (Long) session.getAttribute("TRMID");
     Long crsid = (Long) session.getAttribute("CRSID");
     Long examTypeId = (Long) session.getAttribute("examTypeId");
-
+    if (crsid == null || trmid == null || examTypeId == null) {
+        model.addAttribute("error", "Session expired or missing data. Please reselect options.");
+        return "redirect:/directGradeEntry";
+    }
     // Load all distinct grades for the filter dropdown
     List<Grade> allGrades = gradeService.getAllGrades();
     List<Grade> distinctGrades = allGrades.stream()
@@ -149,7 +148,7 @@ public String showUpdatedGrades(@RequestParam(required = false) List<String> sel
 
         if (crsid == null || trmid == null || examTypeId == null) {
             model.addAttribute("error", "Session expired or missing data. Please reselect options.");
-            return "redirect:/directGradeEntry/gradeOptions";
+            return "redirect:/directGradeEntry";
         }
 
         String termName = gradeService.getTermName(trmid);
@@ -189,7 +188,7 @@ public String showUpdatedGrades(@RequestParam(required = false) List<String> sel
 
         if (crsid == null || trmid == null || examTypeId == null) {
             model.addAttribute("error", "Session expired or missing data. Please reselect options.");
-            return "redirect:/directGradeEntry/gradeOptions";
+            return "redirect:/directGradeEntry";
         }
 
         String termName = gradeService.getTermName(trmid);
@@ -207,7 +206,7 @@ public String showUpdatedGrades(@RequestParam(required = false) List<String> sel
 
         if (crsid == null || trmid == null || examTypeId == null) {
             model.addAttribute("error", "Session expired or missing data. Please reselect options.");
-            return "redirect:/directGradeEntry/gradeOptions";
+            return "redirect:/directGradeEntry";
         }
 
         String termName = gradeService.getTermName(trmid);
@@ -225,7 +224,7 @@ public String showUpdatedGrades(@RequestParam(required = false) List<String> sel
 
         if (crsid == null || trmid == null || examTypeId == null) {
             model.addAttribute("error", "Session expired or missing data. Please reselect options.");
-            return "redirect:/directGradeEntry/gradeOptions";
+            return "redirect:/directGradeEntry";
         }
 
         String termName = gradeService.getTermName(trmid);
@@ -240,11 +239,13 @@ public String showUpdatedGrades(@RequestParam(required = false) List<String> sel
     public String showGradeOptions(@RequestParam(required = false) List<String> selectedGrades,
             ModelMap model,
             HttpSession session) {
-                Long ayrid = (Long) session.getAttribute("AYRID"); 
                 Long trmid = (Long) session.getAttribute("TRMID"); 
                 Long crsid = (Long) session.getAttribute("CRSID"); 
                 Long examTypeId = (Long) session.getAttribute("examTypeId"); 
-
+                if (crsid == null || trmid == null || examTypeId == null) {
+                    model.addAttribute("error", "Session expired or missing data. Please reselect options.");
+                    return "redirect:/directGradeEntry";
+                }
                 List<Grade> allGrades = gradeService.getAllGrades();
                 List<Grade> distinctGrades = allGrades.stream()
                         .collect(Collectors.collectingAndThen(
@@ -412,10 +413,5 @@ public String showUpdatedGrades(@RequestParam(required = false) List<String> sel
         model.addAttribute("batch", batch);
         model.addAttribute("students", students);
         return "batchwise_details";
-    }
-
-
-    
-
-    
+    }    
 }
