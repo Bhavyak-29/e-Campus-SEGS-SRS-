@@ -1,6 +1,7 @@
 <!-- grade_chart.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <title>Grade Chart</title>
     <!-- Bootstrap 5 CSS -->
@@ -10,236 +11,131 @@
     <link rel="stylesheet" th:href="@{/css/ecampus.css}" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body>
     <table>
-   <tr>
-        <td colspan="3" class="top-bar">
-            <div class="top-bar-content">
-                <a href="/" class="brand-name">DA-IICT</a>
-                <span class="brand-description">
-                    Dhirubhai Ambani Institute of Information & Communication Technology
-                </span>
-            </div>
-        </td>
-    </tr>
+        <div th:insert="fragments/header :: mainHeader"></div>
+        <div class="container mt-5 text-center">
+            <tr>
+            <td class="sidemenu"></td>
+            <td class="content">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <a href="/directGradeEntry/gradeLeftFrame" class="btn btn-dark ms-3" style="white-space: nowrap;">⬅
+                        Back to Menu</a>
+                </div>
+                <h2 th:text="'Grades for ' + ${courseName} + ' (' + ${termName} + ')'"></h2>
+                <canvas id="gradeChart" width="800" height="400"></canvas>
+            </td>
+            <td class="sidemenu"></td>
+        </tr>
 
-    <tr class="nav-bar">
-        <td colspan="3">
-            <table width="100%">
-                <tr>
-                    <td>
-                        <div class="dropdown">
-                            <button class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
-                                Transaction
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li class="dropdown-submenu position-relative">
-                                    <a class="dropdown-item" href="/directGradeEntry">Direct Grade Entry</a>
-                            
-                                </li>
-                                <li><a class="dropdown-item" href="#">Modify Grade</a></li>
-                                <li><a class="dropdown-item" href="#">Revise I Grade</a></li>
-                                <li><a class="dropdown-item" href="#">Approval Status</a></li>
-                            </ul>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="dropdown">
-                            <button class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
-                                Reports (Your Course)
-                            </button>
-                            <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">Marks</a></li>
-                                    <li class="dropdown-submenu position-relative">
-                                    <a class="dropdown-item dropdown-toggle" href="#">Result</a>
-                                        <ul class="dropdown-menu">
-                                                <li class="dropdown-submenu position-relative">
-                                                    <a class="dropdown-item dropdown-toggle" href="#">Grade Freq</a>
-                                                    <ul class="dropdown-menu">
-                                                        <li><a class="dropdown-item" href="/directGradeEntry/grades/chart-view">Bar Graph</a></li>
-                                                        <li><a class="dropdown-item" href="/directGradeEntry/grades/chart-view2">Pie Chart</a></li>
-                                                        <li><a class="dropdown-item" href="/directGradeEntry/grades/chart-view3">Line Graph</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li><a class="dropdown-item" href="/directGradeEntry/gradeOptions">Grade List</a></li>
-                                            </ul>
-                                    <li><a class="dropdown-item" href="#">Course Evaluation</a></li>
-                                </ul>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="dropdown">
-                            <div class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" data-bs-toggle="dropdown">
-                                Reports (All Courses)
-                            </div>
-                            <ul class="dropdown-menu">
-                                <li class="dropdown-submenu position-relative">
-                                    <a class="dropdown-item dropdown-toggle" href="#">Student Info</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="/students/search">Studentwise</a></li>
-                                        <li><a class="dropdown-item" href="/students/batch">Batchwise</a></li>
-                                    </ul>
-                                </li>
-                                <li class="dropdown-submenu position-relative">
-                                    <a class="dropdown-item dropdown-toggle" href="#">Course</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="/courses/master-list">Master List</a></li>
-                                        <li><a class="dropdown-item" href="/courses/term">Term Courses</a></li>
-                                    </ul>
-                                </li>                                
-                                <li class="dropdown-submenu position-relative">
-                                    <a class="dropdown-item dropdown-toggle" href="#">Registrations</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="/registrations/search">Student-wise</a></li>
-                                        <li><a class="dropdown-item" href="/registrations/term">Term-wise</a></li>
-                                        <li><a class="dropdown-item" href="/registrations/courses">Course-wise</a></li>
-                                    </ul>
-                                </li>                                                                                              
-                                <li><a class="dropdown-item" href="#">Result</a></li>
-                            </ul>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="dropdown">
-                            <button class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
-                                Help
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">About Application</a></li>
-                                <li><a class="dropdown-item" href="#">Workflow of SEGS</a></li>
-                                <li><a class="dropdown-item" href="#">Contact US</a></li>
-                            </ul>
-                        </div>
-                    </td>
-                    <td>
-                    <a class="btn btn-logout-modern w-100" style="color:white;font-weight:bold;" href="/logout">
-                        Logout
-                    </a>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-    
-    
-    <tr>
+        <tr>
+            <td class="sidemenu"></td>
+            <td class="footer" colspan="1">
+                &copy; 2002 DA-IICT, Near Indroda Circle, Ahmedabad-Gandhinagar Highway, Gandhinagar - 382 009, Gujarat,
+                India.<br>
+                Designed, developed and maintained by Bhavya, Sumit & Harsh</a>
+            </td>
+            <td class="sidemenu"></td>
+        </tr>
+        </div>
         
-        <td class="sidemenu"></td>
-        <td class="content">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                    <a href="/directGradeEntry/gradeLeftFrame" class="btn btn-dark ms-3"
-                        style="white-space: nowrap;">⬅ Back to Menu</a>
-            </div>
-            <h2 th:text="'Grades for ' + ${courseName} + ' (' + ${termName} + ')'"></h2>
-    <canvas id="gradeChart" width="800" height="400"></canvas>
-        </td>
-        <td class="sidemenu"></td>
-    </tr>
-    
-    <tr>
-        
-        <td class="sidemenu"></td>
-        <td class="footer" colspan="1">
-            &copy; 2002 DA-IICT, Near Indroda Circle, Ahmedabad-Gandhinagar Highway, Gandhinagar - 382 009, Gujarat, India.<br>
-            Designed, developed and maintained by Bhavya, Sumit & Harsh</a>
-        </td>
-        <td class="sidemenu"></td>
-    </tr>
-</table>
-    
+    </table>
 
-<script>
-    fetch('/grades/chart-data')
-        .then(res => res.json())
-        .then(data => {
-            const gradeMap = { "AA": "AA", "AB": "AB", "BB": "BB", "BC": "BC", "CC": "CC", "CD": "CD", "DD": "DD", "F": "F" };
-            const gradeCounts = {
-                "AA": 0, "AB": 0, "BB": 0, "BC": 0, "CC": 0, "CD": 0, "DE": 0, "F": 0
-            };
 
-            data.forEach(student => {
-                const point = gradeMap[student.grade];
-                if (point !== undefined) {
-                    gradeCounts[point]++;
-                }
-            });
+    <script>
+        fetch('/grades/chart-data')
+            .then(res => res.json())
+            .then(data => {
+                const gradeMap = { "AA": "AA", "AB": "AB", "BB": "BB", "BC": "BC", "CC": "CC", "CD": "CD", "DD": "DD", "F": "F" };
+                const gradeCounts = {
+                    "AA": 0, "AB": 0, "BB": 0, "BC": 0, "CC": 0, "CD": 0, "DE": 0, "F": 0
+                };
 
-            const labels = Object.keys(gradeCounts).sort(); // Optional: Use fixed order instead of sorting alphabetically
-            const counts = labels.map(grade => gradeCounts[grade]);
+                data.forEach(student => {
+                    const point = gradeMap[student.grade];
+                    if (point !== undefined) {
+                        gradeCounts[point]++;
+                    }
+                });
 
-            const ctx = document.getElementById('gradeChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Number of Students',
-                        data: counts,
-                        backgroundColor: 'rgba(7, 123, 152, 0.67)',
-                        borderRadius: 5,
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Number of Students vs Grade ',
-                            font: {
-                                size: 20,
-                                weight: 'bold'
-                            }
-                        },
-                        legend: {
-                            labels: {
-                                font: {
-                                    size: 14,
-                                    weight: 'bold'
-                                }
-                            }
-                        }
+                const labels = Object.keys(gradeCounts).sort(); // Optional: Use fixed order instead of sorting alphabetically
+                const counts = labels.map(grade => gradeCounts[grade]);
+
+                const ctx = document.getElementById('gradeChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Number of Students',
+                            data: counts,
+                            backgroundColor: 'rgba(7, 123, 152, 0.67)',
+                            borderRadius: 5,
+                            borderWidth: 1
+                        }]
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
+                    options: {
+                        responsive: true,
+                        plugins: {
                             title: {
                                 display: true,
-                                text: 'Number of Students',
+                                text: 'Number of Students vs Grade ',
                                 font: {
-                                    size: 22,
+                                    size: 20,
                                     weight: 'bold'
                                 }
                             },
-                            ticks: {
-                                font: {
-                                    size: 14,
-                                    weight: 'bold'
+                            legend: {
+                                labels: {
+                                    font: {
+                                        size: 14,
+                                        weight: 'bold'
+                                    }
                                 }
                             }
                         },
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Grade ',
-                                font: {
-                                    size: 22,
-                                    weight: 'bold'
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Number of Students',
+                                    font: {
+                                        size: 22,
+                                        weight: 'bold'
+                                    }
+                                },
+                                ticks: {
+                                    font: {
+                                        size: 14,
+                                        weight: 'bold'
+                                    }
                                 }
                             },
-                            ticks: {
-                                font: {
-                                    size: 14,
-                                    weight: 'bold'
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Grade ',
+                                    font: {
+                                        size: 22,
+                                        weight: 'bold'
+                                    }
+                                },
+                                ticks: {
+                                    font: {
+                                        size: 14,
+                                        weight: 'bold'
+                                    }
                                 }
                             }
                         }
                     }
-                }
+                });
             });
-        });
-</script>
+    </script>
 
 
 </body>
+
 </html>
