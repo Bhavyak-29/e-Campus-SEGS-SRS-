@@ -51,7 +51,7 @@ public class SpringSecurityConfiguration {
             );
         http.formLogin(form -> form
             .loginPage("/login")
-            .defaultSuccessUrl("/", true)
+            .defaultSuccessUrl("/segs/faculty", true)
             .permitAll()
         );
         http.httpBasic(withDefaults());

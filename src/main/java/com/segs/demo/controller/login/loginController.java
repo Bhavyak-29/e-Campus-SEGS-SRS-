@@ -29,7 +29,7 @@ public class loginController {
         return "login"; 
     }
 
-    @RequestMapping("/")
+    @RequestMapping("/segs/faculty")
     public String postLoginRedirect(HttpServletRequest request, HttpSession session, Authentication authentication, ModelMap model) {
         if (authentication != null) {
             String username = authentication.getName();
