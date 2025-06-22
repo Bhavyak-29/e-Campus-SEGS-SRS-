@@ -41,7 +41,7 @@ public class GradeController {
         Long crsid = (Long) session.getAttribute("CRSID");
         Long trmid = (Long) session.getAttribute("TRMID");
         Long examTypeId = (Long) session.getAttribute("examTypeId");
-        List<String> selectedGrades = List.of("AA", "AB", "BB", "BC", "CC", "CD", "DD", "F");
+        List<String> selectedGrades = List.of("AA", "AB", "BB", "BC", "CC", "CD", "DD", "F","NULL");
         if (crsid == null || trmid == null || examTypeId == null) {
             model.addAttribute("error", "Session expired or missing data. Please reselect options.");
             return "redirect:/directGradeEntry";

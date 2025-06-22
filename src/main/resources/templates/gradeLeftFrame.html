@@ -72,14 +72,6 @@
             float: right;
             transition: transform 0.3s ease-in-out;
         }
-
-        /* .sidebar h6.clickable.collapsed .arrow {
-            transform: rotate(0deg);
-        }
-
-        .sidebar h6.clickable:not(.collapsed) .arrow {
-            transform: rotate(90deg);
-        } */
     </style>
 </head>
 
@@ -90,48 +82,24 @@
     <div class="content-wrapper">
         <div class="sidebar">
             <div class="menu-section">
-                <h6 class="clickable" data-bs-toggle="collapse" data-bs-target="#transactionMenu" aria-expanded="false" aria-controls="transactionMenu">
-                    Transaction <span class="arrow">▷</span>
-                </h6>
-                <ul id="transactionMenu" class="collapse">
+                <h6>Direct Grade Entry</h6>
+                <ul>
                     <li><a th:href="@{/grades/upload}">Grade Entry</a></li>
                     <li><a th:href="@{/directGradeEntry/gradeOptions}">Grade View</a></li>
                     <li><a th:href="@{/grades/reviseIGrade}">Revise I Grade</a></li>
+                    <li><a th:href="@{#}">Modify Grade</a></li>
                 </ul>
             </div>
-            <div class="menu-section">
-                <h6 class="clickable" data-bs-toggle="collapse" data-bs-target="#reportsMenu" aria-expanded="false" aria-controls="reportsMenu">
-                    Reports (Your Courses) <span class="arrow">▷</span>
-                </h6>
-                <ul id="reportsMenu" class="collapse">
-                    <li>
-                        <h6 class="clickable" data-bs-toggle="collapse" data-bs-target="#resultsMenu" aria-expanded="false" aria-controls="resultsMenu">
-                            Results <span class="arrow">▷</span>
-                        </h6>
-                        <ul id="resultsMenu" class="collapse">
-                            <li>
-                                <h6 class="clickable" data-bs-toggle="collapse" data-bs-target="#gradeFrequencyMenu" aria-expanded="false" aria-controls="gradeFrequencyMenu">
-                                    Grade Frequency <span class="arrow">▷</span>
-                                </h6>
-                                <ul id="gradeFrequencyMenu" class="collapse">
-                                    <li><a th:href="@{/directGradeEntry/grades/chart-view3}">Line Graph</a></li>
-                                    <li><a th:href="@{/directGradeEntry/grades/chart-view}">Bar Graph</a></li>
-                                    <li><a th:href="@{/directGradeEntry/grades/chart-view2}">Pie Chart</a></li>
-                                </ul>
-                            </li>
-                            <li>
-                                <h6 class="clickable" data-bs-toggle="collapse" data-bs-target="#gradeListMenu" aria-expanded="false" aria-controls="gradeListMenu">
-                                    Grade List <span class="arrow">▷</span>
-                                </h6>
-                                <ul id="gradeListMenu" class="collapse">
-                                    <li><a th:href="@{/directGradeEntry/gradeOptions}">Exam Specific</a></li>
-                                    <li><a th:href="@{/directGradeEntry/updatedGrades}">Updated Grades</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
+            <!-- <div class="menu-section">
+                <h6>Reports</h6>
+                <ul>
+                    <li><a th:href="@{/directGradeEntry/grades/chart-view3}">Line Graph</a></li>
+                    <li><a th:href="@{/directGradeEntry/grades/chart-view}">Bar Graph</a></li>
+                    <li><a th:href="@{/directGradeEntry/grades/chart-view2}">Pie Chart</a></li>
+                    <li><a th:href="@{/directGradeEntry/gradeOptions}">Exam Specific Grades</a></li>
+                    <li><a th:href="@{/directGradeEntry/updatedGrades}">Updated Grades</a></li>
                 </ul>
-            </div>
+            </div> -->
         </div>
         <div class="main-content2 d-flex flex-column justify-content-center align-items-center text-center"
             style="height: 70vh; background-color:transparent; border-radius: 12px; ">
@@ -161,5 +129,6 @@
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>

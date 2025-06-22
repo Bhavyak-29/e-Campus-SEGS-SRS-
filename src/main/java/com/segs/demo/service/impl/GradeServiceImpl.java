@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -15,10 +16,10 @@ import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.segs.demo.model.Course;
+import com.segs.demo.model.DropdownItem;
 import com.segs.demo.model.Egcrstt1;
 import com.segs.demo.model.Egcrstt1Id;
-import com.segs.demo.model.Enrollment;
-import com.segs.demo.model.DropdownItem; // Added for new methods
+import com.segs.demo.model.Enrollment; // Added for new methods
 import com.segs.demo.model.Grade; // Assuming this is your Eggradm1 equivalent
 import com.segs.demo.model.GradeUploadForm;
 import com.segs.demo.model.Student;
@@ -171,48 +172,122 @@ public class GradeServiceImpl implements GradeService {
     }
 
 
+    // @Override
+    // public List<StudentGradeDTO> getStudentGrades(Long CRSID, Long trmid, Long examTypeId, List<String> selectedGrades) {
+    //     Long tcrid = termCourseRepository.findTcridByCrsidAndTrmid(CRSID, trmid);
+
+    //     if (tcrid == null) {
+    //         System.out.println("No tcrid found for CRSID: " + CRSID + " and TRMID: " + trmid);
+    //         return new ArrayList<>(); // Return empty list if no term course is found
+    //     }
+
+    //     StringBuilder sqlBuilder = new StringBuilder();
+    //     sqlBuilder.append("SELECT s.stdinstid, s.stdfirstname, s.stdemail, g.grad_lt "); // Adjusted select list for DTO
+    //     sqlBuilder.append("FROM ec2.egcrstt1 e ");
+    //     sqlBuilder.append("JOIN ec2.students s ON e.stud_id = s.stdid ");
+    //     sqlBuilder.append("JOIN ec2.eggradm1 g ON e.obtgr_id = g.grad_id ");
+    //     sqlBuilder.append("WHERE e.tcrid = :tcrid AND e.examtype_id = :examTypeId");
+
+    //     if (selectedGrades != null && !selectedGrades.isEmpty()) {
+    //         sqlBuilder.append(" AND g.grad_lt IN (:selectedGrades)");
+    //     }
+
+    //     Query query = entityManager.createNativeQuery(sqlBuilder.toString());
+    //     query.setParameter("tcrid", tcrid);
+    //     query.setParameter("examTypeId", examTypeId);
+
+    //     if (selectedGrades != null && !selectedGrades.isEmpty()) {
+    //         query.setParameter("selectedGrades", selectedGrades);
+    //     }
+
+    //     @SuppressWarnings("unchecked")
+    //     List<Object[]> results = query.getResultList();
+
+    //     List<StudentGradeDTO> studentGrades = new ArrayList<>();
+    //     for (Object[] row : results) {
+    //         String studentId = (String) row[0];
+    //         String studentName = (String) row[1]; // Corrected index
+    //         String studentEmail = (String) row[2]; // Corrected index
+    //         String gradeValue = (String) row[3]; // Corrected index
+
+    //         studentGrades.add(new StudentGradeDTO(studentId, studentName, studentEmail, gradeValue));
+    //     }
+    //     return studentGrades;
+    // }
+
     @Override
-    public List<StudentGradeDTO> getStudentGrades(Long CRSID, Long trmid, Long examTypeId, List<String> selectedGrades) {
-        Long tcrid = termCourseRepository.findTcridByCrsidAndTrmid(CRSID, trmid);
+public List<StudentGradeDTO> getStudentGrades(Long CRSID, Long trmid, Long examTypeId, List<String> selectedGrades) {
+    Long tcrid = termCourseRepository.findTcridByCrsidAndTrmid(CRSID, trmid);
 
-        if (tcrid == null) {
-            System.out.println("No tcrid found for CRSID: " + CRSID + " and TRMID: " + trmid);
-            return new ArrayList<>(); // Return empty list if no term course is found
-        }
-
-        StringBuilder sqlBuilder = new StringBuilder();
-        sqlBuilder.append("SELECT s.stdinstid, s.stdfirstname, s.stdemail, g.grad_lt "); // Adjusted select list for DTO
-        sqlBuilder.append("FROM ec2.egcrstt1 e ");
-        sqlBuilder.append("JOIN ec2.students s ON e.stud_id = s.stdid ");
-        sqlBuilder.append("JOIN ec2.eggradm1 g ON e.obtgr_id = g.grad_id ");
-        sqlBuilder.append("WHERE e.tcrid = :tcrid AND e.examtype_id = :examTypeId");
-
-        if (selectedGrades != null && !selectedGrades.isEmpty()) {
-            sqlBuilder.append(" AND g.grad_lt IN (:selectedGrades)");
-        }
-
-        Query query = entityManager.createNativeQuery(sqlBuilder.toString());
-        query.setParameter("tcrid", tcrid);
-        query.setParameter("examTypeId", examTypeId);
-
-        if (selectedGrades != null && !selectedGrades.isEmpty()) {
-            query.setParameter("selectedGrades", selectedGrades);
-        }
-
-        @SuppressWarnings("unchecked")
-        List<Object[]> results = query.getResultList();
-
-        List<StudentGradeDTO> studentGrades = new ArrayList<>();
-        for (Object[] row : results) {
-            String studentId = (String) row[0];
-            String studentName = (String) row[1]; // Corrected index
-            String studentEmail = (String) row[2]; // Corrected index
-            String gradeValue = (String) row[3]; // Corrected index
-
-            studentGrades.add(new StudentGradeDTO(studentId, studentName, studentEmail, gradeValue));
-        }
-        return studentGrades;
+    if (tcrid == null) {
+        System.out.println("No tcrid found for CRSID: " + CRSID + " and TRMID: " + trmid);
+        return new ArrayList<>();
     }
+
+    // Step 1: Fetch students who already have grades
+    StringBuilder sqlBuilder = new StringBuilder();
+    sqlBuilder.append("SELECT s.stdinstid, s.stdfirstname, s.stdemail, g.grad_lt ");
+    sqlBuilder.append("FROM ec2.egcrstt1 e ");
+    sqlBuilder.append("JOIN ec2.students s ON e.stud_id = s.stdid ");
+    sqlBuilder.append("JOIN ec2.eggradm1 g ON e.obtgr_id = g.grad_id ");
+    sqlBuilder.append("WHERE e.tcrid = :tcrid AND e.examtype_id = :examTypeId");
+
+    if (selectedGrades != null && !selectedGrades.isEmpty()) {
+        sqlBuilder.append(" AND g.grad_lt IN (:selectedGrades)");
+    }
+
+    Query query = entityManager.createNativeQuery(sqlBuilder.toString());
+    query.setParameter("tcrid", tcrid);
+    query.setParameter("examTypeId", examTypeId);
+
+    if (selectedGrades != null && !selectedGrades.isEmpty()) {
+        query.setParameter("selectedGrades", selectedGrades);
+    }
+
+    @SuppressWarnings("unchecked")
+    List<Object[]> existingGradeResults = query.getResultList();
+
+    List<StudentGradeDTO> studentGrades = new ArrayList<>();
+    for (Object[] row : existingGradeResults) {
+        String studentId = (String) row[0];
+        String studentName = (String) row[1];
+        String studentEmail = (String) row[2];
+        String gradeValue = (String) row[3];
+
+        studentGrades.add(new StudentGradeDTO(studentId, studentName, studentEmail, gradeValue));
+    }
+
+    // Step 2: Fetch students who are registered but missing from egcrstt1
+    String sqlMissing = """
+        SELECT s.stdinstid, s.stdfirstname, s.stdemail 
+        FROM ec2.studentregistrationcourses src
+        JOIN ec2.studentregistrations sr ON src.srcsrgid = sr.srgid
+        JOIN ec2.students s ON sr.srgstdid = s.stdid
+        LEFT JOIN ec2.egcrstt1 gr ON gr.stud_id = sr.srgstdid AND gr.tcrid = :tcrid
+        WHERE src.srctcrid = :tcrid AND gr.stud_id IS NULL
+        """;
+
+    Query missingQuery = entityManager.createNativeQuery(sqlMissing);
+    missingQuery.setParameter("tcrid", tcrid);
+
+    @SuppressWarnings("unchecked")
+    List<Object[]> missingResults = missingQuery.getResultList();
+
+    for (Object[] row : missingResults) {
+        String studentId = (String) row[0];
+        String studentName = (String) row[1];
+        String studentEmail = (String) row[2];
+        String gradeValue = "NULL"; // Default value for missing grade
+
+        studentGrades.add(new StudentGradeDTO(studentId, studentName, studentEmail, gradeValue));
+    }
+    studentGrades.sort(Comparator.comparing(
+        s -> s.getGrade() == null || s.getGrade().equalsIgnoreCase("NULL") ? 0 : 1
+    ));
+
+    return studentGrades;
+}
+
 
     @Override
     public String getTermName(Long termId) {
