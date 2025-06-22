@@ -256,6 +256,9 @@ public String showUpdatedGrades(@RequestParam(required = false) List<String> sel
 
                 if (crsid != null && trmid != null && examTypeId != null) {
                     List<StudentGradeDTO> studentGrades = gradeService.getStudentGrades(crsid, trmid, examTypeId, selectedGrades);
+                    studentGrades = studentGrades.stream()
+                    .filter(dto -> dto.getGrade() != null && !dto.getGrade().equalsIgnoreCase("NULL"))
+                    .collect(Collectors.toList());
                     model.addAttribute("studentGrades", studentGrades);
                     model.addAttribute("selectedGrades", selectedGrades);
                 } else {
