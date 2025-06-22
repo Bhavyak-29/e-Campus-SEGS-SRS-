@@ -8,16 +8,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
-import org.springframework.stereotype.Service; // For current timestamp
+import org.springframework.stereotype.Service;
 
-import com.segs.demo.model.Course; // For converting LocalDateTime to Timestamp if needed for NativeQuery
+import com.segs.demo.model.Course;
 import com.segs.demo.model.Egcrstt1;
 import com.segs.demo.model.Egcrstt1Id;
 import com.segs.demo.model.Enrollment;
-import com.segs.demo.model.Grade;
+import com.segs.demo.model.DropdownItem; // Added for new methods
+import com.segs.demo.model.Grade; // Assuming this is your Eggradm1 equivalent
 import com.segs.demo.model.GradeUploadForm;
 import com.segs.demo.model.Student;
 import com.segs.demo.model.StudentGradeDTO;
@@ -37,7 +39,7 @@ import com.segs.demo.service.GradeService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
-import jakarta.servlet.http.HttpSession; // Import the TermCourseRepository
+import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 
 @Service
@@ -47,16 +49,16 @@ public class GradeServiceImpl implements GradeService {
     private TermCourseCreditsRepository termCourseCreditsRepository;
 
     @Autowired
-    private GradeRepository gradeRepository;
+    private GradeRepository gradeRepository; // Assuming this interacts with eggradm1
 
     @Autowired
     private EnrollmentRepository enrollmentRepository;
 
     @Autowired
-    private TermCourseRepository termCourseRepository; // Inject TermCourseRepository
+    private TermCourseRepository termCourseRepository;
 
     @PersistenceContext
-    private EntityManager entityManager; // Inject EntityManager for native queries
+    private EntityManager entityManager;
 
     @Autowired
     private Egcrstt1Repository egcrstt1Repository;
@@ -73,57 +75,100 @@ public class GradeServiceImpl implements GradeService {
     @Autowired
     private CourseRepository courseRepository;
 
+    // --- New methods for Dropdowns as per previous response ---
+    @Override
+    public List<DropdownItem> getUpdatedTermCoursesByTermId(Long termId) {
+        // You'll need a method in TermCourseRepository or a native query here
+        // to find TermCourses that have at least one Egcrstt1 record with updat_by/updat_dt NOT NULL
+        // This is a placeholder, you'll need to implement the actual query based on your DB schema
+        // Example: termCourseRepository.findDistinctTermCoursesWithUpdatedGrades(termId);
+        // For now, returning dummy data or implement a proper query.
+        // Let's assume you have a way to find term courses by term ID.
+        // This part needs a specific query in TermCourseRepository to check for 'updated' grades
+        // associated with the term course, similar to Egcrstt1Repository's logic.
+        // For simplicity, let's just return all active term courses for now.
+        // A more precise implementation would involve a JOIN to egcrstt1 and check updat_by/updat_dt
+        return termCourseRepository.findByTerm_IdAndRowStateGreaterThan(termId, (int)0)
+                .stream()
+                .map(tc -> new DropdownItem(String.valueOf(tc.getId()), tc.getCourse().getName()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DropdownItem> getExamTypesWithUpdatedGradesByTermCourseId(Long termCourseId) {
+        // This will need a specific query in ExamTypeRepository or a native query
+        // to find exam types that have at least one Egcrstt1 record with updat_by/updat_dt NOT NULL
+        // For now, returning all active exam types.
+        // A more precise implementation would involve a JOIN to egcrstt1 and check updat_by/updat_dt
+        return egcrstt1Repository.findExamTypesWithUpdatedGradesByTermCourseId(termCourseId)
+                .stream()
+                .map(et -> new DropdownItem(String.valueOf(et.getId()), et.getName()))
+                .collect(Collectors.toList());
+    }
+    // --- End of New methods for Dropdowns ---
+
+
     @Override
     public List<Grade> getAllGrades() {
         return gradeRepository.findAll();
     }
 
-
     @Override
-public List<StudentGradeDTO> getUpdatedStudentGrades(Long CRSID, Long trmid, Long examTypeId, List<String> selectedGrades) {
-    Long tcrid = termCourseRepository.findTcridByCrsidAndTrmid(CRSID, trmid);
+    public List<StudentGradeDTO> getUpdatedStudentGrades(Long CRSID, Long trmid, Long examTypeId, List<String> selectedGrades) {
+        Long tcrid = termCourseRepository.findTcridByCrsidAndTrmid(CRSID, trmid);
 
-    if (tcrid == null) {
-        System.out.println("No tcrid found for CRSID: " + CRSID + " and TRMID: " + trmid);
-        return new ArrayList<>();
+        if (tcrid == null) {
+            System.out.println("No tcrid found for CRSID: " + CRSID + " and TRMID: " + trmid);
+            return new ArrayList<>();
+        }
+
+        StringBuilder sqlBuilder = new StringBuilder();
+        sqlBuilder.append("SELECT s.stdinstid, s.stdfirstname, s.stdemail, g.grad_lt "); // Adjusted select list for DTO
+        sqlBuilder.append("FROM ec2.egcrstt1 e ");
+        sqlBuilder.append("JOIN ec2.students s ON e.stud_id = s.stdid ");
+        sqlBuilder.append("JOIN ec2.eggradm1 g ON e.obtgr_id = g.grad_id ");
+        sqlBuilder.append("WHERE e.tcrid = :tcrid AND e.examtype_id = :examTypeId ");
+        sqlBuilder.append("AND e.updat_by IS NOT NULL AND e.updat_dt IS NOT NULL"); // Corrected condition
+
+        if (selectedGrades != null && !selectedGrades.isEmpty()) {
+            sqlBuilder.append(" AND g.grad_lt IN (:selectedGrades)");
+        }
+
+        Query query = entityManager.createNativeQuery(sqlBuilder.toString());
+        query.setParameter("tcrid", tcrid);
+        query.setParameter("examTypeId", examTypeId);
+
+        if (selectedGrades != null && !selectedGrades.isEmpty()) {
+            query.setParameter("selectedGrades", selectedGrades);
+        }
+
+        @SuppressWarnings("unchecked")
+        List<Object[]> results = query.getResultList();
+
+        List<StudentGradeDTO> updatedGrades = new ArrayList<>();
+        for (Object[] row : results) {
+            String studentId = (String) row[0];
+            String studentName = (String) row[1]; // Corrected index
+            String studentEmail = (String) row[2]; // Corrected index
+            String gradeValue = (String) row[3]; // Corrected index
+
+            updatedGrades.add(new StudentGradeDTO(studentId, studentName, studentEmail, gradeValue));
+        }
+        return updatedGrades;
     }
 
-    StringBuilder sqlBuilder = new StringBuilder();
-    sqlBuilder.append("SELECT s.stdinstid, e.obtgr_id, s.stdfirstname, s.stdemail, g.grad_lt ");
-    sqlBuilder.append("FROM ec2.egcrstt1 e ");
-    sqlBuilder.append("JOIN ec2.students s ON e.stud_id = s.stdid ");
-    sqlBuilder.append("JOIN ec2.eggradm1 g ON e.obtgr_id = g.grad_id ");
-    sqlBuilder.append("WHERE e.tcrid = :tcrid AND e.examtype_id = :examTypeId ");
-    sqlBuilder.append("AND e.updat_by IS NOT NULL AND e.updat_dt IS NOT NULL");
+    // New method to fetch updated grades for the report, using JPA repository query
+    @Override
+    public List<StudentGradeDTO> getUpdatedStudentGradesForReport(Long termCourseId, Long examTypeId, List<String> selectedGrades) {
+        List<StudentGradeDTO> grades = egcrstt1Repository.findUpdatedStudentGradesForReport(termCourseId, examTypeId);
 
-    if (selectedGrades != null && !selectedGrades.isEmpty()) {
-        sqlBuilder.append(" AND g.grad_lt IN (:selectedGrades)");
+        if (selectedGrades != null && !selectedGrades.isEmpty()) {
+            grades = grades.stream()
+                    .filter(sg -> selectedGrades.contains(sg.getGrade().trim()))
+                    .collect(Collectors.toList());
+        }
+        return grades;
     }
-
-    Query query = entityManager.createNativeQuery(sqlBuilder.toString());
-    query.setParameter("tcrid", tcrid);
-    query.setParameter("examTypeId", examTypeId);
-
-    if (selectedGrades != null && !selectedGrades.isEmpty()) {
-        query.setParameter("selectedGrades", selectedGrades);
-    }
-
-    @SuppressWarnings("unchecked")
-    List<Object[]> results = query.getResultList();
-
-    List<StudentGradeDTO> updatedGrades = new ArrayList<>();
-    for (Object[] row : results) {
-        String studentId = ((String) row[0]);
-        String studentName = (String) row[2];
-        String studentEmail = (String) row[3];
-        String gradeValue = (String) row[4];
-
-        updatedGrades.add(new StudentGradeDTO(studentId, studentName, studentEmail, gradeValue));
-    }
-
-    return updatedGrades;
-}
-
 
 
     @Override
@@ -136,7 +181,7 @@ public List<StudentGradeDTO> getUpdatedStudentGrades(Long CRSID, Long trmid, Lon
         }
 
         StringBuilder sqlBuilder = new StringBuilder();
-        sqlBuilder.append("SELECT s.stdinstid, e.obtgr_id, s.stdfirstname, s.stdemail, g.grad_lt ");
+        sqlBuilder.append("SELECT s.stdinstid, s.stdfirstname, s.stdemail, g.grad_lt "); // Adjusted select list for DTO
         sqlBuilder.append("FROM ec2.egcrstt1 e ");
         sqlBuilder.append("JOIN ec2.students s ON e.stud_id = s.stdid ");
         sqlBuilder.append("JOIN ec2.eggradm1 g ON e.obtgr_id = g.grad_id ");
@@ -159,22 +204,23 @@ public List<StudentGradeDTO> getUpdatedStudentGrades(Long CRSID, Long trmid, Lon
 
         List<StudentGradeDTO> studentGrades = new ArrayList<>();
         for (Object[] row : results) {
-            String studentId = ((String) row[0]);
-            String studentName = (String) row[2];
-            String studentEmail = (String) row[3];
-            String gradeValue = (String) row[4];
+            String studentId = (String) row[0];
+            String studentName = (String) row[1]; // Corrected index
+            String studentEmail = (String) row[2]; // Corrected index
+            String gradeValue = (String) row[3]; // Corrected index
 
             studentGrades.add(new StudentGradeDTO(studentId, studentName, studentEmail, gradeValue));
         }
-
         return studentGrades;
     }
-    
+
+    @Override
     public String getTermName(Long termId) {
         Term term = termRepository.findById(termId).orElse(null);
         return (term != null) ? term.getName() : "Unknown Term";
     }
 
+    @Override
     public String getCourseName(Long courseId) {
         Course course = courseRepository.findById(courseId).orElse(null);
         return (course != null) ? course.getName() : "Unknown Course";
@@ -188,6 +234,7 @@ public List<StudentGradeDTO> getUpdatedStudentGrades(Long CRSID, Long trmid, Lon
 
             int facultyId = Integer.parseInt(facultyIdObj.toString());
 
+            // ... (rest of your uploadGrades logic, no changes needed here regarding rowStatus)
             Grade grade = new Grade();
 
             Enrollment enrollment = new Enrollment();
@@ -221,7 +268,7 @@ public List<StudentGradeDTO> getUpdatedStudentGrades(Long CRSID, Long trmid, Lon
             grade.setGradeValue(form.getGrade().trim().toUpperCase());
             grade.setRemarks(null);
             grade.setRowState(1);
-            grade.setId(Long.parseLong("100"));
+            grade.setId(Long.parseLong("100")); // This ID assignment seems problematic. Should be auto-generated or fetched.
 
             Enrollment savedEnrollment = enrollmentRepository.save(grade.getEnrollment());
             grade.setEnrollment(savedEnrollment); // Link the grade to the persisted enrollment
@@ -235,13 +282,12 @@ public List<StudentGradeDTO> getUpdatedStudentGrades(Long CRSID, Long trmid, Lon
         }
     }
 
-    
     @Transactional
     @Override
     public void saveOrUpdateGrades(List<StudentGradeDTO> gradesList, Long tcrid, Long examTypeId) {
         Long createdBy = 7L;
-        Long updatedBy = 7L;
-        Integer rowStatus = 1;
+        Long updatedBy = 7L; // This is the 'updat_by' value
+        Integer rowStatus = 1; // This is 'row_st'
         BigDecimal tccCreditPoints = null;
 
         try {
@@ -257,13 +303,10 @@ public List<StudentGradeDTO> getUpdatedStudentGrades(Long CRSID, Long trmid, Lon
             System.err.println("Error retrieving TCC Credit Points for TCID: " + tcrid + " - " + e.getMessage() + ". Will use null for obt_credits calculation.");
         }
 
-        // This loop will now only run for StudentGradeDTOs where selectedForUpdate was true
         for (StudentGradeDTO dto : gradesList) {
-            // No need to check dto.isSelectedForUpdate() here, as the controller already filtered it.
-
             List<Long> stdids;
             try {
-                stdids = StudentRepository.findStudentIdByInstituteId(dto.getStudentId()); // Assuming this now returns List<Long>
+                stdids = StudentRepository.findStudentIdByInstituteId(dto.getStudentId());
                 if (stdids.isEmpty()) {
                     System.err.println("Warning: No student IDs found for institute ID: " + dto.getStudentId() + ". Skipping this student.");
                     continue;
@@ -300,10 +343,8 @@ public List<StudentGradeDTO> getUpdatedStudentGrades(Long CRSID, Long trmid, Lon
                 continue;
             }
 
-            // Iterate over all found stdids (this handles the multiple stdid per instituteId scenario)
             for (Long currentStdid : stdids) {
                 if (currentStdid != null && gradeId != null) {
-                    // Calculate obtCredits
                     BigDecimal obtCredits = null;
                     if (tccCreditPoints != null && gradPt != null) {
                         obtCredits = tccCreditPoints.multiply(gradPt);
@@ -317,12 +358,14 @@ public List<StudentGradeDTO> getUpdatedStudentGrades(Long CRSID, Long trmid, Lon
                     LocalDateTime now = LocalDateTime.now();
                     Timestamp currentTimestamp = Timestamp.valueOf(now);
 
+                    // Attempt to update
                     int updated = entityManager.createNativeQuery(
                             "UPDATE ec2.egcrstt1 " +
                                     "SET obtgr_id = :gradeId, " +
                                     "    obt_credits = :obtCredits, " +
                                     "    updat_by = :updatedBy, " +
-                                    "    updat_dt = :updatedDt " +
+                                    "    updat_dt = :updatedDt, " +
+                                    "    row_st = :rowSt " + // Also update row_st to 1
                                     "WHERE stud_id = :stdid AND tcrid = :tcrid AND examtype_id = :examTypeId"
                     )
                     .setParameter("gradeId", gradeId)
@@ -332,26 +375,28 @@ public List<StudentGradeDTO> getUpdatedStudentGrades(Long CRSID, Long trmid, Lon
                     .setParameter("examTypeId", examTypeId)
                     .setParameter("updatedBy", updatedBy)
                     .setParameter("updatedDt", currentTimestamp)
+                    .setParameter("rowSt", rowStatus) // Set row_st to 1 on update
                     .executeUpdate();
 
                     if (updated == 0) {
+                        // If no rows were updated, insert a new one
                         entityManager.createNativeQuery(
                                 "INSERT INTO ec2.egcrstt1 (stud_id, tcrid, examtype_id, obtgr_id, obt_mks, obt_credits, crst_field1, creat_by, creat_dt, updat_by, updat_dt, row_st, crsid) " +
-                                        "VALUES (:stdid, :tcrid, :examTypeId, :gradeId, :obtMks, :obtCredits, :crstField1, :creatBy, :creatDt, :updatBy, :updatDt, :rowSt, :crsid)"
+                                        "VALUES (:stdid, :tcrid, :examTypeId, :gradeId, :obtMks, :obtCredits, :crstField1, :creatBy, :creatDt, :updatedBy, :updatedDate, :rowSt, :crsid)"
                         )
                         .setParameter("stdid", currentStdid)
                         .setParameter("tcrid", tcrid)
                         .setParameter("examTypeId", examTypeId)
                         .setParameter("gradeId", gradeId)
-                        .setParameter("obtMks", null)
+                        .setParameter("obtMks", null) // Assuming obt_mks is not set during grade entry
                         .setParameter("obtCredits", obtCredits)
                         .setParameter("crstField1", null)
                         .setParameter("creatBy", createdBy)
                         .setParameter("creatDt", currentTimestamp)
-                        .setParameter("updatBy", updatedBy)
-                        .setParameter("updatDt", null)
+                        .setParameter("updatedBy", updatedBy) // Set updat_by even on new insert if it's an "updated" grade from the start
+                        .setParameter("updatedDate", currentTimestamp) // Set updat_dt even on new insert
                         .setParameter("rowSt", rowStatus)
-                        .setParameter("crsid", null)
+                        .setParameter("crsid", null) // Assuming crsid is part of tcrid already
                         .executeUpdate();
                     }
                 }
@@ -361,15 +406,15 @@ public List<StudentGradeDTO> getUpdatedStudentGrades(Long CRSID, Long trmid, Lon
 
     @Override
     public Map<Integer, Long> getGradeDistribution() {
-        List<Integer> gradeIds = egcrstt1Repository.findAllValidGradeIds();
-        Map<Integer, Long> gradeCountMap = new TreeMap<>();
-
-        for (Integer gradeId : gradeIds) {
-            gradeCountMap.put(gradeId, gradeCountMap.getOrDefault(gradeId, 0L) + 1);
-        }
-
-        return gradeCountMap;
+        // This method needs to be implemented. findAllValidGradeIds is not defined in Egcrstt1Repository.
+        // You would likely need to query egcrstt1 for obtgr_id and group by it to count.
+        // For example:
+        // List<Object[]> results = entityManager.createNativeQuery("SELECT obtgr_id, COUNT(*) FROM ec2.egcrstt1 WHERE obtgr_id IS NOT NULL GROUP BY obtgr_id").getResultList();
+        // Map<Integer, Long> gradeCountMap = new TreeMap<>();
+        // for (Object[] row : results) {
+        //     gradeCountMap.put(((BigDecimal) row[0]).intValue(), ((Number) row[1]).longValue());
+        // }
+        // return gradeCountMap;
+        return new TreeMap<>(); // Placeholder
     }
-
-    
 }

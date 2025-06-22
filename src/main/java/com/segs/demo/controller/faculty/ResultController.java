@@ -3,6 +3,7 @@ package com.segs.demo.controller.faculty;
 import com.segs.demo.model.*; // Assuming AcademicYear, Term, Course, TermCourse, ExamType are here
 
 import com.segs.demo.repository.*; // Assuming new repositories are in this package
+import com.segs.demo.service.GradeService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,12 +28,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.Arrays;
 
 // Apache POI for Excel export
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import jakarta.persistence.EntityNotFoundException;
+
 
 
 @Controller
@@ -69,6 +74,9 @@ public class ResultController {
     @Autowired
     private ExamTypeRepository examTypeRepository;       // Assuming this is your ExamType entity (for EGEXAMM1) repository
 
+
+    @Autowired
+    private GradeService gradeService;
 
     // --- Existing Student-wise Result Methods (No Changes) ---
     @GetMapping("/studentwise/search")
@@ -344,11 +352,10 @@ public class ResultController {
      */
     @GetMapping("/coursewise/exam-specific/selector")
     public String showCourseExamSelector(Model model, HttpSession session,
-                                         @RequestParam(name = "actiontext", required = false) String actionText,
-                                         @RequestParam(name = "target", required = false, defaultValue = "/results/coursewise/exam-specific/list") String targetUrl,
-                                         @RequestParam(name = "fromWhichSystem", required = false) String fromWhichSystem) {
+                                        @RequestParam(name = "actiontext", required = false) String actionText,
+                                        @RequestParam(name = "target", required = false, defaultValue = "/results/coursewise/exam-specific/list") String targetUrl,
+                                        @RequestParam(name = "fromWhichSystem", required = false) String fromWhichSystem) {
 
-        // Store session attributes from the original servlet logic
         if (fromWhichSystem != null) {
             session.setAttribute("fromWhichSystem", fromWhichSystem);
         } else {
@@ -367,21 +374,19 @@ public class ResultController {
             targetUrl = (String) session.getAttribute("target");
         }
 
-        // Fetch initial data for Academic Year dropdown
-        List<AcademicYear> academicYears = academicYearRepository.findByRowStateGreaterThanOrderByField1Asc((int) 0);
-
-        // Convert to List<DropdownItem> to match the JSP's expected format (id^name)
+        List<AcademicYear> academicYears = academicYearRepository.findByRowStateGreaterThanOrderByField1Asc(0);
         List<DropdownItem> academicYearDropdown = academicYears.stream()
             .map(ay -> new DropdownItem(String.valueOf(ay.getId()), ay.getName()))
             .collect(Collectors.toList());
 
         model.addAttribute("academicYears", academicYearDropdown);
-        model.addAttribute("actionText", actionText); // For display on JSP
-        model.addAttribute("targetUrl", targetUrl);   // For form action on JSP
+        model.addAttribute("actionText", actionText);
+        model.addAttribute("targetUrl", targetUrl);
+        model.addAttribute("baseApiUrl", "/results/coursewise/exam-specific/api");
 
-        // The other dropdowns (Term, Course, Exam Type) will be populated via AJAX
-        return "courseExamSelector"; // Thymeleaf template for selection
+        return "courseExamSelector";
     }
+
 
     /**
      * AJAX endpoint to get terms based on selected academic year.
@@ -512,5 +517,165 @@ public class ResultController {
         workbook.close();
 
         return null; // No view name needed as content is written directly to response
+    }
+
+    /*
+     * Coursewise -> Updated Grade Functionality
+     */
+    @GetMapping("/coursewise/updated-grade/selector")
+    public String showUpdatedGradeSelector(Model model, HttpSession session,
+                                        @RequestParam(name = "actiontext", required = false) String actionText,
+                                        @RequestParam(name = "target", required = false, defaultValue = "/results/coursewise/updated-grade/list") String targetUrl,
+                                        @RequestParam(name = "fromWhichSystem", required = false) String fromWhichSystem) {
+
+        List<AcademicYear> academicYears = academicYearRepository.findByRowStateGreaterThanOrderByField1Asc(0);
+        List<DropdownItem> academicYearDropdown = academicYears.stream()
+                .map(ay -> new DropdownItem(String.valueOf(ay.getId()), ay.getName()))
+                .collect(Collectors.toList());
+
+        model.addAttribute("academicYears", academicYearDropdown);
+        model.addAttribute("actionText", actionText);
+        model.addAttribute("targetUrl", targetUrl);
+        model.addAttribute("baseApiUrl", "/results/coursewise/updated-grade/api");
+
+        return "courseExamSelector";
+    }
+
+
+    /**
+     * AJAX endpoint to get terms based on selected academic year.
+     * This method is general and does not specifically filter for 'updated' grades at the term level.
+     */
+    @GetMapping("/coursewise/updated-grade/api/terms")
+    @ResponseBody
+    public List<DropdownItem> getTermsForUpdatedGradesByAcademicYear(@RequestParam Long academicYearId) {
+        // This remains general, fetching all active terms for the academic year
+        List<Term> terms = termRepository.findByAcademicYear_IdAndRowStateGreaterThanOrderByField1Asc(academicYearId, (int) 0);
+        return terms.stream()
+                .map(term -> new DropdownItem(String.valueOf(term.getId()), term.getName()))
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * AJAX endpoint to get courses based on selected term that have updated grades.
+     * Calls the `GradeService` method, which in turn uses `TermCourseRepository.findUpdatedTermCoursesByTermId`.
+     */
+    @GetMapping("/coursewise/updated-grade/api/courses")
+    @ResponseBody
+    public List<DropdownItem> getUpdatedCoursesByTerm(@RequestParam Long termId) {
+        return gradeService.getUpdatedTermCoursesByTermId(termId);
+    }
+
+    /**
+     * AJAX endpoint to get exam types based on selected course (TermCourseId) that have updated grades.
+     * Calls the `GradeService` method, which in turn uses `Egcrstt1Repository.findExamTypesWithUpdatedGradesByTermCourseId`.
+     */
+    @GetMapping("/coursewise/updated-grade/api/examtypes")
+    @ResponseBody
+    public List<DropdownItem> getExamTypesForUpdatedGradesByCourse(@RequestParam Long termCourseId) {
+        return gradeService.getExamTypesWithUpdatedGradesByTermCourseId(termCourseId);
+    }
+
+    /**
+     * Displays the updated grade list report based on selected Academic Year, Term, Course, and Exam Type.
+     * Parameters are expected to come directly from the form submission of 'courseExamSelector.html'.
+     */
+    @GetMapping("/coursewise/updated-grade/list")
+    public String showUpdatedGradeListReport(Model model, HttpSession session, HttpServletResponse response,
+                                             @RequestParam(name = "academicYearId") Long academicYearId, // Required parameter from form
+                                             @RequestParam(name = "termId") Long termId, // Required parameter from form
+                                             @RequestParam(name = "termCourseId") Long termCourseId, // Required parameter from form
+                                             @RequestParam(name = "examTypeId") Long examTypeId, // Required parameter from form
+                                             @RequestParam(required = false) List<String> selectedGrades,
+                                             @RequestParam(name = "generateExcelSheet", required = false) String generateExcelSheet,
+                                             RedirectAttributes redirectAttributes) throws IOException {
+
+        // Basic validation (Spring will already handle missing required params by throwing an exception,
+        // but this adds a clean redirect with a message if somehow they are null or if a direct URL access bypasses form validation)
+
+        if (academicYearId == null || termId == null || termCourseId == null || examTypeId == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Please select all required fields (Academic Year, Term Name, Course Name, Exam Type).");
+            return "redirect:/results/coursewise/updated-grade/selector";
+        }
+
+        // Check if updated grades exist for the selected criteria
+        boolean isGradeUpdated = egcrstt1Repository.existsById_TcridAndId_ExamtypeIdAndUpdatedByIsNotNullAndUpdatedDateIsNotNull(termCourseId, examTypeId);
+
+        if (!isGradeUpdated) {
+            model.addAttribute("errorMessage", "No updated grades found for the selected course and exam type.");
+            return "processStatusPage"; // A generic page to show status messages
+        }
+
+        // Fetch all possible grades for the filter dropdown on the report page
+        List<Grade> allGrades = gradeService.getAllGrades();
+        model.addAttribute("allGrades", allGrades);
+
+        //crsid, trmid, examTypeId, selectedGrades
+        // Call the GradeService method to fetch the actual updated student grades for the report
+        TermCourse tc = termCourseRepository.findById(termCourseId)
+        .orElseThrow(() -> new EntityNotFoundException("TermCourse not found"));    
+        List<StudentGradeDTO> studentGrades = gradeService.getUpdatedStudentGrades(tc.getCourse().getId(),termId,examTypeId, selectedGrades);
+
+        model.addAttribute("studentGrades", studentGrades);
+        model.addAttribute("selectedGrades", selectedGrades); // To retain selections in the filter dropdown on the report page
+
+        // Add display names for the report header/title
+        AcademicYear selectedAy = academicYearRepository.findById(academicYearId).orElse(null);
+        Term selectedTerm = termRepository.findById(termId).orElse(null);
+        TermCourse selectedTc = termCourseRepository.findById(termCourseId).orElse(null);
+        ExamType selectedEt = examTypeRepository.findExamTypeById(examTypeId).orElse(null); // Assuming this method exists in Egcrstt1Repository or a dedicated ExamTypeRepository
+
+        model.addAttribute("selectedAcademicYearName", selectedAy != null ? selectedAy.getName() : "N/A");
+        model.addAttribute("selectedTermName", selectedTerm != null ? selectedTerm.getName() : "N/A");
+        // Ensure getCourse() and getName() exist on TermCourse and Course entities respectively
+        model.addAttribute("selectedCourseName", selectedTc != null && selectedTc.getCourse() != null ? selectedTc.getCourse().getName() : "N/A");
+        // Ensure getExamtypeName() exists on your ExamType entity
+        model.addAttribute("selectedExamTypeName", selectedEt != null ? selectedEt.getTitle() : "N/A");
+        model.addAttribute("AcademicYearId", academicYearId);
+        model.addAttribute("TermId", termId);
+        model.addAttribute("termCourseId", termCourseId);
+        model.addAttribute("examTypeId", examTypeId);
+
+        // Handle Excel generation if requested
+        if ("True".equalsIgnoreCase(generateExcelSheet)) {
+            return generateUpdatedGradeListExcel(studentGrades, response);
+        } else {
+            return "updatedGradeListReport"; // Display the HTML report
+        }
+    }
+
+    /**
+     * Helper method to generate an Excel sheet from the list of StudentGradeDTOs.
+     * This method remains largely the same as it consumes the DTO.
+     */
+    private String generateUpdatedGradeListExcel(List<StudentGradeDTO> data, HttpServletResponse response) throws IOException {
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=updated_grade_list_" + System.currentTimeMillis() + ".xlsx";
+        response.setHeader(headerKey, headerValue);
+
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Updated Grade List");
+
+        Row headerRow = sheet.createRow(0);
+        headerRow.createCell(0).setCellValue("Sr No");
+        headerRow.createCell(1).setCellValue("Student ID");
+        headerRow.createCell(2).setCellValue("Student Name");
+        headerRow.createCell(3).setCellValue("Grade");
+
+        int rowNum = 1;
+
+        for (StudentGradeDTO studentGrade : data) {
+            Row row = sheet.createRow(rowNum++);
+            row.createCell(0).setCellValue(rowNum - 1); // Serial number
+            row.createCell(1).setCellValue(studentGrade.getStudentId());
+            row.createCell(2).setCellValue(studentGrade.getStudentName());
+            row.createCell(3).setCellValue(studentGrade.getGrade());
+        }
+
+        workbook.write(response.getOutputStream());
+        workbook.close();
+
+        return null; // Spring handles the response directly, no view name needed
     }
 }

@@ -1,6 +1,7 @@
 package com.segs.demo.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,6 +15,10 @@ import com.segs.demo.model.ExamType;
 public interface ExamTypeRepository extends JpaRepository<ExamType, Long> {
     List<ExamType> findByCourse_Id(Long crsId);
     List<ExamType> findByIdIn(List<Long> examtypeIds);
+
+    // This method is for ResultController to get ExamType details for display in report header
+    // Assuming ExamType is an entity and it has 'id' and 'examtypeName' properties.
+    Optional<ExamType> findExamTypeById(Long id);
 
     // ExamTypeRepository.java
     @Query("SELECT NEW com.segs.demo.model.DropdownItem(CAST(et.id AS string), et.title) " +
