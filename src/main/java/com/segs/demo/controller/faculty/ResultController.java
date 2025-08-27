@@ -1,10 +1,16 @@
 package com.segs.demo.controller.faculty;
 
-import com.segs.demo.model.*; // Assuming AcademicYear, Term, Course, TermCourse, ExamType are here
+import java.io.IOException; // Assuming AcademicYear, Term, Course, TermCourse, ExamType are here
+import java.math.BigDecimal; // Assuming new repositories are in this package
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-import com.segs.demo.repository.*; // Assuming new repositories are in this package
-import com.segs.demo.service.GradeService;
-
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,24 +25,40 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.Arrays;
-
-// Apache POI for Excel export
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import com.segs.demo.model.AcademicYear;
+import com.segs.demo.model.Batch;
+import com.segs.demo.model.DropdownItem;
+import com.segs.demo.model.Egcrstt1;
+import com.segs.demo.model.Eggradm1;
+import com.segs.demo.model.ExamType;
+import com.segs.demo.model.Grade;
+import com.segs.demo.model.Program;
+import com.segs.demo.model.Semester;
+import com.segs.demo.model.Student;
+import com.segs.demo.model.StudentGradeDTO;
+import com.segs.demo.model.StudentGradeReportDTO;
+import com.segs.demo.model.StudentRegistrations;
+import com.segs.demo.model.StudentSemesterResult;
+import com.segs.demo.model.Term;
+import com.segs.demo.model.TermCourse;
+import com.segs.demo.repository.AcademicYearRepository;
+import com.segs.demo.repository.BatchRepository;
+import com.segs.demo.repository.Egcrstt1Repository;
+import com.segs.demo.repository.Eggradm1Repository;
+import com.segs.demo.repository.ExamTypeRepository;
+import com.segs.demo.repository.ProgramRepository;
+import com.segs.demo.repository.SemesterRepository;
+import com.segs.demo.repository.StudentRegistrationCourseRepository;
+import com.segs.demo.repository.StudentRegistrationsRepository;
+import com.segs.demo.repository.StudentRepository;
+import com.segs.demo.repository.StudentSemesterResultRepository;
+import com.segs.demo.repository.TermCourseRepository;
+import com.segs.demo.repository.TermRepository;
+import com.segs.demo.service.GradeService;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 
 
