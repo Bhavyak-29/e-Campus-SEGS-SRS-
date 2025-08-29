@@ -1,17 +1,23 @@
 package com.ec2.main.repository;
 
-import com.ec2.main.model.StudentSemesterResult;
-import com.ec2.main.model.StudentRegistrations;
-import com.ec2.main.model.Student;
-import com.ec2.main.model.Semester;
-
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.criteria.*;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.ec2.main.model.Semesters;
+import com.ec2.main.model.StudentRegistrations;
+import com.ec2.main.model.StudentSemesterResult;
+import com.ec2.main.model.Students;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Expression;
+import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Order;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 
 public class StudentSemesterResultRepositoryImpl implements CustomStudentSemesterResultRepository {
 
@@ -32,8 +38,8 @@ public class StudentSemesterResultRepositoryImpl implements CustomStudentSemeste
 
         // Joins
         Join<StudentSemesterResult, StudentRegistrations> regJoin = root.join("studentRegistration");
-        Join<StudentRegistrations, Student> studentJoin = regJoin.join("student");
-        Join<StudentRegistrations, Semester> semesterJoin = regJoin.join("semester");
+        Join<StudentRegistrations, Students> studentJoin = regJoin.join("student");
+        Join<StudentRegistrations, Semesters> semesterJoin = regJoin.join("semester");
 
         List<Predicate> predicates = new ArrayList<>();
 

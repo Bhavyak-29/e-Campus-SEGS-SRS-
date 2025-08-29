@@ -15,26 +15,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
 import org.springframework.stereotype.Service;
 
-import com.ec2.main.model.Course;
+import com.ec2.main.model.Courses;
 import com.ec2.main.model.DropdownItem;
 import com.ec2.main.model.Egcrstt1;
 import com.ec2.main.model.Egcrstt1Id;
 import com.ec2.main.model.Enrollment; // Added for new methods
 import com.ec2.main.model.Grade; // Assuming this is your Eggradm1 equivalent
 import com.ec2.main.model.GradeUploadForm;
-import com.ec2.main.model.Student;
 import com.ec2.main.model.StudentGradeDTO;
-import com.ec2.main.model.Term;
+import com.ec2.main.model.Students;
+import com.ec2.main.model.Terms;
 import com.ec2.main.model.Users;
-import com.ec2.main.repository.CourseRepository;
+import com.ec2.main.repository.CoursesRepository;
 import com.ec2.main.repository.Egcrstt1Repository;
 import com.ec2.main.repository.Eggradm1Repository;
 import com.ec2.main.repository.EnrollmentRepository;
 import com.ec2.main.repository.GradeRepository;
-import com.ec2.main.repository.StudentRepository;
+import com.ec2.main.repository.StudentsRepository;
 import com.ec2.main.repository.TermCourseCreditsRepository;
-import com.ec2.main.repository.TermCourseRepository;
-import com.ec2.main.repository.TermRepository;
+import com.ec2.main.repository.TermCoursesRepository;
+import com.ec2.main.repository.TermsRepository;
 import com.ec2.main.service.GradeService;
 
 import jakarta.persistence.EntityManager;
@@ -56,7 +56,7 @@ public class GradeServiceImpl implements GradeService {
     private EnrollmentRepository enrollmentRepository;
 
     @Autowired
-    private TermCourseRepository termCourseRepository;
+    private TermCoursesRepository termCoursesRepository;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -65,42 +65,28 @@ public class GradeServiceImpl implements GradeService {
     private Egcrstt1Repository egcrstt1Repository;
 
     @Autowired
-    private StudentRepository StudentRepository;
+    private StudentsRepository StudentRepository;
 
     @Autowired
     private Eggradm1Repository eggradm1Repository;
 
     @Autowired
-    private TermRepository termRepository;
+    private TermsRepository termsRepository;
 
     @Autowired
-    private CourseRepository courseRepository;
+    private CoursesRepository coursesRepository;
 
     // --- New methods for Dropdowns as per previous response ---
     @Override
     public List<DropdownItem> getUpdatedTermCoursesByTermId(Long termId) {
-        // You'll need a method in TermCourseRepository or a native query here
-        // to find TermCourses that have at least one Egcrstt1 record with updat_by/updat_dt NOT NULL
-        // This is a placeholder, you'll need to implement the actual query based on your DB schema
-        // Example: termCourseRepository.findDistinctTermCoursesWithUpdatedGrades(termId);
-        // For now, returning dummy data or implement a proper query.
-        // Let's assume you have a way to find term courses by term ID.
-        // This part needs a specific query in TermCourseRepository to check for 'updated' grades
-        // associated with the term course, similar to Egcrstt1Repository's logic.
-        // For simplicity, let's just return all active term courses for now.
-        // A more precise implementation would involve a JOIN to egcrstt1 and check updat_by/updat_dt
-        return termCourseRepository.findByTerm_IdAndRowStateGreaterThan(termId, (int)0)
+        return termCoursesRepository.findByTerm_TrmidAndTcrrowstateGreaterThan(termId, (int)0)
                 .stream()
-                .map(tc -> new DropdownItem(String.valueOf(tc.getId()), tc.getCourse().getName()))
+                .map(tc -> new DropdownItem(String.valueOf(tc.getTcrid()), tc.getCourse().getCrsname()))
                 .collect(Collectors.toList());
     }
 
     @Override
     public List<DropdownItem> getExamTypesWithUpdatedGradesByTermCourseId(Long termCourseId) {
-        // This will need a specific query in ExamTypeRepository or a native query
-        // to find exam types that have at least one Egcrstt1 record with updat_by/updat_dt NOT NULL
-        // For now, returning all active exam types.
-        // A more precise implementation would involve a JOIN to egcrstt1 and check updat_by/updat_dt
         return egcrstt1Repository.findExamTypesWithUpdatedGradesByTermCourseId(termCourseId)
                 .stream()
                 .map(et -> new DropdownItem(String.valueOf(et.getId()), et.getName()))
@@ -116,7 +102,7 @@ public class GradeServiceImpl implements GradeService {
 
     @Override
     public List<StudentGradeDTO> getUpdatedStudentGrades(Long CRSID, Long trmid, Long examTypeId, List<String> selectedGrades) {
-        Long tcrid = termCourseRepository.findTcridByCrsidAndTrmid(CRSID, trmid);
+        Long tcrid = termCoursesRepository.findTcridByCrsidAndTrmid(CRSID, trmid);
 
         if (tcrid == null) {
             System.out.println("No tcrid found for CRSID: " + CRSID + " and TRMID: " + trmid);
@@ -171,53 +157,9 @@ public class GradeServiceImpl implements GradeService {
         return grades;
     }
 
-
-    // @Override
-    // public List<StudentGradeDTO> getStudentGrades(Long CRSID, Long trmid, Long examTypeId, List<String> selectedGrades) {
-    //     Long tcrid = termCourseRepository.findTcridByCrsidAndTrmid(CRSID, trmid);
-
-    //     if (tcrid == null) {
-    //         System.out.println("No tcrid found for CRSID: " + CRSID + " and TRMID: " + trmid);
-    //         return new ArrayList<>(); // Return empty list if no term course is found
-    //     }
-
-    //     StringBuilder sqlBuilder = new StringBuilder();
-    //     sqlBuilder.append("SELECT s.stdinstid, s.stdfirstname, s.stdemail, g.grad_lt "); // Adjusted select list for DTO
-    //     sqlBuilder.append("FROM ec2.egcrstt1 e ");
-    //     sqlBuilder.append("JOIN ec2.students s ON e.stud_id = s.stdid ");
-    //     sqlBuilder.append("JOIN ec2.eggradm1 g ON e.obtgr_id = g.grad_id ");
-    //     sqlBuilder.append("WHERE e.tcrid = :tcrid AND e.examtype_id = :examTypeId");
-
-    //     if (selectedGrades != null && !selectedGrades.isEmpty()) {
-    //         sqlBuilder.append(" AND g.grad_lt IN (:selectedGrades)");
-    //     }
-
-    //     Query query = entityManager.createNativeQuery(sqlBuilder.toString());
-    //     query.setParameter("tcrid", tcrid);
-    //     query.setParameter("examTypeId", examTypeId);
-
-    //     if (selectedGrades != null && !selectedGrades.isEmpty()) {
-    //         query.setParameter("selectedGrades", selectedGrades);
-    //     }
-
-    //     @SuppressWarnings("unchecked")
-    //     List<Object[]> results = query.getResultList();
-
-    //     List<StudentGradeDTO> studentGrades = new ArrayList<>();
-    //     for (Object[] row : results) {
-    //         String studentId = (String) row[0];
-    //         String studentName = (String) row[1]; // Corrected index
-    //         String studentEmail = (String) row[2]; // Corrected index
-    //         String gradeValue = (String) row[3]; // Corrected index
-
-    //         studentGrades.add(new StudentGradeDTO(studentId, studentName, studentEmail, gradeValue));
-    //     }
-    //     return studentGrades;
-    // }
-
     @Override
 public List<StudentGradeDTO> getStudentGrades(Long CRSID, Long trmid, Long examTypeId, List<String> selectedGrades) {
-    Long tcrid = termCourseRepository.findTcridByCrsidAndTrmid(CRSID, trmid);
+    Long tcrid = termCoursesRepository.findTcridByCrsidAndTrmid(CRSID, trmid);
 
     if (tcrid == null) {
         System.out.println("No tcrid found for CRSID: " + CRSID + " and TRMID: " + trmid);
@@ -291,14 +233,14 @@ public List<StudentGradeDTO> getStudentGrades(Long CRSID, Long trmid, Long examT
 
     @Override
     public String getTermName(Long termId) {
-        Term term = termRepository.findById(termId).orElse(null);
-        return (term != null) ? term.getName() : "Unknown Term";
+        Terms term = termsRepository.findById(termId).orElse(null);
+        return (term != null) ? term.getTrmname() : "Unknown Term";
     }
 
     @Override
     public String getCourseName(Long courseId) {
-        Course course = courseRepository.findById(courseId).orElse(null);
-        return (course != null) ? course.getName() : "Unknown Course";
+        Courses course = coursesRepository.findById(courseId).orElse(null);
+        return (course != null) ? course.getCrsname() : "Unknown Course";
     }
 
     @Override
@@ -314,22 +256,22 @@ public List<StudentGradeDTO> getStudentGrades(Long CRSID, Long trmid, Long examT
 
             Enrollment enrollment = new Enrollment();
 
-            Student student = new Student();
+            Students student = new Students();
             student.setStdinstid(form.getStudentId());
             enrollment.setStudent(student);
 
-            Course course = new Course();
-            course.setId(Long.parseLong(form.getCourse()));
+            Courses course = new Courses();
+            course.setCrsid(Long.parseLong(form.getCourse()));
             enrollment.setCourse(course);
 
-            Term term = new Term();
-            term.setId(Long.parseLong(form.getTerm()));
+            Terms term = new Terms();
+            term.setTrmid(Long.parseLong(form.getTerm()));
             enrollment.setTerm(term);
 
             grade.setEnrollment(enrollment);
 
             Users faculty = new Users();
-            faculty.setUserId(facultyId);
+            faculty.setUid((long)facultyId);
             grade.setFaculty(faculty);
 
             Egcrstt1Id egcrstt1Id = new Egcrstt1Id();
@@ -481,15 +423,6 @@ public List<StudentGradeDTO> getStudentGrades(Long CRSID, Long trmid, Long examT
 
     @Override
     public Map<Integer, Long> getGradeDistribution() {
-        // This method needs to be implemented. findAllValidGradeIds is not defined in Egcrstt1Repository.
-        // You would likely need to query egcrstt1 for obtgr_id and group by it to count.
-        // For example:
-        // List<Object[]> results = entityManager.createNativeQuery("SELECT obtgr_id, COUNT(*) FROM ec2.egcrstt1 WHERE obtgr_id IS NOT NULL GROUP BY obtgr_id").getResultList();
-        // Map<Integer, Long> gradeCountMap = new TreeMap<>();
-        // for (Object[] row : results) {
-        //     gradeCountMap.put(((BigDecimal) row[0]).intValue(), ((Number) row[1]).longValue());
-        // }
-        // return gradeCountMap;
         return new TreeMap<>(); // Placeholder
     }
 }

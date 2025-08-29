@@ -13,7 +13,8 @@ import com.ec2.main.model.Eggradm1;
 @Repository
 public interface Eggradm1Repository extends JpaRepository<Eggradm1, Long> {
 
-    @Query("SELECT e.grad_id FROM Eggradm1 e WHERE e.grad_lt = :gradeValue")
+    // Use entity field name "gradLt"
+     @Query("SELECT e.grad_id FROM Eggradm1 e WHERE e.grad_lt = :gradeValue")
     Long findGradeIdByValue(@Param("gradeValue") String gradeValue);
 
     @Query("SELECT e.grad_pt FROM Eggradm1 e WHERE e.grad_id = :grad_id")
@@ -23,4 +24,9 @@ public interface Eggradm1Repository extends JpaRepository<Eggradm1, Long> {
     List<Object[]> getGradeIdToLetterMap();
 
     List<Eggradm1> findByRowstateGreaterThan(short rowState);
+
+    // Native query must use real table/column names
+    @Query("SELECT eg.grad_lt FROM Eggradm1 eg WHERE eg.grad_id = :obtgr AND eg.rowstate > 0")
+    String getGrade(@Param("obtgr") Long obtgr);
+
 }

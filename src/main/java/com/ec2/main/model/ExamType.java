@@ -21,7 +21,7 @@ public class ExamType {
 
     @ManyToOne
     @JoinColumn(name = "CRSID") // ← replace with actual column name in table
-    private Course course;
+    private Courses course;
 
     public Long getId() {
         return id;
@@ -47,11 +47,11 @@ public class ExamType {
         this.rowState = rowState;
     }
 
-    public Course getCourse() {
+    public Courses getCourse() {
         return course;
     }
 
-    public void setCourse(Course course) {
+    public void setCourse(Courses course) {
         this.course = course;
     }
 }

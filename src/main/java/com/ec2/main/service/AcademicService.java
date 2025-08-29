@@ -8,21 +8,21 @@ import org.springframework.stereotype.Service;
 
 import com.ec2.main.model.CourseDTO;
 import com.ec2.main.model.ExamType;
-import com.ec2.main.model.Term;
-import com.ec2.main.model.TermCourse;
+import com.ec2.main.model.Terms;
+import com.ec2.main.model.TermCourses;
 import com.ec2.main.repository.Egcrstt1Repository;
 import com.ec2.main.repository.ExamTypeRepository;
-import com.ec2.main.repository.TermCourseRepository;
-import com.ec2.main.repository.TermRepository;
+import com.ec2.main.repository.TermCoursesRepository;
+import com.ec2.main.repository.TermsRepository;
 
 @Service
 public class AcademicService {
 
     @Autowired
-    private TermRepository termRepo;
+    private TermsRepository termRepo;
 
     @Autowired
-    private TermCourseRepository termCourseRepo;
+    private TermCoursesRepository termCourseRepo;
 
     @Autowired
     private Egcrstt1Repository egcrstt1Repository;
@@ -31,20 +31,20 @@ public class AcademicService {
     private ExamTypeRepository examTypeRepository;
 
 
-    public List<Term> getTermsByAcademicYear(Long AYRID) {
-        return termRepo.findByAcademicYear_Id(AYRID);
+    public List<Terms> getTermsByAcademicYear(Long AYRID) {
+        return termRepo.findByAcademicYear_Ayrid(AYRID);
     }
 
     public List<CourseDTO> getCoursesByTerm(Long TRMID) {
-        List<TermCourse> courses = termCourseRepo.findByTerm_Id(TRMID);
-        return courses.stream().map(tc -> new CourseDTO(tc.getCourse().getId(), tc.getCourse().getCode(), tc.getCourse().getName())).toList();
+        List<TermCourses> courses = termCourseRepo.findByTerm_Trmid(TRMID);
+        return courses.stream().map(tc -> new CourseDTO(tc.getCourse().getCrsid(), tc.getCourse().getCrscode(), tc.getCourse().getCrsname())).toList();
     }
 
     public List<CourseDTO> getCoursesByTermAndFaculty(Long TRMID, Long userId) {
         
-        List<TermCourse> courses = termCourseRepo.findByTerm_IdAndUser_UserId(TRMID, userId);
+        List<TermCourses> courses = termCourseRepo.findByTerm_TrmidAndUser_Uid(TRMID, userId);
             return courses.stream()
-                .map(tc -> new CourseDTO(tc.getCourse().getId(), tc.getCourse().getCode(), tc.getCourse().getName()))
+                .map(tc -> new CourseDTO(tc.getCourse().getCrsid(), tc.getCourse().getCrscode(), tc.getCourse().getCrsname()))
                 .toList();
     }
 

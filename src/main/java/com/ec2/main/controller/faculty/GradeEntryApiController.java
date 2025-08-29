@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ec2.main.model.CourseDTO;
 import com.ec2.main.model.ExamType;
-import com.ec2.main.model.Term;
+import com.ec2.main.model.Terms;
 import com.ec2.main.service.AcademicService;
 
 import jakarta.servlet.http.HttpSession;
@@ -25,7 +25,7 @@ public class GradeEntryApiController {
     private AcademicService academicService;
 
     @GetMapping("/terms")
-    public List<Term> getTermsByAcademicYear(@RequestParam Long AYRID) {
+    public List<Terms> getTermsByAcademicYear(@RequestParam Long AYRID) {
         return academicService.getTermsByAcademicYear(AYRID);
     }
 

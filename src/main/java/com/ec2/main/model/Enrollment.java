@@ -1,6 +1,12 @@
 package com.ec2.main.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "ENROLLMENTS")
@@ -13,11 +19,11 @@ public class Enrollment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "STUDENTID", nullable = false)
-    private Student student;
+    private Students student;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CRSID", nullable = false)
-    private Course course;
+    private Courses course;
 
     @Column(name = "ENRROWSTATE")
     private Integer rowState;
@@ -30,7 +36,7 @@ public class Enrollment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TRMID", nullable = false) // Adjust column name as per your DB schema
-    private Term term;
+    private Terms term;
 
     
     
@@ -44,19 +50,19 @@ public class Enrollment {
         this.id = id;
     }
 
-    public Student getStudent() {
+    public Students getStudent() {
         return student;
     }
 
-    public void setStudent(Student student) {
+    public void setStudent(Students student) {
         this.student = student;
     }
 
-    public Course getCourse() {
+    public Courses getCourse() {
         return course;
     }
 
-    public void setCourse(Course course) {
+    public void setCourse(Courses course) {
         this.course = course;
     }
 
@@ -84,11 +90,11 @@ public class Enrollment {
         this.marks = marks;
     }
 
-    public Term getTerm() {
+    public Terms getTerm() {
         return term;
     }
 
-    public void setTerm(Term term) {
+    public void setTerm(Terms term) {
         this.term = term;
     }
 }

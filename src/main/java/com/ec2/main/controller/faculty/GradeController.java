@@ -19,7 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.ec2.main.model.Grade;
 import com.ec2.main.model.StudentGradeDTO;
 import com.ec2.main.model.StudentGradeDTOWrapper;
-import com.ec2.main.repository.TermCourseRepository;
+import com.ec2.main.repository.TermCoursesRepository;
 import com.ec2.main.service.GradeService;
 
 import jakarta.servlet.http.HttpSession;
@@ -33,7 +33,7 @@ public class GradeController {
     private GradeService gradeService;
 
     @Autowired
-    private TermCourseRepository termCourseRepository;
+    private TermCoursesRepository termCourseRepository;
 
     @GetMapping("/upload")
     public String showUploadForm(ModelMap model,HttpSession session) {

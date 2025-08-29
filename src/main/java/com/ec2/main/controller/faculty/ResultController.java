@@ -25,35 +25,35 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.ec2.main.model.AcademicYear;
-import com.ec2.main.model.Batch;
+import com.ec2.main.model.AcademicYears;
+import com.ec2.main.model.Batches;
 import com.ec2.main.model.DropdownItem;
 import com.ec2.main.model.Egcrstt1;
 import com.ec2.main.model.Eggradm1;
 import com.ec2.main.model.ExamType;
 import com.ec2.main.model.Grade;
-import com.ec2.main.model.Program;
-import com.ec2.main.model.Semester;
-import com.ec2.main.model.Student;
+import com.ec2.main.model.Programs;
+import com.ec2.main.model.Semesters;
 import com.ec2.main.model.StudentGradeDTO;
 import com.ec2.main.model.StudentGradeReportDTO;
-import com.ec2.main.model.StudentRegistrations;
+import com.ec2.main.model.StudentRegistration;
 import com.ec2.main.model.StudentSemesterResult;
-import com.ec2.main.model.Term;
-import com.ec2.main.model.TermCourse;
-import com.ec2.main.repository.AcademicYearRepository;
-import com.ec2.main.repository.BatchRepository;
+import com.ec2.main.model.Students;
+import com.ec2.main.model.TermCourses;
+import com.ec2.main.model.Terms;
+import com.ec2.main.repository.AcademicYearsRepository;
+import com.ec2.main.repository.BatchesRepository;
 import com.ec2.main.repository.Egcrstt1Repository;
 import com.ec2.main.repository.Eggradm1Repository;
 import com.ec2.main.repository.ExamTypeRepository;
-import com.ec2.main.repository.ProgramRepository;
-import com.ec2.main.repository.SemesterRepository;
-import com.ec2.main.repository.StudentRegistrationCourseRepository;
-import com.ec2.main.repository.StudentRegistrationsRepository;
-import com.ec2.main.repository.StudentRepository;
+import com.ec2.main.repository.ProgramsRepository;
+import com.ec2.main.repository.SemestersRepository;
+import com.ec2.main.repository.StudentRegistrationCoursesRepository;
+import com.ec2.main.repository.StudentRegistrationRepository;
 import com.ec2.main.repository.StudentSemesterResultRepository;
-import com.ec2.main.repository.TermCourseRepository;
-import com.ec2.main.repository.TermRepository;
+import com.ec2.main.repository.StudentsRepository;
+import com.ec2.main.repository.TermCoursesRepository;
+import com.ec2.main.repository.TermsRepository;
 import com.ec2.main.service.GradeService;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -68,31 +68,31 @@ public class ResultController {
 
     // Repositories (Existing)
     @Autowired
-    private StudentRepository studentRepository;
+    private StudentsRepository studentsRepository;
     @Autowired
     private Egcrstt1Repository egcrstt1Repository;
     @Autowired
     private Eggradm1Repository eggradm1Repository;
     @Autowired
-    private StudentRegistrationsRepository studentRegistrationsRepository;
+    private StudentRegistrationRepository studentRegistrationRepository;
     @Autowired
-    private StudentRegistrationCourseRepository studentRegistrationCourseRepository;
+    private StudentRegistrationCoursesRepository studentRegistrationCourseRepository;
     @Autowired
     private StudentSemesterResultRepository studentSemesterResultRepository;
     @Autowired
-    private ProgramRepository programRepository;
+    private ProgramsRepository programsRepository;
     @Autowired
-    private BatchRepository batchRepository;
+    private BatchesRepository batchesRepository;
     @Autowired
-    private SemesterRepository semesterRepository;
+    private SemestersRepository semestersRepository;
 
     // New Repositories for CourseWise -> Exam Specific
     @Autowired
-    private AcademicYearRepository academicYearRepository; // Assuming this is your AcademicYear entity repository
+    private AcademicYearsRepository academicYearsRepository; // Assuming this is your AcademicYear entity repository
     @Autowired
-    private TermRepository termRepository;               // Assuming this is your Term entity repository
+    private TermsRepository termsRepository;               // Assuming this is your Term entity repository
     @Autowired
-    private TermCourseRepository termCourseRepository;   // Assuming this is your TermCourse entity repository
+    private TermCoursesRepository termCoursesRepository;   // Assuming this is your TermCourse entity repository
     @Autowired
     private ExamTypeRepository examTypeRepository;       // Assuming this is your ExamType entity (for EGEXAMM1) repository
 
@@ -111,16 +111,16 @@ public class ResultController {
             ModelMap model) {
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<Student> studentsPage;
+        Page<Students> studentsPage;
 
         if (instId != null && !instId.isEmpty()) {
-            studentsPage = studentRepository.findByStdinstidAndStdrowstateGreaterThan(instId, (short) 0, pageable);
+            studentsPage = studentsRepository.findByStdinstidAndStdrowstateGreaterThan(instId, (short) 0, pageable);
         } else if (fname != null && !fname.isEmpty() && lname != null && !lname.isEmpty()) {
-            studentsPage = studentRepository.findByStdfirstnameContainingIgnoreCaseAndStdlastnameContainingIgnoreCaseAndStdrowstateGreaterThan(fname, lname, (short) 0, pageable);
+            studentsPage = studentsRepository.findByStdfirstnameContainingIgnoreCaseAndStdlastnameContainingIgnoreCaseAndStdrowstateGreaterThan(fname, lname, (short) 0, pageable);
         } else if (fname != null && !fname.isEmpty()) {
-            studentsPage = studentRepository.findByStdfirstnameContainingIgnoreCaseAndStdrowstateGreaterThan(fname, (short) 0, pageable);
+            studentsPage = studentsRepository.findByStdfirstnameContainingIgnoreCaseAndStdrowstateGreaterThan(fname, (short) 0, pageable);
         } else if (lname != null && !lname.isEmpty()) {
-            studentsPage = studentRepository.findByStdlastnameContainingIgnoreCaseAndStdrowstateGreaterThan(lname, (short) 0, pageable);
+            studentsPage = studentsRepository.findByStdlastnameContainingIgnoreCaseAndStdrowstateGreaterThan(lname, (short) 0, pageable);
         } else {
             studentsPage = Page.empty(pageable);
         }
@@ -141,19 +141,19 @@ public class ResultController {
             @PathVariable String id,
             Model model) {
 
-        List<Student> students = studentRepository.findStudentByInstIdWithLatestRegistration(id);
+        List<Students> students = studentsRepository.findStudentByInstIdWithLatestRegistration(id);
         if (students.isEmpty()) {
             return "error/404";
         }
-        Student student = students.get(0);
+        Students student = students.get(0);
 
-        List<StudentRegistrations> registrations = studentRegistrationsRepository
+        List<StudentRegistration> registrations = studentRegistrationRepository
                 .findAllRegistrationsByStudentIdOrderBySemesterSequence(student.getStdid());
 
         Map<Long, List<Object[]>> regCourses = new LinkedHashMap<>();
         Map<Long, List<StudentSemesterResult>> regResults = new LinkedHashMap<>();
 
-        for (StudentRegistrations reg : registrations) {
+        for (StudentRegistration reg : registrations) {
             regCourses.put(reg.getSrgid(), studentRegistrationCourseRepository
                     .findActiveRegistrationCourseDetails(reg.getSrgid()));
             regResults.put(reg.getSrgid(), studentSemesterResultRepository
@@ -180,11 +180,7 @@ public class ResultController {
     }
 
 
-    // --- SPI-CPI List Functionality (Existing) ---
-
-    /**
-     * Displays the Program, Batch, and Semester selection page for SPI-CPI list.
-     */
+  
     @GetMapping("/spicpi/selector")
     public String showPrgBchSemSelector(Model model, HttpSession session,
                                         @RequestParam(name = "actionText", required = false) String actionText,
@@ -195,9 +191,9 @@ public class ResultController {
         session.setAttribute("targetUrl", targetUrl);
 
         // Fetch initial data for dropdowns (all active programs, batches, semesters)
-        List<Program> programs = programRepository.findByPrgrowstateGreaterThanOrderByPrgfield1Asc((short) 0);
-        List<Batch> batches = batchRepository.findAllActiveBatchesOrderedByProgramAndBatchField();
-        List<Semester> semesters = semesterRepository.findAllActiveSemestersOrderedByProgramBatchAndSequence();
+        List<Programs> programs = programsRepository.findByPrgrowstateGreaterThanOrderByPrgfield1Asc((short) 0);
+        List<Batches> batches = batchesRepository.findAllActiveBatchesOrderedByProgramAndBatchField();
+        List<Semesters> semesters = semestersRepository.findAllActiveSemestersOrderedByProgramBatchAndSequence();
 
         model.addAttribute("programs", programs);
         model.addAttribute("batches", batches);
@@ -208,29 +204,20 @@ public class ResultController {
         return "prgBchSemSelector"; // Thymeleaf template name
     }
 
-    /**
-     * AJAX endpoint to get batches based on selected program.
-     */
+  
     @GetMapping("/spicpi/api/batches")
     @ResponseBody
-    public List<Batch> getBatchesByProgram(@RequestParam Long programId) {
-        return batchRepository.findByProgram_PrgidAndBchrowstateGreaterThanOrderByBchfield1Asc(programId, (short) 0);
+    public List<Batches> getBatchesByProgram(@RequestParam Long programId) {
+        return batchesRepository.findByPrograms_PrgidAndBchrowstateGreaterThanOrderByBchfield1Asc(programId, (long) 0);
     }
 
-    /**
-     * AJAX endpoint to get semesters based on selected batch.
-     */
     @GetMapping("/spicpi/api/semesters")
     @ResponseBody
-    public List<Semester> getSemestersByBatch(@RequestParam Long batchId) {
-        return semesterRepository.findByBatch_BchidAndStrrowstateGreaterThanOrderByStrseqnoAsc(batchId, (short) 0);
+    public List<Semesters> getSemestersByBatch(@RequestParam Long batchId) {
+        return semestersRepository.findByBatches_BchidAndStrrowstateGreaterThanOrderByStrseqnoAsc(batchId, (short) 0);
     }
 
 
-    /**
-     * Displays the SPI-CPI list based on selected semester and filter criteria.
-     * This method now leverages the custom repository implementation.
-     */
     @GetMapping("/spicpi/list")
     public String showSpiCpiList(Model model, HttpSession session, HttpServletResponse response,
                                  @RequestParam(name = "semesterId", required = false) String semesterIdParam,
@@ -309,9 +296,7 @@ public class ResultController {
     }
 
 
-    /**
-     * Generates an Excel sheet from the SPI-CPI list data.
-     */
+   
     private String generateSpiCpiExcel(List<Object[]> data, HttpServletResponse response) throws IOException {
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         String headerKey = "Content-Disposition";
@@ -366,12 +351,6 @@ public class ResultController {
         return null; // No view name needed as content is written directly to response
     }
 
-    // --- NEW: Coursewise -> Exam Specific Functionality ---
-
-    /**
-     * Displays the Academic Year, Term, Course, Exam Type selection page.
-     * Corresponds to SegsSubmittedTermCourseExamSelector servlet.
-     */
     @GetMapping("/coursewise/exam-specific/selector")
     public String showCourseExamSelector(Model model, HttpSession session,
                                         @RequestParam(name = "actiontext", required = false) String actionText,
@@ -396,9 +375,9 @@ public class ResultController {
             targetUrl = (String) session.getAttribute("target");
         }
 
-        List<AcademicYear> academicYears = academicYearRepository.findByRowStateGreaterThanOrderByField1Asc(0);
+        List<AcademicYears> academicYears = academicYearsRepository.findByAyrrowstateGreaterThanOrderByAyrfield1Asc(0);
         List<DropdownItem> academicYearDropdown = academicYears.stream()
-            .map(ay -> new DropdownItem(String.valueOf(ay.getId()), ay.getName()))
+            .map(ay -> new DropdownItem(String.valueOf(ay.getAyrid()), ay.getAyrname()))
             .collect(Collectors.toList());
 
         model.addAttribute("academicYears", academicYearDropdown);
@@ -410,42 +389,30 @@ public class ResultController {
     }
 
 
-    /**
-     * AJAX endpoint to get terms based on selected academic year.
-     */
     @GetMapping("/coursewise/exam-specific/api/terms")
     @ResponseBody
     public List<DropdownItem> getTermsByAcademicYear(@RequestParam Long academicYearId) {
-        List<Term> terms = termRepository.findByAcademicYear_IdAndRowStateGreaterThanOrderByField1Asc(academicYearId, (int) 0);
+        List<Terms> terms = termsRepository.findByAcademicYear_AyridAndTrmrowstateGreaterThanOrderByTrmnameAsc(academicYearId, (int) 0);
         return terms.stream()
-            .map(term -> new DropdownItem(String.valueOf(term.getId()), term.getName()))
+            .map(term -> new DropdownItem(String.valueOf(term.getTrmid()), term.getTrmname()))
             .collect(Collectors.toList());
     }
 
-    /**
-     * AJAX endpoint to get courses based on selected term.
-     * This specifically fetches courses that have 'T' (submitted) grades.
-     */
+ 
     @GetMapping("/coursewise/exam-specific/api/courses")
     @ResponseBody
     public List<DropdownItem> getCoursesByTerm(@RequestParam Long termId) {
-        return termCourseRepository.findSubmittedTermCoursesByTermId(termId);
+        return termCoursesRepository.findSubmittedTermCoursesByTermId(termId);
     }
 
-    /**
-     * AJAX endpoint to get exam types based on selected course (TermCourseId).
-     * This specifically fetches exam types for which grades exist for the given course.
-     */
+    
     @GetMapping("/coursewise/exam-specific/api/examtypes")
     @ResponseBody
     public List<DropdownItem> getExamTypesByCourse(@RequestParam Long termCourseId) {
         return examTypeRepository.findExamTypesWithGradesByTermCourseId(termCourseId);
     }
 
-    /**
-     * Displays the grade list report based on selected Academic Year, Term, Course, and Exam Type.
-     * Corresponds to GradeListServlet and defaultGradeListReport.jsp.
-     */
+    
     @GetMapping("/coursewise/exam-specific/list")
     public String showGradeListReport(Model model, HttpSession session, HttpServletResponse response,
                                       @RequestParam(name = "academicYearId", required = false) Long academicYearId,
@@ -506,9 +473,7 @@ public class ResultController {
         }
     }
 
-    /**
-     * Generates an Excel sheet for the Grade List Report.
-     */
+ 
     private String generateGradeListExcel(List<StudentGradeReportDTO> data, HttpServletResponse response) throws IOException {
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         String headerKey = "Content-Disposition";
@@ -541,18 +506,15 @@ public class ResultController {
         return null; // No view name needed as content is written directly to response
     }
 
-    /*
-     * Coursewise -> Updated Grade Functionality
-     */
     @GetMapping("/coursewise/updated-grade/selector")
     public String showUpdatedGradeSelector(Model model, HttpSession session,
                                         @RequestParam(name = "actiontext", required = false) String actionText,
                                         @RequestParam(name = "target", required = false, defaultValue = "/results/coursewise/updated-grade/list") String targetUrl,
                                         @RequestParam(name = "fromWhichSystem", required = false) String fromWhichSystem) {
 
-        List<AcademicYear> academicYears = academicYearRepository.findByRowStateGreaterThanOrderByField1Asc(0);
+        List<AcademicYears> academicYears = academicYearsRepository.findByAyrrowstateGreaterThanOrderByAyrfield1Asc(0);
         List<DropdownItem> academicYearDropdown = academicYears.stream()
-                .map(ay -> new DropdownItem(String.valueOf(ay.getId()), ay.getName()))
+                .map(ay -> new DropdownItem(String.valueOf(ay.getAyrid()), ay.getAyrname()))
                 .collect(Collectors.toList());
 
         model.addAttribute("academicYears", academicYearDropdown);
@@ -564,44 +526,31 @@ public class ResultController {
     }
 
 
-    /**
-     * AJAX endpoint to get terms based on selected academic year.
-     * This method is general and does not specifically filter for 'updated' grades at the term level.
-     */
+ 
     @GetMapping("/coursewise/updated-grade/api/terms")
     @ResponseBody
     public List<DropdownItem> getTermsForUpdatedGradesByAcademicYear(@RequestParam Long academicYearId) {
         // This remains general, fetching all active terms for the academic year
-        List<Term> terms = termRepository.findByAcademicYear_IdAndRowStateGreaterThanOrderByField1Asc(academicYearId, (int) 0);
+        List<Terms> terms = termsRepository.findByAcademicYear_AyridAndTrmrowstateGreaterThanOrderByTrmnameAsc(academicYearId, (int) 0);
         return terms.stream()
-                .map(term -> new DropdownItem(String.valueOf(term.getId()), term.getName()))
+                .map(term -> new DropdownItem(String.valueOf(term.getTrmid()), term.getTrmname()))
                 .collect(Collectors.toList());
     }
 
-    /**
-     * AJAX endpoint to get courses based on selected term that have updated grades.
-     * Calls the `GradeService` method, which in turn uses `TermCourseRepository.findUpdatedTermCoursesByTermId`.
-     */
+
     @GetMapping("/coursewise/updated-grade/api/courses")
     @ResponseBody
     public List<DropdownItem> getUpdatedCoursesByTerm(@RequestParam Long termId) {
         return gradeService.getUpdatedTermCoursesByTermId(termId);
     }
 
-    /**
-     * AJAX endpoint to get exam types based on selected course (TermCourseId) that have updated grades.
-     * Calls the `GradeService` method, which in turn uses `Egcrstt1Repository.findExamTypesWithUpdatedGradesByTermCourseId`.
-     */
+    
     @GetMapping("/coursewise/updated-grade/api/examtypes")
     @ResponseBody
     public List<DropdownItem> getExamTypesForUpdatedGradesByCourse(@RequestParam Long termCourseId) {
         return gradeService.getExamTypesWithUpdatedGradesByTermCourseId(termCourseId);
     }
 
-    /**
-     * Displays the updated grade list report based on selected Academic Year, Term, Course, and Exam Type.
-     * Parameters are expected to come directly from the form submission of 'courseExamSelector.html'.
-     */
     @GetMapping("/coursewise/updated-grade/list")
     public String showUpdatedGradeListReport(Model model, HttpSession session, HttpServletResponse response,
                                              @RequestParam(name = "academicYearId") Long academicYearId, // Required parameter from form
@@ -612,15 +561,12 @@ public class ResultController {
                                              @RequestParam(name = "generateExcelSheet", required = false) String generateExcelSheet,
                                              RedirectAttributes redirectAttributes) throws IOException {
 
-        // Basic validation (Spring will already handle missing required params by throwing an exception,
-        // but this adds a clean redirect with a message if somehow they are null or if a direct URL access bypasses form validation)
 
         if (academicYearId == null || termId == null || termCourseId == null || examTypeId == null) {
             redirectAttributes.addFlashAttribute("errorMessage", "Please select all required fields (Academic Year, Term Name, Course Name, Exam Type).");
             return "redirect:/results/coursewise/updated-grade/selector";
         }
 
-        // Check if updated grades exist for the selected criteria
         boolean isGradeUpdated = egcrstt1Repository.existsById_TcridAndId_ExamtypeIdAndUpdatedByIsNotNullAndUpdatedDateIsNotNull(termCourseId, examTypeId);
 
         if (!isGradeUpdated) {
@@ -628,29 +574,26 @@ public class ResultController {
             return "processStatusPage"; // A generic page to show status messages
         }
 
-        // Fetch all possible grades for the filter dropdown on the report page
         List<Grade> allGrades = gradeService.getAllGrades();
         model.addAttribute("allGrades", allGrades);
 
-        //crsid, trmid, examTypeId, selectedGrades
-        // Call the GradeService method to fetch the actual updated student grades for the report
-        TermCourse tc = termCourseRepository.findById(termCourseId)
+        TermCourses tc = termCoursesRepository.findById(termCourseId)
         .orElseThrow(() -> new EntityNotFoundException("TermCourse not found"));    
-        List<StudentGradeDTO> studentGrades = gradeService.getUpdatedStudentGrades(tc.getCourse().getId(),termId,examTypeId, selectedGrades);
+        List<StudentGradeDTO> studentGrades = gradeService.getUpdatedStudentGrades(tc.getCourse().getCrsid(),termId,examTypeId, selectedGrades);
 
         model.addAttribute("studentGrades", studentGrades);
         model.addAttribute("selectedGrades", selectedGrades); // To retain selections in the filter dropdown on the report page
 
         // Add display names for the report header/title
-        AcademicYear selectedAy = academicYearRepository.findById(academicYearId).orElse(null);
-        Term selectedTerm = termRepository.findById(termId).orElse(null);
-        TermCourse selectedTc = termCourseRepository.findById(termCourseId).orElse(null);
+        AcademicYears selectedAy = academicYearsRepository.findById(academicYearId).orElse(null);
+        Terms selectedTerm = termsRepository.findById(termId).orElse(null);
+        TermCourses selectedTc = termCoursesRepository.findById(termCourseId).orElse(null);
         ExamType selectedEt = examTypeRepository.findExamTypeById(examTypeId).orElse(null); // Assuming this method exists in Egcrstt1Repository or a dedicated ExamTypeRepository
 
-        model.addAttribute("selectedAcademicYearName", selectedAy != null ? selectedAy.getName() : "N/A");
-        model.addAttribute("selectedTermName", selectedTerm != null ? selectedTerm.getName() : "N/A");
+        model.addAttribute("selectedAcademicYearName", selectedAy != null ? selectedAy.getAyrname() : "N/A");
+        model.addAttribute("selectedTermName", selectedTerm != null ? selectedTerm.getTrmname() : "N/A");
         // Ensure getCourse() and getName() exist on TermCourse and Course entities respectively
-        model.addAttribute("selectedCourseName", selectedTc != null && selectedTc.getCourse() != null ? selectedTc.getCourse().getName() : "N/A");
+        model.addAttribute("selectedCourseName", selectedTc != null && selectedTc.getCourse() != null ? selectedTc.getCourse().getCrsname() : "N/A");
         // Ensure getExamtypeName() exists on your ExamType entity
         model.addAttribute("selectedExamTypeName", selectedEt != null ? selectedEt.getTitle() : "N/A");
         model.addAttribute("AcademicYearId", academicYearId);
@@ -666,10 +609,6 @@ public class ResultController {
         }
     }
 
-    /**
-     * Helper method to generate an Excel sheet from the list of StudentGradeDTOs.
-     * This method remains largely the same as it consumes the DTO.
-     */
     private String generateUpdatedGradeListExcel(List<StudentGradeDTO> data, HttpServletResponse response) throws IOException {
         response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         String headerKey = "Content-Disposition";

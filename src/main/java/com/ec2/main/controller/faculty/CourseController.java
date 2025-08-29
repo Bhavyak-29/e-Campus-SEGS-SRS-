@@ -1,51 +1,52 @@
 package com.ec2.main.controller.faculty;
 
-import com.ec2.main.model.AcademicYear;
-import com.ec2.main.model.Course;
-import com.ec2.main.model.Term;
-import com.ec2.main.model.TermCourse;
-import com.ec2.main.repository.AcademicYearRepository;
-import com.ec2.main.repository.CourseRepository;
-import com.ec2.main.repository.TermCourseRepository;
-import com.ec2.main.repository.TermRepository;
+import java.io.IOException;
+import java.util.List;
 
-import jakarta.servlet.http.HttpServletResponse;
-import jakarta.servlet.http.HttpSession;
-
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.apache.poi.ss.usermodel.*;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import com.ec2.main.model.AcademicYears;
+import com.ec2.main.model.Courses;
+import com.ec2.main.model.Terms;
+import com.ec2.main.model.TermCourses;
+import com.ec2.main.repository.AcademicYearsRepository;
+import com.ec2.main.repository.CoursesRepository;
+import com.ec2.main.repository.TermCoursesRepository;
+import com.ec2.main.repository.TermsRepository;
 
-import java.io.IOException;
-import java.util.List;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/courses")
 public class CourseController {
 
     @Autowired
-    private CourseRepository courseRepository;
+    private CoursesRepository coursesRepository;
 
     @Autowired
-    private TermCourseRepository termCourseRepository;
+    private TermCoursesRepository termCoursesRepository;
 
     @Autowired
-    private TermRepository termRepository;
+    private TermsRepository termsRepository;
 
     @Autowired
-    private AcademicYearRepository academicYearRepository;
+    private AcademicYearsRepository academicYearsRepository;
 
 
     // View: Display Master Course List
     @GetMapping("/master-list")
     public String showCourseMasterList(Model model) {
-        List<Course> courses = courseRepository.findAll();
+        List<Courses> courses = coursesRepository.findAll();
         model.addAttribute("courses", courses);
         return "course_list"; // Thymeleaf template under resources/templates/
     }
@@ -55,7 +56,7 @@ public class CourseController {
         response.setContentType("application/vnd.ms-excel");
         response.setHeader("Content-Disposition", "attachment; filename=courses_master_list.xlsx");
 
-        List<Course> courses = courseRepository.findAll();
+        List<Courses> courses = coursesRepository.findAll();
 
         // Create Excel workbook and sheet
         try (Workbook workbook = new XSSFWorkbook()) {
@@ -70,19 +71,19 @@ public class CourseController {
 
             // Data rows
             int rowNum = 1;
-            for (Course course : courses) {
+            for (Courses course : courses) {
                 Row row = sheet.createRow(rowNum++);
                 row.createCell(0).setCellValue(rowNum - 1);
-                row.createCell(1).setCellValue(course.getName());
-                row.createCell(2).setCellValue(course.getTitle());
-                row.createCell(3).setCellValue(course.getDiscipline());
-                row.createCell(4).setCellValue(course.getCode());
-                row.createCell(5).setCellValue(course.getAssessmentType());
+                row.createCell(1).setCellValue(course.getCrsname());
+                row.createCell(2).setCellValue(course.getCrstitle());
+                row.createCell(3).setCellValue(course.getCrsdiscipline());
+                row.createCell(4).setCellValue(course.getCrscode());
+                row.createCell(5).setCellValue(course.getCrsassessmenttype());
                 String ltp = String.format("%s-%s-%s (%s)",
-                        course.getLectures(),
-                        course.getTutorials(),
-                        course.getPracticals(),
-                        course.getCreditPoints());
+                        course.getCrslectures(),
+                        course.getCrstutorials(),
+                        course.getCrspracticals(),
+                        course.getCrscreditpoints());
                 row.createCell(6).setCellValue(ltp);
             }
 
@@ -103,16 +104,16 @@ public class CourseController {
             Model model,
             HttpSession session
     ) {
-        model.addAttribute("academicYears", academicYearRepository.findAll());
+        model.addAttribute("academicYears", academicYearsRepository.findAll());
 
         if (academicYearId != null) {
-            model.addAttribute("terms", termRepository.findByAcademicYear_Id(academicYearId));
+            model.addAttribute("terms", termsRepository.findByAcademicYear_Ayrid(academicYearId));
             model.addAttribute("selectedAcademicYearId", academicYearId);
             model.addAttribute("termId", termId);
         }
 
         if (academicYearId != null && termId != null) {
-            List<TermCourse> termCourses = termCourseRepository.findByTerm_AcademicYear_IdAndTerm_Id(academicYearId, termId);
+            List<TermCourses> termCourses = termCoursesRepository.findByTerm_AcademicYear_AyridAndTerm_Trmid(academicYearId, termId);
             model.addAttribute("termCourses", termCourses);
 
             // optional: control checkboxes based on session userId
@@ -121,16 +122,16 @@ public class CourseController {
         }
 
          if (academicYearId != null) {
-            AcademicYear selectedYear = academicYearRepository.findById(academicYearId).orElse(null);
+            AcademicYears selectedYear = academicYearsRepository.findById(academicYearId).orElse(null);
             if (selectedYear != null)
-                model.addAttribute("ayrname", selectedYear.getName());
+                model.addAttribute("ayrname", selectedYear.getAyrname());
             
         }
         
         if (termId != null) {
-            Term selectedTerm = termRepository.findById(termId).orElse(null);
+            Terms selectedTerm = termsRepository.findById(termId).orElse(null);
             if (selectedTerm != null)
-                model.addAttribute("trmname", selectedTerm.getName());
+                model.addAttribute("trmname", selectedTerm.getTrmname());
         }
 
         return "term_courses"; // Thymeleaf view
@@ -146,7 +147,7 @@ public class CourseController {
         response.setContentType("application/vnd.ms-excel");
         response.setHeader("Content-Disposition", "attachment; filename=term_courses.xlsx");
 
-        List<TermCourse> termCourses = termCourseRepository.findByTerm_AcademicYear_IdAndTerm_Id(academicYearId, termId);
+        List<TermCourses> termCourses = termCoursesRepository.findByTerm_AcademicYear_AyridAndTerm_Trmid(academicYearId, termId);
 
         try (Workbook workbook = new XSSFWorkbook()) {
             Sheet sheet = workbook.createSheet("Term Courses");
@@ -156,16 +157,16 @@ public class CourseController {
                 header.createCell(i).setCellValue(headers[i]);
             }
             int rowNum = 1;
-            for (TermCourse tc : termCourses) {
+            for (TermCourses tc : termCourses) {
                 Row row = sheet.createRow(rowNum++);
 
                 int col = 0;
                 row.createCell(col++).setCellValue(rowNum - 1); // Sr No
-                row.createCell(col++).setCellValue(tc.getCourse().getName());
-                row.createCell(col++).setCellValue(tc.getCourse().getCreditPoints() != null ? tc.getCourse().getCreditPoints().doubleValue() : 0.0);
-                row.createCell(col++).setCellValue(tc.getCourse().getCode() != null ? tc.getCourse().getCode() : ""); 
-                row.createCell(col++).setCellValue(tc.getUser() != null ? tc.getUser().getUserName() : "N/A");
-                row.createCell(col++).setCellValue(tc.getUser() != null ? tc.getUser().getUserMailId() : "N/A");
+                row.createCell(col++).setCellValue(tc.getCourse().getCrsname());
+                row.createCell(col++).setCellValue(tc.getCourse().getCrscreditpoints() != null ? tc.getCourse().getCrscreditpoints().doubleValue() : 0.0);
+                row.createCell(col++).setCellValue(tc.getCourse().getCrscode() != null ? tc.getCourse().getCrscode() : ""); 
+                row.createCell(col++).setCellValue(tc.getUser() != null ? tc.getUser().getUname() : "N/A");
+                row.createCell(col++).setCellValue(tc.getUser() != null ? tc.getUser().getUemail() : "N/A");
                 
                 // If you want to include a "Check" column only conditionally, you can add:
                 row.createCell(col++).setCellValue("✓");

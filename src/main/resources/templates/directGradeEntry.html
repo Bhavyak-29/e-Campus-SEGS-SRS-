@@ -21,7 +21,7 @@
                     <label for="academicYearSelect" class="form-label">Academic Year</label>
                     <select id="academicYearSelect" class="form-select" name="AYRID" onchange="fetchTerms(this.value)">
                         <option value="">-- Select Academic Year --</option>
-                        <option th:each="ay : ${academicYears}" th:value="${ay.id}" th:text="${ay.name}"></option>
+                        <option th:each="ay : ${academicYears}" th:value="${ay.ayrid}" th:text="${ay.ayrname}"></option>
                     </select>
                 </div>
 
@@ -68,8 +68,8 @@
                 termSelect.innerHTML = '<option value="">-- Select Term --</option>';
                 data.forEach(term => {
                     const option = document.createElement("option");
-                    option.value = term.id;
-                    option.text = term.name;
+                    option.value = term.trmid;
+                    option.text = term.trmname;
                     termSelect.appendChild(option);
                 });
 

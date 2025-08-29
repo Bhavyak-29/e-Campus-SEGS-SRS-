@@ -1,8 +1,18 @@
 package com.ec2.main.model;
 
-import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
+
+
+//toupdate
 
 @Entity
 @Table(name = "studentsemesterresult", schema = "ec2")
@@ -66,7 +76,7 @@ public class StudentSemesterResult {
     private LocalDateTime lastUpdatedAt;
 
     @Column(name = "ssrrowstate")
-    private Short rowState;
+    private Long rowState;
 
     @Column(name = "ssrcpi_numeric")
     private BigDecimal cpiNumeric;
@@ -239,11 +249,11 @@ public class StudentSemesterResult {
         this.lastUpdatedAt = lastUpdatedAt;
     }
 
-    public Short getRowState() {
+    public Long getRowState() {
         return rowState;
     }
 
-    public void setRowState(Short rowState) {
+    public void setRowState(Long rowState) {
         this.rowState = rowState;
     }
 }

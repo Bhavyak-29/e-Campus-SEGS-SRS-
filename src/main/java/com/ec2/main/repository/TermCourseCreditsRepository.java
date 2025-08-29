@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.ec2.main.model.TermCourseCredits;
-
+//toupdaate
 @Repository
 public interface TermCourseCreditsRepository extends JpaRepository<TermCourseCredits, Long> {
 

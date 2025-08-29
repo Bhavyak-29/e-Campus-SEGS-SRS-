@@ -1,135 +1,104 @@
 package com.ec2.main.model;
 
-import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
 @Entity
-@Table(name = "studentregistrations", schema = "ec2")
+@Table(name = "studentregistrations", schema="ec2")
 public class StudentRegistrations {
 
     @Id
-    @Column(name = "srgid", nullable = false)
+    @Column(name = "srgid")
     private Long srgid;
+
+    @Column(name = "srgregdate")
+    private LocalDate srgregdate;
+
+    @Column(name = "srgfield1")
+    private String srgfield1;
+
+    @Column(name = "srgfield2")
+    private String srgfield2;
+
+    @Column(name = "srgcreatedby")
+    private Long srgcreatedby;
+
+    @Column(name = "srgcreatedat")
+    private LocalDateTime srgcreatedat;
+
+    @Column(name = "srglastupdatedby")
+    private Long srglastupdatedby;
+
+    @Column(name = "srglastupdatedat")
+    private LocalDateTime srglastupdatedat;
+
+    @Column(name = "srgrowstate")
+    private Long srgrowstate;
+
+    @Column(name = "srgstrid", insertable = false, updatable = false)
+    private Long srgstrid;
+
+    @Column(name = "srgstdid", insertable = false, updatable = false)
+    private Long srgstdid;
 
     @ManyToOne
     @JoinColumn(name = "srgstdid", nullable = false)
-    private Student student;
+    private Students students;
 
+    public Students getStudents() {
+        return students;
+    }
+    public void setStudents(Students students) {
+        this.students = students;
+    }
     @ManyToOne
     @JoinColumn(name = "srgstrid", nullable = false)
-    private Semester semester;
+    private Semesters semesters;
 
-    @Column(name = "srgregdate", nullable = false)
-    private LocalDate registrationDate;
-
-    @Column(name = "srgfield1")
-    private String field1;
-
-    @Column(name = "srgfield2")
-    private String field2;
-
-    @Column(name = "srgcreatedby")
-    private Long createdBy;
-
-    @Column(name = "srgcreatedat", nullable = false)
-    private LocalDateTime createdAt;
-
-    @Column(name = "srglastupdatedby")
-    private Long lastUpdatedBy;
-
-    @Column(name = "srglastupdatedat")
-    private LocalDateTime lastUpdatedAt;
-
-    @Column(name = "srgrowstate", nullable = false)
-    private Short srgrowstate;
-
-    public Long getSrgid() {
-        return srgid;
+    public Semesters getSemester() {
+        return semesters;
     }
-    public void setSrgid(Long srgid) {
-        this.srgid = srgid;
+    public void setSemester(Semesters semester) {
+        this.semesters = semester;
     }
+    public Long getSrgid() { return srgid; }
+    public void setSrgid(Long srgid) { this.srgid = srgid; }
 
-    public Student getStudent() {
-        return student;
-    }
+    public Long getSrgstdid() { return srgstdid; }
+    public void setSrgstdid(Long srgstdid) { this.srgstdid = srgstdid; }
 
-    public void setStudent(Student student) {
-        this.student = student;
-    }
+    public Long getSrgstrid() { return srgstrid; }
+    public void setSrgstrid(Long srgstrid) { this.srgstrid = srgstrid; }
 
-    public Semester getSemester() {
-        return semester;
-    }
+    public LocalDate getSrgregdate() { return srgregdate; }
+    public void setSrgregdate(LocalDate srgregdate) { this.srgregdate = srgregdate; }
 
-    public void setSemester(Semester semester) {
-        this.semester = semester;
-    }
+    public String getSrgfield1() { return srgfield1; }
+    public void setSrgfield1(String srgfield1) { this.srgfield1 = srgfield1; }
 
-    public LocalDate getRegistrationDate() {
-        return registrationDate;
-    }
+    public String getSrgfield2() { return srgfield2; }
+    public void setSrgfield2(String srgfield2) { this.srgfield2 = srgfield2; }
 
-    public void setRegistrationDate(LocalDate registrationDate) {
-        this.registrationDate = registrationDate;
-    }
+    public Long getSrgcreatedby() { return srgcreatedby; }
+    public void setSrgcreatedby(Long srgcreatedby) { this.srgcreatedby = srgcreatedby; }
 
-    public String getField1() {
-        return field1;
-    }
+    public LocalDateTime getSrgcreatedat() { return srgcreatedat; }
+    public void setSrgcreatedat(LocalDateTime srgcreatedat) { this.srgcreatedat = srgcreatedat; }
 
-    public void setField1(String field1) {
-        this.field1 = field1;
-    }
+    public Long getSrglastupdatedby() { return srglastupdatedby; }
+    public void setSrglastupdatedby(Long srglastupdatedby) { this.srglastupdatedby = srglastupdatedby; }
 
-    public String getField2() {
-        return field2;
-    }
+    public LocalDateTime getSrglastupdatedat() { return srglastupdatedat; }
+    public void setSrglastupdatedat(LocalDateTime srglastupdatedat) { this.srglastupdatedat = srglastupdatedat; }
 
-    public void setField2(String field2) {
-        this.field2 = field2;
-    }
+    public Long getSrgrowstate() { return srgrowstate; }
+    public void setSrgrowstate(Long srgrowstate) { this.srgrowstate = srgrowstate; }
 
-    public Long getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(Long createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Long getLastUpdatedBy() {
-        return lastUpdatedBy;
-    }
-
-    public void setLastUpdatedBy(Long lastUpdatedBy) {
-        this.lastUpdatedBy = lastUpdatedBy;
-    }
-
-    public LocalDateTime getLastUpdatedAt() {
-        return lastUpdatedAt;
-    }
-
-    public void setLastUpdatedAt(LocalDateTime lastUpdatedAt) {
-        this.lastUpdatedAt = lastUpdatedAt;
-    }
-
-    public Short getRowState() {
-        return srgrowstate;
-    }
-
-    public void setRowState(Short rowState) {
-        this.srgrowstate = rowState;
-    }
-
-    
 }

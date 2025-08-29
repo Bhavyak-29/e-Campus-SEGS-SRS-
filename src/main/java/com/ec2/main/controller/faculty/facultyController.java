@@ -21,30 +21,30 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.ec2.main.model.AcademicYear;
-import com.ec2.main.model.Address;
-import com.ec2.main.model.Batch;
-import com.ec2.main.model.Course;
+import com.ec2.main.model.AcademicYears;
+import com.ec2.main.model.Addresses;
+import com.ec2.main.model.Batches;
+import com.ec2.main.model.Courses;
 import com.ec2.main.model.Egcrstt1;
 import com.ec2.main.model.Eggradm1;
 import com.ec2.main.model.Grade;
-import com.ec2.main.model.Program;
-import com.ec2.main.model.Student;
+import com.ec2.main.model.Programs;
 import com.ec2.main.model.StudentGradeDTO;
 import com.ec2.main.model.StudentProfile;
-import com.ec2.main.model.StudentRegistrations;
+import com.ec2.main.model.StudentRegistration;
 import com.ec2.main.model.StudentSemesterResult;
-import com.ec2.main.model.Term;
-import com.ec2.main.repository.AddressRepository;
-import com.ec2.main.repository.BatchRepository;
+import com.ec2.main.model.Students;
+import com.ec2.main.model.Terms;
+import com.ec2.main.repository.AddressesRepository;
+import com.ec2.main.repository.BatchesRepository;
 import com.ec2.main.repository.Egcrstt1Repository;
 import com.ec2.main.repository.Eggradm1Repository;
-import com.ec2.main.repository.ProgramRepository;
+import com.ec2.main.repository.ProgramsRepository;
 import com.ec2.main.repository.StudentProfileRepository;
-import com.ec2.main.repository.StudentRegistrationCourseRepository;
-import com.ec2.main.repository.StudentRegistrationsRepository;
-import com.ec2.main.repository.StudentRepository;
+import com.ec2.main.repository.StudentRegistrationCoursesRepository;
+import com.ec2.main.repository.StudentRegistrationRepository;
 import com.ec2.main.repository.StudentSemesterResultRepository;
+import com.ec2.main.repository.StudentsRepository;
 import com.ec2.main.service.GradeService;
 import com.ec2.main.service.facultyService;
 
@@ -57,28 +57,28 @@ public class facultyController {
     private facultyService facultyService;
 
     @Autowired
-    private StudentRepository studentRepository;
+    private StudentsRepository studentsRepository;
 
     @Autowired
     private GradeService gradeService;
 
     @Autowired
-    private AddressRepository addressRepository;
+    private AddressesRepository addressesRepository;
 
     @Autowired
-    private StudentRegistrationsRepository studentRegistrationsRepository;
+    private StudentRegistrationRepository studentRegistrationRepository;
 
     @Autowired
-    private StudentRegistrationCourseRepository studentRegistrationCourseRepository;
+    private StudentRegistrationCoursesRepository studentRegistrationCoursesRepository;
 
     @Autowired
     private StudentSemesterResultRepository studentSemesterResultRepository;
 
     @Autowired
-    private ProgramRepository programRepository;
+    private ProgramsRepository programsRepository;
 
     @Autowired
-    private BatchRepository batchRepository;
+    private BatchesRepository batchesRepository;
 
     @Autowired
     private StudentProfileRepository studentProfileRepository;
@@ -92,10 +92,10 @@ public class facultyController {
 
     @RequestMapping("/directGradeEntry")
     public String directGradeEntry(ModelMap model) {
-        List<Term> terms = facultyService.getAllTerms();
+        List<Terms> terms = facultyService.getAllTerms();
         List<Egcrstt1> examTypes = facultyService.getAllExamTypes();
-        List<AcademicYear> academicYears = facultyService.getAllAcademicYears();
-        List<Course> courses = facultyService.getAllCourses();
+        List<AcademicYears> academicYears = facultyService.getAllAcademicYears();
+        List<Courses> courses = facultyService.getAllCourses();
 
         model.addAttribute("terms", terms);
         model.addAttribute("examTypes", examTypes);
@@ -282,16 +282,16 @@ public String showUpdatedGrades(@RequestParam(required = false) List<String> sel
             ModelMap model) {
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<Student> studentsPage;
+        Page<Students> studentsPage;
 
         if (instId != null) {
-            studentsPage = studentRepository.findByStdinstidAndStdrowstateGreaterThan(instId, 0, pageable);
+            studentsPage = studentsRepository.findByStdinstidAndStdrowstateGreaterThan(instId, 0, pageable);
         } else if (fname != null && lname != null) {
-            studentsPage = studentRepository.findByStdfirstnameContainingIgnoreCaseAndStdlastnameContainingIgnoreCaseAndStdrowstateGreaterThan(fname, lname, 0, pageable);
+            studentsPage = studentsRepository.findByStdfirstnameContainingIgnoreCaseAndStdlastnameContainingIgnoreCaseAndStdrowstateGreaterThan(fname, lname, 0, pageable);
         } else if (fname != null) {
-            studentsPage = studentRepository.findByStdfirstnameContainingIgnoreCaseAndStdrowstateGreaterThan(fname, 0, pageable);
+            studentsPage = studentsRepository.findByStdfirstnameContainingIgnoreCaseAndStdrowstateGreaterThan(fname, 0, pageable);
         } else if (lname != null) {
-            studentsPage = studentRepository.findByStdlastnameContainingIgnoreCaseAndStdrowstateGreaterThan(lname, 0, pageable);
+            studentsPage = studentsRepository.findByStdlastnameContainingIgnoreCaseAndStdrowstateGreaterThan(lname, 0, pageable);
         } else {
             studentsPage = Page.empty(pageable);
         }
@@ -310,9 +310,9 @@ public String showUpdatedGrades(@RequestParam(required = false) List<String> sel
             @RequestParam(value = "from", required = false) String from,
             Model model) {
     
-        List<Student> students = studentRepository.findStudentByInstIdWithLatestRegistration(id);
+        List<Students> students = studentsRepository.findStudentByInstIdWithLatestRegistration(id);
         if (students.isEmpty()) return "error/404";
-        Student student = students.get(0);
+        Students student = students.get(0);
     
         StudentProfile profile = studentProfileRepository.findBystdid(student.getStdid());
     
@@ -320,25 +320,25 @@ public String showUpdatedGrades(@RequestParam(required = false) List<String> sel
         if (student.getPrmtAdrId() != null) addressIds.add(student.getPrmtAdrId());
         if (student.getCurrAdrId() != null) addressIds.add(student.getCurrAdrId());
     
-        List<Address> addresses = addressRepository.findAddressesByIdsWithCustomOrder(
+        List<Addresses> addresses = addressesRepository.findAddressesByIdsWithCustomOrder(
                 addressIds, student.getCurrAdrId(), student.getPrmtAdrId());
     
-        Address currAddr = addresses.stream()
+        Addresses currAddr = addresses.stream()
                 .filter(a -> a.getAdrid().equals(student.getCurrAdrId()))
                 .findFirst().orElse(null);
     
-        Address permAddr = addresses.stream()
+        Addresses permAddr = addresses.stream()
                 .filter(a -> a.getAdrid().equals(student.getPrmtAdrId()))
                 .findFirst().orElse(null);
     
-        List<StudentRegistrations> registrations = studentRegistrationsRepository
+        List<StudentRegistration> registrations = studentRegistrationRepository
                 .findAllRegistrationsByStudentIdOrderBySemesterSequence(student.getStdid());
     
         Map<Long, List<Object[]>> regCourses = new LinkedHashMap<>();
         Map<Long, List<StudentSemesterResult>> regResults = new LinkedHashMap<>();
     
-        for (StudentRegistrations reg : registrations) {
-            regCourses.put(reg.getSrgid(), studentRegistrationCourseRepository
+        for (StudentRegistration reg : registrations) {
+            regCourses.put(reg.getSrgid(), studentRegistrationCoursesRepository
                     .findActiveRegistrationCourseDetails(reg.getSrgid()));
             regResults.put(reg.getSrgid(), studentSemesterResultRepository
                     .findByStudentRegistration_SrgidAndRowStateGreaterThan(reg.getSrgid(), (short) 0));
@@ -385,15 +385,15 @@ public String showUpdatedGrades(@RequestParam(required = false) List<String> sel
     @GetMapping("/students/batch")
     public String showProgramAndBatchSelection(@RequestParam(value = "programId", required = false) Long programId,
                                             Model model) {
-        List<Program> programs = programRepository.findAll();
-        programs.sort(Comparator.comparing(Program::getPrgname));
+        List<Programs> programs = programsRepository.findAll();
+        programs.sort(Comparator.comparing(Programs::getPrgname));
         model.addAttribute("programs", programs);
 
         if (programId != null) {
-            Program program = programRepository.findById(programId).orElse(null);
+            Programs program = programsRepository.findById(programId).orElse(null);
             if (program != null) {
-                List<Batch> batches = batchRepository.findByProgram(program);
-                batches.sort(Comparator.comparing(Batch::getBchname).reversed());
+                List<Batches> batches = batchesRepository.findByPrograms(program);
+                batches.sort(Comparator.comparing(Batches::getBchname).reversed());
                 model.addAttribute("selectedProgram", program);
                 model.addAttribute("batches", batches);
             }
@@ -405,13 +405,13 @@ public String showUpdatedGrades(@RequestParam(required = false) List<String> sel
     public String viewStudents(@RequestParam("programId") Long programId,
                             @RequestParam("batchId") Long batchId,
                             Model model) {
-        Program program = programRepository.findById(programId).orElse(null);
-        Batch batch = batchRepository.findById(batchId).orElse(null);
+        Programs program = programsRepository.findById(programId).orElse(null);
+        Batches batch = batchesRepository.findById(batchId).orElse(null);
         if (program == null || batch == null) return "redirect:/students/batch";
 
 
-        List<Student> students = studentRepository.findByBatch(batch);
-        students.sort(Comparator.comparing(Student::getStdinstid));
+        List<Students> students = studentsRepository.findByBatch(batch);
+        students.sort(Comparator.comparing(Students::getStdinstid));
         model.addAttribute("program", program);
         model.addAttribute("batch", batch);
         model.addAttribute("students", students);

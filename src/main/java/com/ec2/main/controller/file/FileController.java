@@ -1,7 +1,7 @@
 package com.ec2.main.controller.file;
 
 import com.ec2.main.model.StudentGradeDTO;
-import com.ec2.main.repository.TermCourseRepository;
+import com.ec2.main.repository.TermCoursesRepository;
 import com.ec2.main.model.ResponseMessage;
 import com.ec2.main.service.FileService;
 import com.ec2.main.service.GradeService;
@@ -27,7 +27,7 @@ public class FileController {
     private GradeService gradeService; // <-- Use your existing grade saving service
 
     @Autowired
-    private TermCourseRepository termCourseRepository;
+    private TermCoursesRepository termCoursesRepository;
 
     @PostMapping("/uploadcsv")
 public ResponseEntity<ResponseMessage> uploadFile(
@@ -44,7 +44,7 @@ public ResponseEntity<ResponseMessage> uploadFile(
     }
 
     // Compute tcrid from crsid and trmid
-    Long tcrid = termCourseRepository.findTcridByCrsidAndTrmid(crsid, trmid);
+    Long tcrid = termCoursesRepository.findTcridByCrsidAndTrmid(crsid, trmid);
     if (tcrid == null) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ResponseMessage("Invalid Term-Course combination."));

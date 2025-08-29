@@ -1,20 +1,20 @@
 package com.ec2.main.repository;
 
-import com.ec2.main.model.DropdownItem;
-import com.ec2.main.model.Egcrstt1;
-import com.ec2.main.model.Egcrstt1Id;
-import com.ec2.main.model.ExamType;
-import com.ec2.main.model.StudentGradeDTO;
-import com.ec2.main.model.StudentGradeReportDTO;
+import java.util.List;
 
-// Import your DTO here, e.g., import com.ec2.main.dto.GradeResultDto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-import java.util.Optional;
+import com.ec2.main.model.DropdownItem;
+import com.ec2.main.model.Egcrstt1;
+import com.ec2.main.model.Egcrstt1Id;
+import com.ec2.main.model.StudentGradeDTO;
+import com.ec2.main.model.StudentGradeReportDTO;
+
+
+//toupdate
 
 @Repository
 public interface Egcrstt1Repository extends JpaRepository<Egcrstt1, Egcrstt1Id> {
@@ -44,7 +44,7 @@ public interface Egcrstt1Repository extends JpaRepository<Egcrstt1, Egcrstt1Id> 
 
     // Method to fetch student grades for the report
     @Query("SELECT NEW com.ec2.main.model.StudentGradeReportDTO(s.stdinstid, CONCAT(s.stdfirstname, ' ', s.stdlastname), gm.grad_lt) " +
-           "FROM Egcrstt1 e JOIN Student s ON e.id.studId = s.stdid " +
+           "FROM Egcrstt1 e JOIN Students s ON e.id.studId = s.stdid " +
            "JOIN Eggradm1 gm ON e.obtainedGradeId = gm.grad_id " + 
            "WHERE e.id.tcrid = :termCourseId AND e.id.examtypeId = :examTypeId AND e.rowStatus = '1' " + 
            "AND s.stdrowstate > 0 ORDER BY s.stdinstid")
@@ -59,7 +59,7 @@ public interface Egcrstt1Repository extends JpaRepository<Egcrstt1, Egcrstt1Id> 
        "g.gradeValue" +           // grade (String)
        ") " +
        "FROM Egcrstt1 e " +
-       "JOIN Student s ON e.id.studId = s.stdid " +
+       "JOIN Students s ON e.id.studId = s.stdid " +
        "JOIN Grade g ON e.obtainedGradeId = g.id " +
        "WHERE e.id.tcrid = :termCourseId " +
        "AND e.id.examtypeId = :examTypeId " +
@@ -69,11 +69,6 @@ List<StudentGradeDTO> findUpdatedStudentGradesForReport(
 @Param("termCourseId") Long termCourseId,
 @Param("examTypeId") Long examTypeId);
 
-    /**
-     * Retrieves a list of DropdownItem for ExamTypes that have at least one
-     * associated Egcrstt1 entry with grades that have been 'updated'
-     * (i.e., updatedBy and updatedDate are not null) for a given TermCourse.
-     */
     @Query("SELECT NEW com.ec2.main.model.DropdownItem(CAST(et.id AS string), et.title) " +
            "FROM ExamType et JOIN Egcrstt1 e ON et.id = e.id.examtypeId " +
            "WHERE e.id.tcrid = :termCourseId " +
@@ -81,5 +76,7 @@ List<StudentGradeDTO> findUpdatedStudentGradesForReport(
            "AND et.rowState > 0") // Assuming ExamType entity has 'rowstate' property
     List<DropdownItem> findExamTypesWithUpdatedGradesByTermCourseId(@Param("termCourseId") Long termCourseId);
 
+    @Query(value = "SELECT * FROM ec2.Egcrstt1 eg WHERE eg.id.tcrid = :tcrid AND eg.id.studId = :studentId AND eg.rowStatus > '0'", nativeQuery = true)
+    Egcrstt1 getObtgrId(@Param("studentId") Long studentId, @Param("tcrid") Long tcrid);
 }
 

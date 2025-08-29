@@ -1,7 +1,10 @@
 package com.ec2.main.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -10,10 +13,34 @@ public class StudentRegistration {
     @Id
     //@GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long srgid;
-    private Long srgstdid;
-    private Long srgstrid;
     private int srgrowstate;
+
+    @Column(name = "srgstrid", insertable = false, updatable = false)
+    private Long srgstrid;
+
+    @Column(name = "srgstdid", insertable = false, updatable = false)
+    private Long srgstdid;
+
+    @ManyToOne
+    @JoinColumn(name = "srgstdid", nullable = false)
+    private Students students;
+
+    public Students getStudents() {
+        return students;
+    }
+    public void setStudents(Students students) {
+        this.students = students;
+    }
+    @ManyToOne
+    @JoinColumn(name = "srgstrid", nullable = false)
+    private Semesters semesters;
     
+    public Semesters getSemester() {
+        return semesters;
+    }
+    public void setSemester(Semesters semester) {
+        this.semesters = semester;
+    }
     public Long getSrgid() {
         return srgid;
     }

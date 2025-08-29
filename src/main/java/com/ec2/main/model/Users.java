@@ -1,64 +1,129 @@
 package com.ec2.main.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "users", schema = "ec2")
+@Table(name = "users", schema="ec2")
 public class Users {
 
     @Id
-    @Column(name= "uid")
-    private int userId;
+    @Column(name = "uid")
+    private Long uid;
 
-    @Column(name= "uname")
-    private String userName;
+    @Column(name = "univId")
+    private String univId;
 
-    @Column(name="uemail")
-    private String userMailId;
+    @Column(name = "stdid")
+    private Long stdid;
 
-    @Column(name="urole_0")
-    private String userCategory;
+    @Column(name = "uname")
+    private String uname;
 
-    // Constructors
+    @Column(name = "ufullname")
+    private String ufullname;
+
+    @Column(name = "utype")
+    private String utype;
+
+    @Column(name = "utype_0")
+    private String utype0;
+
+    @Column(name = "urole")
+    private String urole;
+
+    @Column(name = "urole_0")
+    private String urole0;
+
+    @Column(name = "uemail")
+    private String uemail;
+
+    @Column(name = "created_by")
+    private Long createdBy;
+
+    @Column(name = "create_ts")
+    private LocalDateTime createTs;
+
+    @Column(name = "last_updated_by")
+    private Long lastUpdatedBy;
+
+    @Column(name = "last_updated_ts")
+    private LocalDateTime lastUpdatedTs;
+
+    @Column(name = "password")
+    private String password;
+
+    @Column(name = "status")
+    private Boolean status;
+
+    @Column(name = "row_state")
+    private Short rowState;
+
+    @Column(name = "uid_older")
+    private Long uidOlder;
+
     public Users() {
+        
     }
 
-    public Users(String userName, String userMailId, String userCategory, int userId) {
-        this.userName = userName;
-        this.userMailId = userMailId;
-        this.userCategory = userCategory;
-        this.userId = userId;
+    public Users(String userName, String userMailId, String userCategory, Long userId) {
+        this.uname = userName;
+        this.uemail = userMailId;
+        this.urole0 = userCategory;
+        this.uid = userId;
     }
-
     // Getters and Setters
-    public String getUserName() {
-        return userName;
-    }
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
+    public Long getUid() { return uid; }
+    public void setUid(Long uid) { this.uid = uid; }
 
-    public String getUserMailId() {
-        return userMailId;
-    }
-    public void setUserMailId(String userMailId) {
-        this.userMailId = userMailId;
-    }
+    public String getUnivId() { return univId; }
+    public void setUnivId(String univId) { this.univId = univId; }
 
-    public String getUserCategory() {
-        return userCategory;
-    }
-    public void setUserCategory(String userCategory) {
-        this.userCategory = userCategory;
-    }
+    public Long getStdid() { return stdid; }
+    public void setStdid(Long stdid) { this.stdid = stdid; }
 
-    public int getUserId() {
-        return userId;
-    }
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
+    public String getUname() { return uname; }
+    public void setUname(String uname) { this.uname = uname; }
+
+    public String getUfullname() { return ufullname; }
+    public void setUfullname(String ufullname) { this.ufullname = ufullname; }
+
+    public String getUtype() { return utype; }
+    public void setUtype(String utype) { this.utype = utype; }
+
+    public String getUtype0() { return utype0; }
+    public void setUtype0(String utype0) { this.utype0 = utype0; }
+
+    public String getUrole() { return urole; }
+    public void setUrole(String urole) { this.urole = urole; }
+
+    public String getUrole0() { return urole0; }
+    public void setUrole0(String urole0) { this.urole0 = urole0; }
+
+    public String getUemail() { return uemail; }
+    public void setUemail(String uemail) { this.uemail = uemail; }
+
+    public Long getCreatedBy() { return createdBy; }
+    public void setCreatedBy(Long createdBy) { this.createdBy = createdBy; }
+
+    public LocalDateTime getCreateTs() { return createTs; }
+    public void setCreateTs(LocalDateTime createTs) { this.createTs = createTs; }
+
+    public Long getLastUpdatedBy() { return lastUpdatedBy; }
+    public void setLastUpdatedBy(Long lastUpdatedBy) { this.lastUpdatedBy = lastUpdatedBy; }
+
+    public LocalDateTime getLastUpdatedTs() { return lastUpdatedTs; }
+    public void setLastUpdatedTs(LocalDateTime lastUpdatedTs) { this.lastUpdatedTs = lastUpdatedTs; }
+
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
+
+    public Boolean getStatus() { return status; }
+    public void setStatus(Boolean status) { this.status = status; }
+
+    public Short getRowState() { return rowState; }
+    public void setRowState(Short rowState) { this.rowState = rowState; }
+
+    public Long getUidOlder() { return uidOlder; }
+    public void setUidOlder(Long uidOlder) { this.uidOlder = uidOlder; }
 }

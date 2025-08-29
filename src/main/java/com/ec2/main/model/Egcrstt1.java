@@ -1,8 +1,15 @@
 package com.ec2.main.model;
 
-import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+
+
+//toupdate
 
 @Entity
 @Table(name = "egcrstt1", schema = "ec2")  // use schema name if required
@@ -15,7 +22,7 @@ public class Egcrstt1 {
     private Float obtainedMarks;
 
     @Column(name = "obtgr_id")
-    private Integer obtainedGradeId;
+    private Long obtainedGradeId;
 
     @Column(name = "obt_credits", precision = 9, scale = 2)
     private BigDecimal obtainedCredits;
@@ -41,8 +48,6 @@ public class Egcrstt1 {
     @Column(name = "crsid")
     private Long crsId;
 
-    // Getters and Setters
-
     public Egcrstt1Id getId() {
         return id;
     }
@@ -59,11 +64,11 @@ public class Egcrstt1 {
         this.obtainedMarks = obtainedMarks;
     }
 
-    public Integer getObtainedGradeId() {
+    public Long getObtainedGradeId() {
         return obtainedGradeId;
     }
 
-    public void setObtainedGradeId(Integer obtainedGradeId) {
+    public void setObtainedGradeId(Long obtainedGradeId) {
         this.obtainedGradeId = obtainedGradeId;
     }
 
@@ -131,119 +136,3 @@ public class Egcrstt1 {
         this.crsId = crsId;
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// package com.ec2.main.model;
-// import jakarta.persistence.Column;
-// import jakarta.persistence.Entity;
-// import jakarta.persistence.Id;
-// import jakarta.persistence.JoinColumn;
-// import jakarta.persistence.ManyToOne;
-// import jakarta.persistence.Table;
-
-// @Entity
-// @Table(name = "egexamm1", schema = "ec2")
-// public class ExamType {
-//     @Id
-//     @Column(name = "examtype_id")
-//     private Long id;
-
-//     @Column(name = "examtype_title")
-//     private String title;
-
-//     @Column(name = "row_st")
-//     private Integer rowState;
-
-//     @ManyToOne
-//     @JoinColumn(name = "CRSID") // ← replace with actual column name in table
-//     private Course course;
-
-//     public Long getId() {
-//         return id;
-//     }
-
-//     public void setId(Long id) {
-//         this.id = id;
-//     }
-
-//     public String getTitle() {
-//         return title;
-//     }
-
-//     public void setTitle(String title) {
-//         this.title = title;
-//     }
-
-//     public Integer getRowState() {
-//         return rowState;
-//     }
-
-//     public void setRowState(Integer rowState) {
-//         this.rowState = rowState;
-//     }
-
-//     public Course getCourse() {
-//         return course;
-//     }
-
-//     public void setCourse(Course course) {
-//         this.course = course;
-//     }
-// }

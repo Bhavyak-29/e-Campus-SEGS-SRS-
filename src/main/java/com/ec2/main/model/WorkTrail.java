@@ -1,7 +1,17 @@
 package com.ec2.main.model;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
+
+//toupdate
 
 @Entity
 @Table(name = "work_trail", schema = "ec2")
@@ -16,16 +26,16 @@ public class WorkTrail {
     private WorkType workType;
 
     @Column(name = "node_number", nullable = false)
-    private Short nodeNumber;
+    private Long nodeNumber;
 
     @Column(name = "employee_id")
     private Long employeeId;
 
     @Column(name = "iteration_number", nullable = false)
-    private Short iterationNumber;
+    private Long iterationNumber;
 
     @Column(name = "response_code", nullable = false)
-    private Short responseCode;
+    private Long responseCode;
 
     @Column(name = "response_date")
     private LocalDateTime responseDate;
@@ -34,10 +44,10 @@ public class WorkTrail {
     private String remarks;
 
     @Column(name = "prev_node_number")
-    private Short prevNodeNumber;
+    private Long prevNodeNumber;
 
     @Column(name = "prev_iteration_number")
-    private Short prevIterationNumber;
+    private Long prevIterationNumber;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "prev_employee_id")
@@ -61,11 +71,11 @@ public class WorkTrail {
         this.workType = workType;
     }
 
-    public Short getNodeNumber() {
+    public Long getNodeNumber() {
         return nodeNumber;
     }
 
-    public void setNodeNumber(Short nodeNumber) {
+    public void setNodeNumber(Long nodeNumber) {
         this.nodeNumber = nodeNumber;
     }
 
@@ -77,19 +87,19 @@ public class WorkTrail {
         this.employeeId = employeeId;
     }
 
-    public Short getIterationNumber() {
+    public Long getIterationNumber() {
         return iterationNumber;
     }
 
-    public void setIterationNumber(Short iterationNumber) {
+    public void setIterationNumber(Long iterationNumber) {
         this.iterationNumber = iterationNumber;
     }
 
-    public Short getResponseCode() {
+    public Long getResponseCode() {
         return responseCode;
     }
 
-    public void setResponseCode(Short responseCode) {
+    public void setResponseCode(Long responseCode) {
         this.responseCode = responseCode;
     }
 
@@ -109,19 +119,19 @@ public class WorkTrail {
         this.remarks = remarks;
     }
 
-    public Short getPrevNodeNumber() {
+    public Long getPrevNodeNumber() {
         return prevNodeNumber;
     }
 
-    public void setPrevNodeNumber(Short prevNodeNumber) {
+    public void setPrevNodeNumber(Long prevNodeNumber) {
         this.prevNodeNumber = prevNodeNumber;
     }
 
-    public Short getPrevIterationNumber() {
+    public Long getPrevIterationNumber() {
         return prevIterationNumber;
     }
 
-    public void setPrevIterationNumber(Short prevIterationNumber) {
+    public void setPrevIterationNumber(Long prevIterationNumber) {
         this.prevIterationNumber = prevIterationNumber;
     }
 

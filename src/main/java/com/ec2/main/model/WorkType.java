@@ -1,6 +1,13 @@
+
 package com.ec2.main.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+
+//toupdate
 
 @Entity
 @Table(name = "work_types", schema = "ec2")
@@ -8,7 +15,7 @@ public class WorkType {
 
     @Id
     @Column(name = "code", nullable = false)
-    private Short code;
+    private Long code;
 
     @Column(name = "description", length = 30)
     private String description;
@@ -21,11 +28,11 @@ public class WorkType {
 
     // Getters and setters (if you want, or use Lombok)
 
-    public Short getCode() {
+    public Long getCode() {
         return code;
     }
 
-    public void setCode(Short code) {
+    public void setCode(Long code) {
         this.code = code;
     }
 

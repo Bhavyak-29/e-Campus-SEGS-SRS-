@@ -84,7 +84,7 @@
                         <tr><th>Name</th><td th:text="${student.stdfirstname + ' ' + student.stdlastname}">-</td></tr>
                         <tr><th>Email</th><td th:text="${student.stdemail}">-</td></tr>
                         <tr><th>Batch</th><td th:text="${student.batch?.bchname}">-</td></tr>
-                        <tr><th>Program</th><td th:text="${student.batch?.program?.prgname}">-</td></tr>
+                        <tr><th>Program</th><td th:text="${student.batch?.programs?.prgname}">-</td></tr>
                         <tr>
                             <th>Date of Birth</th>
                             <td th:text="${profile != null && profile.stddob != null ? #dates.format(profile.stddob, 'dd-MM-yyyy') : 'Not Available'}">-</td>
@@ -161,7 +161,7 @@
                 <div class="accordion-body">
                     <div th:each="reg : ${registrations}" class="semester-card">
                         <div class="semester-header">
-                            <h5 class="mb-0" th:text="${reg.semester.strname}">Semester I</h5>
+                            <h5 class="mb-0" th:text="${reg.semesters.strname}">Semester I</h5>
                         </div>
                         <div class="p-3">
                             <!-- Course Table -->
@@ -204,7 +204,7 @@
                 <div class="accordion-body">
                     <div th:each="reg : ${registrations}" class="semester-card">
                         <div class="semester-header">
-                            <h5 class="mb-0" th:text="${reg.semester.strname}">Semester I</h5>
+                            <h5 class="mb-0" th:text="${reg.semesters.strname}">Semester I</h5>
                         </div>
                         <div class="p-3">
                             <!-- Results Table -->

@@ -5,34 +5,34 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ec2.main.model.AcademicYear;
-import com.ec2.main.model.Course;
+import com.ec2.main.model.AcademicYears;
+import com.ec2.main.model.Courses;
 import com.ec2.main.model.Egcrstt1;
-import com.ec2.main.model.Term;
-import com.ec2.main.repository.AcademicYearRepository;
-import com.ec2.main.repository.CourseRepository;
+import com.ec2.main.model.Terms;
+import com.ec2.main.repository.AcademicYearsRepository;
+import com.ec2.main.repository.CoursesRepository;
 import com.ec2.main.repository.Egcrstt1Repository;
-import com.ec2.main.repository.TermRepository;
+import com.ec2.main.repository.TermsRepository;
 import com.ec2.main.service.facultyService;
 
 @Service
 public class facultyServiceImpl implements facultyService {
 
     @Autowired
-    private TermRepository termRepository;
+    private TermsRepository termsRepository;
 
     @Autowired
     private Egcrstt1Repository examTypeRepository;
 
     @Autowired
-    private AcademicYearRepository academicYearRepository;
+    private AcademicYearsRepository academicYearsRepository;
 
     @Autowired
-    private CourseRepository courseRepository;
+    private CoursesRepository coursesRepository;
 
     @Override
-    public List<Term> getAllTerms() {
-        return termRepository.findAll();
+    public List<Terms> getAllTerms() {
+        return termsRepository.findAll();
     }
 
     @Override
@@ -41,12 +41,12 @@ public class facultyServiceImpl implements facultyService {
     }
 
     @Override
-    public List<AcademicYear> getAllAcademicYears() {
-        return academicYearRepository.findAll();
+    public List<AcademicYears> getAllAcademicYears() {
+        return academicYearsRepository.findAll();
     }
 
     @Override
-    public List<Course> getAllCourses() {
-        return courseRepository.findAll();
+    public List<Courses> getAllCourses() {
+        return coursesRepository.findAll();
     }
 }

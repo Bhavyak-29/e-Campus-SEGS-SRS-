@@ -10,11 +10,11 @@ public class TermCourseCredit {
 
     @Id
     @Column(name = "tccid")
-    private Short id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "tcctcrid", nullable = false)
-    private TermCourse termCourse;
+    private TermCourses termCourse;
 
     @Column(name = "tcclectures", nullable = false)
     private BigDecimal lectures;
@@ -29,7 +29,7 @@ public class TermCourseCredit {
     private BigDecimal creditPoints;
 
     @Column(name = "tccmarks", nullable = false)
-    private Short marks;
+    private Long marks;
 
     @Column(name = "tcccreatedby")
     private Long createdBy;
@@ -44,21 +44,21 @@ public class TermCourseCredit {
     private LocalDateTime lastUpdatedAt;
 
     @Column(name = "tccrowstate", nullable = false)
-    private Short rowState;
+    private Long rowState;
 
-    public Short getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Short id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public TermCourse getTermCourse() {
+    public TermCourses getTermCourse() {
         return termCourse;
     }
 
-    public void setTermCourse(TermCourse termCourse) {
+    public void setTermCourse(TermCourses termCourse) {
         this.termCourse = termCourse;
     }
 
@@ -94,11 +94,11 @@ public class TermCourseCredit {
         this.creditPoints = creditPoints;
     }
 
-    public Short getMarks() {
+    public Long getMarks() {
         return marks;
     }
 
-    public void setMarks(Short marks) {
+    public void setMarks(Long marks) {
         this.marks = marks;
     }
 
@@ -134,11 +134,11 @@ public class TermCourseCredit {
         this.lastUpdatedAt = lastUpdatedAt;
     }
 
-    public Short getRowState() {
+    public Long getRowState() {
         return rowState;
     }
 
-    public void setRowState(Short rowState) {
+    public void setRowState(Long rowState) {
         this.rowState = rowState;
     }
 }

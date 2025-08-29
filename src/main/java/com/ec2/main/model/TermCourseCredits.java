@@ -6,6 +6,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table; 
 
+
+//toupdate
+
 @Entity
 @Table(name = "termcoursecredits", schema = "ec2") // Assuming a schema 'ec2' and table 'term_course_credits'
 public class TermCourseCredits {

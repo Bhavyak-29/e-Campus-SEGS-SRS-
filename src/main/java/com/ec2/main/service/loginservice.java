@@ -10,12 +10,12 @@ import com.ec2.main.model.Users;
 
 @Service
 public class loginservice {
-    public Users fetchUserDetails(int userId) {
+    public Users fetchUserDetails(Long userId) {
         // Replace with real DB/service call
         if (userId == 7) {
-            return new Users("Bhavya", "bhavya@demo.com", "FACULTY", 7);
+            return new Users("Bhavya", "bhavya@demo.com", "FACULTY", (long)7);
         } else if (userId == 2025) {
-            return new Users("Admin", "admin@demo.com", "REGISTRAR", 2025);
+            return new Users("Admin", "admin@demo.com", "REGISTRAR", (long)2025);
         } else {
             return null;
         }

@@ -43,7 +43,7 @@ public class Grade {
     // Constructors
     public Grade() {}
 
-    public Grade(Enrollment enrollment, String gradeValue, Long examType, Course course, Term term, String remarks, Integer rowState) {
+    public Grade(Enrollment enrollment, String gradeValue, Long examType, Courses course, Terms term, String remarks, Integer rowState) {
         this.enrollment = enrollment;
         this.gradeValue = gradeValue;
         this.examType = examType;

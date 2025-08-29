@@ -13,7 +13,7 @@ import com.ec2.main.model.ExamType;
 
 @Repository
 public interface ExamTypeRepository extends JpaRepository<ExamType, Long> {
-    List<ExamType> findByCourse_Id(Long crsId);
+    List<ExamType> findByCourse_Crsid(Long crsId);
     List<ExamType> findByIdIn(List<Long> examtypeIds);
 
     // This method is for ResultController to get ExamType details for display in report header

@@ -1,15 +1,9 @@
 package com.ec2.main.controller.faculty;
 
-import com.ec2.main.model.AcademicYear;
-import com.ec2.main.model.Semester;
-import com.ec2.main.model.Student;
-import com.ec2.main.model.StudentRegistrations;
-import com.ec2.main.model.Term;
-import com.ec2.main.repository.AcademicYearRepository;
-import com.ec2.main.repository.StudentRegistrationCourseRepository;
-import com.ec2.main.repository.StudentRegistrationsRepository;
-import com.ec2.main.repository.StudentRepository;
-import com.ec2.main.repository.TermRepository;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,31 +12,40 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-
-
-
-import java.util.*;
+import com.ec2.main.model.AcademicYears;
+import com.ec2.main.model.Semesters;
+import com.ec2.main.model.StudentRegistration;
+import com.ec2.main.model.Students;
+import com.ec2.main.model.Terms;
+import com.ec2.main.repository.AcademicYearsRepository;
+import com.ec2.main.repository.StudentRegistrationCoursesRepository;
+import com.ec2.main.repository.StudentRegistrationRepository;
+import com.ec2.main.repository.StudentsRepository;
+import com.ec2.main.repository.TermsRepository;
 
 @Controller
 @RequestMapping("/registrations")
 public class RegistrationController {
 
     @Autowired
-    private StudentRepository studentRepository;
+    private StudentsRepository studentsRepository;
 
     @Autowired
-    private StudentRegistrationsRepository studentRegistrationsRepository;
+    private StudentRegistrationRepository studentRegistrationRepository;
 
     @Autowired
-    private StudentRegistrationCourseRepository studentRegistrationCourseRepository;
+    private StudentRegistrationCoursesRepository studentRegistrationCoursesRepository;
 
     @Autowired
-    private TermRepository termRepository; 
+    private TermsRepository termsRepository; 
 
     @Autowired
-    private AcademicYearRepository academicYearRepository;
+    private AcademicYearsRepository academicYearsRepository;
 
     @GetMapping("/search")
     public String searchStudents(
@@ -54,16 +57,16 @@ public class RegistrationController {
             ModelMap model) {
 
         Pageable pageable = PageRequest.of(page, size);
-        Page<Student> studentsPage;
+        Page<Students> studentsPage;
 
         if (instId != null) {
-            studentsPage = studentRepository.findByStdinstidAndStdrowstateGreaterThan(instId, 0, pageable);
+            studentsPage = studentsRepository.findByStdinstidAndStdrowstateGreaterThan(instId, 0, pageable);
         } else if (fname != null && lname != null) {
-            studentsPage = studentRepository.findByStdfirstnameContainingIgnoreCaseAndStdlastnameContainingIgnoreCaseAndStdrowstateGreaterThan(fname, lname, 0, pageable);
+            studentsPage = studentsRepository.findByStdfirstnameContainingIgnoreCaseAndStdlastnameContainingIgnoreCaseAndStdrowstateGreaterThan(fname, lname, 0, pageable);
         } else if (fname != null) {
-            studentsPage = studentRepository.findByStdfirstnameContainingIgnoreCaseAndStdrowstateGreaterThan(fname, 0, pageable);
+            studentsPage = studentsRepository.findByStdfirstnameContainingIgnoreCaseAndStdrowstateGreaterThan(fname, 0, pageable);
         } else if (lname != null) {
-            studentsPage = studentRepository.findByStdlastnameContainingIgnoreCaseAndStdrowstateGreaterThan(lname, 0, pageable);
+            studentsPage = studentsRepository.findByStdlastnameContainingIgnoreCaseAndStdrowstateGreaterThan(lname, 0, pageable);
         } else {
             studentsPage = Page.empty(pageable);
         }
@@ -80,18 +83,18 @@ public class RegistrationController {
     public String showStudentRegistrations(@PathVariable String id, Model model) {
 
         // Get student object
-        List<Student> students = studentRepository.findStudentByInstIdWithLatestRegistration(id);
+        List<Students> students = studentsRepository.findStudentByInstIdWithLatestRegistration(id);
         if (students.isEmpty()) return "error/404";
-        Student student = students.get(0);
+        Students student = students.get(0);
 
         // Get all registrations for student
-        List<StudentRegistrations> registrations =
-                studentRegistrationsRepository.findAllRegistrationsByStudentIdOrderBySemesterSequence(student.getStdid());
+        List<StudentRegistration> registrations =
+                studentRegistrationRepository.findAllRegistrationsByStudentIdOrderBySemesterSequence(student.getStdid());
 
         // Map of registration ID -> list of course detail rows
         Map<Long, List<Object[]>> regCourses = new LinkedHashMap<>();
-        for (StudentRegistrations reg : registrations) {
-            regCourses.put(reg.getSrgid(), studentRegistrationCourseRepository
+        for (StudentRegistration reg : registrations) {
+            regCourses.put(reg.getSrgid(), studentRegistrationCoursesRepository
                     .findActiveRegistrationCourseDetails(reg.getSrgid()));
         }
 
@@ -110,37 +113,37 @@ public class RegistrationController {
                                     Model model) {
 
         // 1. Load academic years always
-        List<AcademicYear> academicYears = academicYearRepository.findByRowStateGreaterThan(0);
+        List<AcademicYears> academicYears = academicYearsRepository.findByAyrrowstateGreaterThan(0);
         model.addAttribute("academicYears", academicYears);
         model.addAttribute("academicYearId", academicYearId); // keep selected
         
         
         // 2. Load terms only if academic year is selected
-        List<Term> terms = new ArrayList<>();
+        List<Terms> terms = new ArrayList<>();
         if (academicYearId != null) {
-            terms = termRepository.findByAcademicYear_Id(academicYearId);
+            terms = termsRepository.findByAcademicYear_Ayrid(academicYearId);
         }
         model.addAttribute("terms", terms);
         model.addAttribute("termId", termId); // keep selected
         
         if (academicYearId != null) {
-            AcademicYear selectedYear = academicYearRepository.findById(academicYearId).orElse(null);
+            AcademicYears selectedYear = academicYearsRepository.findById(academicYearId).orElse(null);
             if (selectedYear != null)
-                model.addAttribute("ayrname", selectedYear.getName());
+                model.addAttribute("ayrname", selectedYear.getAyrname());
             
         }
         
         if (termId != null) {
-            Term selectedTerm = termRepository.findById(termId).orElse(null);
+            Terms selectedTerm = termsRepository.findById(termId).orElse(null);
             if (selectedTerm != null)
-                model.addAttribute("trmname", selectedTerm.getName());
+                model.addAttribute("trmname", selectedTerm.getTrmname());
         }
 
         
         // 3. Load semesters if term is selected
-        List<Semester> semesters = new ArrayList<>();
+        List<Semesters> semesters = new ArrayList<>();
         if (termId != null) {
-            semesters = studentRegistrationsRepository.findSemestersByTerm(termId);
+            semesters = studentRegistrationRepository.findSemestersByTerm(termId);
         }
         model.addAttribute("semesters", semesters);
         model.addAttribute("semesterId", semesterId); // keep selected
@@ -152,7 +155,7 @@ public class RegistrationController {
         }
 
         List<Object[]> registeredCourses;
-        registeredCourses = studentRegistrationCourseRepository.findRegisteredCoursesForTerm(termId);
+        registeredCourses = studentRegistrationCoursesRepository.findRegisteredCoursesForTerm(termId);
 
         model.addAttribute("registeredCourses", registeredCourses);
         return "registered_courses";
@@ -161,7 +164,7 @@ public class RegistrationController {
     @GetMapping("/courses/{termCourseId}/students")
     public String viewRegisteredStudentsForCourse(@PathVariable Long termCourseId, Model model) {
 
-        List<Object[]> students = studentRegistrationCourseRepository
+        List<Object[]> students = studentRegistrationCoursesRepository
                 .findActiveStudentsByTermCourseId(termCourseId);
 
         model.addAttribute("students", students);
@@ -172,14 +175,14 @@ public class RegistrationController {
     public String showCourseSelectorPage(@RequestParam(required = false) Long academicYearId,
                                         Model model) {
 
-        List<AcademicYear> academicYears = academicYearRepository.findByRowStateGreaterThan(0);
+        List<AcademicYears> academicYears = academicYearsRepository.findByAyrrowstateGreaterThan(0);
         model.addAttribute("academicYears", academicYears);
         model.addAttribute("academicYearId", academicYearId);
 
         // Load terms dynamically if academic year selected
-        List<Term> terms = new ArrayList<>();
+        List<Terms> terms = new ArrayList<>();
         if (academicYearId != null) {
-            terms = termRepository.findByAcademicYear_Id(academicYearId);
+            terms = termsRepository.findByAcademicYear_Ayrid(academicYearId);
             model.addAttribute("terms", terms);
         }
 
@@ -192,22 +195,22 @@ public class RegistrationController {
         @RequestParam Long termId,
         Model model
     ) {
-        List<Object[]> registeredCourses = studentRegistrationCourseRepository.findRegisteredCoursesForTerm(termId);
-        AcademicYear ay = academicYearRepository.findById(academicYearId).orElse(null);
-        Term term = termRepository.findById(termId).orElse(null);
+        List<Object[]> registeredCourses = studentRegistrationCoursesRepository.findRegisteredCoursesForTerm(termId);
+        AcademicYears ay = academicYearsRepository.findById(academicYearId).orElse(null);
+        Terms term = termsRepository.findById(termId).orElse(null);
 
         model.addAttribute("registeredCourses", registeredCourses);
         model.addAttribute("academicYearId", academicYearId);
         model.addAttribute("termId", termId);
-        model.addAttribute("ayrname", ay != null ? ay.getName() : "");
-        model.addAttribute("trmname", term != null ? term.getName() : "");
+        model.addAttribute("ayrname", ay != null ? ay.getAyrname() : "");
+        model.addAttribute("trmname", term != null ? term.getTrmname() : "");
 
         return "course_selection_form"; // course dropdown + submit button
     }
 
     @GetMapping("/courses/students")
     public String showStudentsForSelectedCourse(@RequestParam Long termCourseId, Model model) {
-        List<Object[]> students = studentRegistrationCourseRepository
+        List<Object[]> students = studentRegistrationCoursesRepository
             .findActiveStudentsByTermCourseId(termCourseId);
         model.addAttribute("students", students);
         return "registered_students";
