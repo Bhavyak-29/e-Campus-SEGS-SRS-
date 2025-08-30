@@ -311,11 +311,13 @@ public String showUpdatedGrades(@RequestParam(required = false) List<String> sel
             Model model) {
     
         List<Students> students = studentsRepository.findStudentByInstIdWithLatestRegistration(id);
+        
         if (students.isEmpty()) return "error/404";
         Students student = students.get(0);
     
-        StudentProfile profile = studentProfileRepository.findBystdid(student.getStdid());
-    
+        StudentProfile profile = studentProfileRepository.findByStdid(student.getStdid());
+        System.out.println(profile);
+        System.out.println("------------------------------------");
         List<Long> addressIds = new ArrayList<>();
         if (student.getPrmtAdrId() != null) addressIds.add(student.getPrmtAdrId());
         if (student.getCurrAdrId() != null) addressIds.add(student.getCurrAdrId());
@@ -333,13 +335,16 @@ public String showUpdatedGrades(@RequestParam(required = false) List<String> sel
     
         List<StudentRegistration> registrations = studentRegistrationRepository
                 .findAllRegistrationsByStudentIdOrderBySemesterSequence(student.getStdid());
-    
+
+        // System.out.println(registrations);
+        // System.out.println("-------------------------------");
         Map<Long, List<Object[]>> regCourses = new LinkedHashMap<>();
         Map<Long, List<StudentSemesterResult>> regResults = new LinkedHashMap<>();
     
         for (StudentRegistration reg : registrations) {
             regCourses.put(reg.getSrgid(), studentRegistrationCoursesRepository
                     .findActiveRegistrationCourseDetails(reg.getSrgid()));
+            //System.out.println("Courses for regId " + reg.getSrgid() + ": " + reg);
             regResults.put(reg.getSrgid(), studentSemesterResultRepository
                     .findByStudentRegistration_SrgidAndRowStateGreaterThan(reg.getSrgid(), (short) 0));
         }
@@ -376,7 +381,7 @@ public String showUpdatedGrades(@RequestParam(required = false) List<String> sel
         model.addAttribute("egcrResults", resultsGrouped);          // grouped raw Egcrstt1 rows
         model.addAttribute("gradeMap", gradeMap);                   // grade ID → object
         model.addAttribute("gradeExamMap", gradeExamMap);           // tcrid → list of [grad_lt, examtype_title]
-    
+        
         return "student_details";
     }
     

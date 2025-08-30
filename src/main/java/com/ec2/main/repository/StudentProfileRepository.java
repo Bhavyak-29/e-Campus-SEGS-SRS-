@@ -1,8 +1,8 @@
 package com.ec2.main.repository;
-import com.ec2.main.model.StudentProfile;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import com.ec2.main.model.StudentProfile;
+
 public interface StudentProfileRepository extends JpaRepository<StudentProfile, Long> {
-    StudentProfile findBystdid(Long stdid);
+    StudentProfile findByStdid(Long stdid);
 }

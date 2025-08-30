@@ -76,7 +76,13 @@ List<StudentGradeDTO> findUpdatedStudentGradesForReport(
            "AND et.rowState > 0") // Assuming ExamType entity has 'rowstate' property
     List<DropdownItem> findExamTypesWithUpdatedGradesByTermCourseId(@Param("termCourseId") Long termCourseId);
 
-    @Query(value = "SELECT * FROM ec2.Egcrstt1 eg WHERE eg.id.tcrid = :tcrid AND eg.id.studId = :studentId AND eg.rowStatus > '0'", nativeQuery = true)
-    Egcrstt1 getObtgrId(@Param("studentId") Long studentId, @Param("tcrid") Long tcrid);
+    @Query(value = "SELECT * FROM ec2.egcrstt1 eg " +
+               "WHERE eg.tcrid = :tcrid " +
+               "AND eg.stud_id = :studentId " +
+               "AND eg.row_st > '0'",
+       nativeQuery = true)
+Egcrstt1 getObtgrId(@Param("studentId") Long studentId,
+                    @Param("tcrid") Long tcrid);
+
 }
 

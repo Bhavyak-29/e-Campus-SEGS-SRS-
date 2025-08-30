@@ -240,9 +240,11 @@
                     </tbody>
                 </table>
 
-                <p class="text-danger font-weight-bold text-center" style="font-size: 1.5rem;" th:if="${result.ssrspi == '--'}">
+                <p th:if="${result.spi?.toString() eq '--'}"
+                class="text-danger font-weight-bold text-center" style="font-size: 1.5rem;">
                     Note: RESULT IS NOT DECLARED
                 </p>
+
 
                 <table class="table table-bordered table-striped">
                     <thead>
@@ -262,15 +264,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:if="${result.ssrspi != '--'}">
-                            <td th:text="${result.ssrcreditsregistered}">25.0</td>
-                            <td th:text="${result.ssrcreditsearned}">25.0</td>
-                            <td th:text="${result.ssrgradepointsearned}">209.0</td>
-                            <td th:text="${result.ssrspi}">8.36</td>
-                            <td th:text="${result.ssrcumcreditsregistered}">25.0</td>
-                            <td th:text="${result.ssrcumcreditsearned}">25.0</td>
-                            <td th:text="${result.ssrcumgradepointsearned}">209.0</td>
-                            <td th:text="${result.ssrcpi}">8.53</td>
+                        <tr th:if="${result.spi != '--'}">
+                            <td th:text="${result.creditsRegistered}">25.0</td>
+                            <td th:text="${result.creditsEarned}">25.0</td>
+                            <td th:text="${result.gradePointsEarned}">209.0</td>
+                            <td th:text="${result.spi}">8.36</td>
+                            <td th:text="${result.cumCreditsRegistered}">25.0</td>
+                            <td th:text="${result.cumCreditsEarned}">25.0</td>
+                            <td th:text="${result.cumGradePointsEarned}">209.0</td>
+                            <td th:text="${result.cpi}">8.53</td>
                         </tr>
                     </tbody>
                 </table>

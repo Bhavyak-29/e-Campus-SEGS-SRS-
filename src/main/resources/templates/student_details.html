@@ -176,7 +176,7 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr th:each="course, iter : ${regCourses[reg.srgid]}">
+                                    <tr th:each="course, iter : ${regCourses.get(reg.srgid)}">
                                         <td th:text="${iter.index + 1}">1</td>
                                         <td th:text="${course[1]}">Course Name</td>
                                         <td th:text="${course[2]}">Code</td>
