@@ -1,1 +1,2 @@
-Research Internship Project
+BTech Mini Project 
+Merging SRS with SEGS
