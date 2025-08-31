@@ -120,9 +120,9 @@
                         <select id="academicYearId" name="academicYearId" class="form-select" onchange="this.form.submit()">
                             <option value="">-- Select Academic Year --</option>
                             <option th:each="ay : ${academicYears}"
-                                    th:value="${ay.id}"
-                                    th:text="${ay.name}"
-                                    th:selected="${ay.id == academicYearId}">
+                                    th:value="${ay.ayrid}"
+                                    th:text="${ay.ayrname}"
+                                    th:selected="${ay.ayrid == academicYearId}">
                             </option>
                         </select>
                     </div>
@@ -135,7 +135,7 @@
                         <label for="termId" class="form-label">Term</label>
                         <select id="termId" name="termId" class="form-select" required>
                             <option value="">-- Select Term --</option>
-                            <option th:each="term : ${terms}" th:value="${term.id}" th:text="${term.name}"></option>
+                            <option th:each="term : ${terms}" th:value="${term.trmid}" th:text="${term.trmname}"></option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary">View Courses</button>

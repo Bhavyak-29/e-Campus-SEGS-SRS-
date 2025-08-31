@@ -132,12 +132,12 @@
                     <tbody>
                         <tr th:each="course, iterStat : ${courses}">
                             <td th:text="${iterStat.index + 1}">1</td>
-                            <td th:text="${course.name}">Course Name</td>
-                            <td th:text="${course.title}">Title</td>
-                            <td th:text="${course.discipline}">Level</td>
-                            <td th:text="${course.code}">Code</td>
-                            <td th:text="${course.assessmentType}">Assessment</td>
-                            <td th:text="${course.lectures + '-' + course.tutorials + '-' + course.practicals + ' (' + course.creditPoints + ')'}">L-T-P (C)</td>
+                            <td th:text="${course.crsname}">Course Name</td>
+                            <td th:text="${course.crstitle}">Title</td>
+                            <td th:text="${course.crsdiscipline}">Level</td>
+                            <td th:text="${course.crscode}">Code</td>
+                            <td th:text="${course.crsassessmenttype}">Assessment</td>
+                            <td th:text="${course.crslectures + '-' + course.crstutorials + '-' + course.crspracticals + ' (' + course.crscreditpoints + ')'}">L-T-P (C)</td>
                         </tr>
                     </tbody>
                 </table>

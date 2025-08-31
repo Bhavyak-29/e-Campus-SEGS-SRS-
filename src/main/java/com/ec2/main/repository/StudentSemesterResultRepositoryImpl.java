@@ -38,8 +38,8 @@ public class StudentSemesterResultRepositoryImpl implements CustomStudentSemeste
 
         // Joins
         Join<StudentSemesterResult, StudentRegistrations> regJoin = root.join("studentRegistration");
-        Join<StudentRegistrations, Students> studentJoin = regJoin.join("student");
-        Join<StudentRegistrations, Semesters> semesterJoin = regJoin.join("semester");
+        Join<StudentRegistrations, Students> studentJoin = regJoin.join("students");
+        Join<StudentRegistrations, Semesters> semesterJoin = regJoin.join("semesters");
 
         List<Predicate> predicates = new ArrayList<>();
 

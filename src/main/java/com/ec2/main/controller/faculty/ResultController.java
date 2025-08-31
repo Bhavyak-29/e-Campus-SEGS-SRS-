@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ec2.main.model.AcademicYears;
@@ -143,7 +145,7 @@ public class ResultController {
 
         List<Students> students = studentsRepository.findStudentByInstIdWithLatestRegistration(id);
         if (students.isEmpty()) {
-            return "error/404";
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found");
         }
         Students student = students.get(0);
 

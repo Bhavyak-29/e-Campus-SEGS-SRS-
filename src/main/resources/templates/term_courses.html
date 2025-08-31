@@ -125,9 +125,9 @@
                                 <select class="form-select" id="academicYear" name="academicYearId" onchange="this.form.submit()">
                                     <option value="">Select</option>
                                     <option th:each="ay : ${academicYears}"
-                                            th:value="${ay.id}"
-                                            th:text="${ay.name}"
-                                            th:selected="${ay.id == selectedAcademicYearId}">
+                                            th:value="${ay.ayrid}"
+                                            th:text="${ay.ayrname}"
+                                            th:selected="${ay.ayrid == selectedAcademicYearId}">
                                     </option>
                                 </select>
                             </div>
@@ -137,9 +137,9 @@
                                 <select class="form-select" id="term" name="termId">
                                     <option value="">Select</option>
                                     <option th:each="term : ${terms}"
-                                            th:value="${term.id}"
-                                            th:text="${term.name}"
-                                            th:selected="${term.id == termId}">
+                                            th:value="${term.trmid}"
+                                            th:text="${term.trmname}"
+                                            th:selected="${term.trmid == termId}">
                                     </option>
                                 </select>
                             </div>
@@ -170,13 +170,13 @@
                     <tbody>
                         <tr th:each="course, iterStat : ${termCourses}">
                             <td th:text="${iterStat.index + 1}"></td>
-                            <td th:text="${course.course.name}"></td>
-                            <td th:text="${course.course.creditPoints}"></td>
-                            <td th:text="${course.course.Code}"></td>
-                            <td th:text="${course.user != null ? course.user.userName : 'N/A'}"></td>
-                            <td th:text="${course.user != null ? course.user.userMailId : 'N/A'}"></td>
+                            <td th:text="${course.course.crsname}"></td>
+                            <td th:text="${course.course.crscreditpoints}"></td>
+                            <td th:text="${course.course.crscode}"></td>
+                            <td th:text="${course.user != null ? course.user.uname : 'N/A'}"></td>
+                            <td th:text="${course.user != null ? course.user.uemail : 'N/A'}"></td>
                             <td th:if="${showOverlap}">
-                                <input type="checkbox" th:value="${course.id}" name="SelectedTcrId"/>
+                                <input type="checkbox" th:value="${course.crsid}" name="SelectedTcrId"/>
                             </td>
                         </tr>
                     </tbody>

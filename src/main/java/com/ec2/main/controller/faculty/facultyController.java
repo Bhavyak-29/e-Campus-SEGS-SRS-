@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.ec2.main.model.AcademicYears;
 import com.ec2.main.model.Addresses;
@@ -312,12 +314,15 @@ public String showUpdatedGrades(@RequestParam(required = false) List<String> sel
     
         List<Students> students = studentsRepository.findStudentByInstIdWithLatestRegistration(id);
         
-        if (students.isEmpty()) return "error/404";
+        if (students.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found");
         Students student = students.get(0);
+        // System.out.println("Student: " + student);
+        // System.out.println("STDID: " + student.getStdid());
+
     
         StudentProfile profile = studentProfileRepository.findByStdid(student.getStdid());
-        System.out.println(profile);
-        System.out.println("------------------------------------");
+        // System.out.println(profile);
+        // System.out.println("------------------------------------");
         List<Long> addressIds = new ArrayList<>();
         if (student.getPrmtAdrId() != null) addressIds.add(student.getPrmtAdrId());
         if (student.getCurrAdrId() != null) addressIds.add(student.getCurrAdrId());
@@ -381,7 +386,10 @@ public String showUpdatedGrades(@RequestParam(required = false) List<String> sel
         model.addAttribute("egcrResults", resultsGrouped);          // grouped raw Egcrstt1 rows
         model.addAttribute("gradeMap", gradeMap);                   // grade ID → object
         model.addAttribute("gradeExamMap", gradeExamMap);           // tcrid → list of [grad_lt, examtype_title]
-        
+        // System.out.println("Egcrstt1 results: " + resultRecords.size());
+        // System.out.println("--------------------------------");
+        // System.out.println("Grades: " + gradeMap.size());
+
         return "student_details";
     }
     

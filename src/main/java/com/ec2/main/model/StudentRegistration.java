@@ -8,7 +8,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "studentregistration",schema="ec2")
+@Table(name = "studentregistrations",schema="ec2")
 public class StudentRegistration {
     @Id
     //@GeneratedValue(strategy = GenerationType.IDENTITY)

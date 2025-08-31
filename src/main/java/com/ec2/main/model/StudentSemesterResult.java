@@ -24,7 +24,7 @@ public class StudentSemesterResult {
 
     @ManyToOne
     @JoinColumn(name = "ssrsrgid", nullable = false)
-    private StudentRegistrations studentRegistration;
+    private StudentRegistration studentRegistration;
 
     @ManyToOne
     @JoinColumn(name = "grade") 
@@ -121,11 +121,11 @@ public class StudentSemesterResult {
         this.id = id;
     }
 
-    public StudentRegistrations getStudentRegistration() {
+    public StudentRegistration getStudentRegistration() {
         return studentRegistration;
     }
 
-    public void setStudentRegistration(StudentRegistrations studentRegistration) {
+    public void setStudentRegistration(StudentRegistration studentRegistration) {
         this.studentRegistration = studentRegistration;
     }
 

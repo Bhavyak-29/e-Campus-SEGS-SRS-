@@ -1,11 +1,15 @@
 package com.ec2.main.model;
 
-import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
 @Entity
-@Table(name = "students2", schema = "ec2")
+@Table(name = "students", schema = "ec2")
 public class StudentProfile {
 
     @Id
