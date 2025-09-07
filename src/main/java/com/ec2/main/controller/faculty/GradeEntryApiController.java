@@ -34,13 +34,13 @@ public class GradeEntryApiController {
             @RequestParam Long TRMID,
             HttpSession session) {
                 
-        Integer userId = (Integer) session.getAttribute("userid"); // get userid from session
+        Long userId = (Long) session.getAttribute("userid"); // get userid from session
 
         if (userId == null) {
             throw new RuntimeException("User ID not found in session.");
         }
 
-        return academicService.getCoursesByTermAndFaculty(TRMID, userId.longValue());
+        return academicService.getCoursesByTermAndFaculty(TRMID, userId);
     }
 
     @GetMapping("/exam-types")

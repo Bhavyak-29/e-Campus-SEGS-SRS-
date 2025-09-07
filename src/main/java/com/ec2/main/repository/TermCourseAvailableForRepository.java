@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface TermCourseAvailableForRepository extends JpaRepository<TermCourseAvailableFor, Integer> {
+public interface TermCourseAvailableForRepository extends JpaRepository<TermCourseAvailableFor, Long> {
     // Custom queries can be added here
 }

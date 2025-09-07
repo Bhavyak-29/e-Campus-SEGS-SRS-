@@ -13,7 +13,7 @@ import jakarta.servlet.http.HttpSession;
 public interface GradeService {
     List<Grade> getAllGrades();
 
-    Map<Integer, Long> getGradeDistribution();
+    Map<Long, Long> getGradeDistribution();
 
     List<StudentGradeDTO> getStudentGrades(Long CRSID, Long trmid, Long examTypeId, List<String> selectedGrades);
 

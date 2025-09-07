@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Students</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/StyleEDU.css}">
+    <script th:src="@{/js/menu-renderer.js}"></script>
+</head>
+<body>
+<table width="700" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+        <td width="700" align="left" valign="bottom">
+            <table width="700" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                    <td width="138" align="left" valign="center" bgcolor="#FFFFFF">
+                        <img th:src="@{/images/menu/daiictlogo.gif}" width="130" height="30" border="0" vspace="1">
+                    </td>
+                    <td width="544" align="left" valign="center">
+                            <span style="font-size: 10px; font-family: Verdana, Arial, Helvetica, sans-serif; color: #007ABE; font-weight: bold; line-height: 0.1;">
+                                Dhirubhai Ambani<br>
+                                Institute of Information & Communication Technology
+                            </span>
+                    </td>
+                    <td width="98" align="left" valign="bottom">&nbsp;</td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr valign="top">
+        <td align="left">&nbsp;</td>
+    </tr>
+    <tr valign="top">
+        <td align="left" valign="top">
+            <div align="right">
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                    <tr>
+                        <td width="11%">&nbsp;</td>
+                        <td width="89%" align="left" valign="top">
+                            <div align="left">
+                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                    <tr>
+                                        <td width="24%">
+                                            <div align="right">
+                                                    <span style="color: #205AA7; font-size: 12px; font-weight: bold;">
+                                                        Welcome to Students<br>
+                                                        page!!
+                                                    </span>
+                                            </div>
+                                        </td>
+                                        <td width="66%">
+                                            <img th:src="@{/images/menu/header_bg.gif}" width="483" height="47" border="0" align="right" hspace="4">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="2" align="left" valign="top">
+                                            <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                <tr>
+                                                    <td align="left" valign="top" bgcolor="#000000">
+                                                        <div style="height: 1px; background-color: #000000; width: 100%;"></div>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div id="menu-container"></div>
+<div style="margin-top:26px;">
+    <p>Welcome &nbsp; <span th:text="${username}"></span></p>
+</div>
+
+<script th:inline="javascript">
+    document.addEventListener('DOMContentLoaded', function () {
+        const roleId = /*[[${roleId}]]*/ 'unknown';
+        console.log("Rendering menu for roleId: ", roleId);
+
+        // Map roleId to the corresponding section key in menu-master.json
+        const roleSectionMap = {
+            "914": "STUDENT"
+            // Add more mappings if needed
+        };
+
+        const sectionToRender = roleSectionMap[roleId];
+
+        if (!sectionToRender) {
+            console.warn("No menu section mapped for roleId:", roleId);
+            return;
+        }
+
+        const menuRenderer = new MenuRenderer(roleId, sectionToRender);
+        menuRenderer.init()
+            .then(menu => {
+                if (menu) {
+                    document.getElementById("menu-container").appendChild(menu);
+                }
+            })
+            .catch(err => {
+                console.error("Menu rendering error:", err);
+                document.getElementById("menu-container").innerHTML = "<p>Unable to load menu.</p>";
+            });
+    });
+</script>
+
+
+
+
+</body>
+</html>

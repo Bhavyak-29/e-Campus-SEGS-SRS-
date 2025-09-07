@@ -9,10 +9,10 @@ public class TermCourseAvailableFor {
 
     @Id
     @Column(name = "tcaid")
-    private Integer tcaid;
+    private Long tcaid;
 
     @Column(name = "tcatcrid")
-    private Integer tcatcrid;
+    private Long tcatcrid;
 
     @Column(name = "tcaprgid")
     private Long tcaprgid;
@@ -36,11 +36,11 @@ public class TermCourseAvailableFor {
     private Long tcarowstate;
 
 
-    public Integer getTcaid() { return tcaid; }
-    public void setTcaid(Integer tcaid) { this.tcaid = tcaid; }
+    public Long getTcaid() { return tcaid; }
+    public void setTcaid(Long tcaid) { this.tcaid = tcaid; }
 
-    public Integer getTcatcrid() { return tcatcrid; }
-    public void setTcatcrid(Integer tcatcrid) { this.tcatcrid = tcatcrid; }
+    public Long getTcatcrid() { return tcatcrid; }
+    public void setTcatcrid(Long tcatcrid) { this.tcatcrid = tcatcrid; }
 
     public Long getTcaprgid() { return tcaprgid; }
     public void setTcaprgid(Long tcaprgid) { this.tcaprgid = tcaprgid; }

@@ -9,7 +9,7 @@ public class Addresses {
 
     @Id
     @Column(name = "adrid")
-    private Integer adrid;
+    private Long adrid;
 
     @Column(name = "adrcontact")
     private String adrcontact;
@@ -57,8 +57,8 @@ public class Addresses {
     private Long adrrowstate;
 
 
-    public Integer getAdrid() { return adrid; }
-    public void setAdrid(Integer adrid) { this.adrid = adrid; }
+    public Long getAdrid() { return adrid; }
+    public void setAdrid(Long adrid) { this.adrid = adrid; }
 
     public String getAdrcontact() { return adrcontact; }
     public void setAdrcontact(String adrcontact) { this.adrcontact = adrcontact; }

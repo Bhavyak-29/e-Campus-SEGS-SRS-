@@ -422,7 +422,7 @@ public List<StudentGradeDTO> getStudentGrades(Long CRSID, Long trmid, Long examT
     }
 
     @Override
-    public Map<Integer, Long> getGradeDistribution() {
+    public Map<Long, Long> getGradeDistribution() {
         return new TreeMap<>(); // Placeholder
     }
 }

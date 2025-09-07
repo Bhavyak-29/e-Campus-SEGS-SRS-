@@ -220,7 +220,7 @@ public class CourseAddDropSaveService {
     public void addNewRegularCourseIds(Set<String> courseIds, Long srgid, Long termId, Long semesterId, Long studentId) {
         if(courseIds != null) {
             for (String courseId : courseIds) {
-                Integer scrid = semesterCoursesRepo.findScrid(semesterId, Long.parseLong(courseId));
+                Long scrid = semesterCoursesRepo.findScrid(semesterId, Long.parseLong(courseId));
                 Long tcrid = termCoursesRepo.findTcrid(Long.parseLong(courseId), termId);
                 StudentAdjustmentCourses sacid = studentAdjustmentRepo.findSacid(tcrid.intValue(), srgid);
 
@@ -287,7 +287,7 @@ public class CourseAddDropSaveService {
     public void addNewBacklogCourseIds(Set<String> courseIds, Long srgid, Long termId, Long semesterId, Long studentId) {
         if(courseIds != null) {
             for (String courseId : courseIds) {
-                Integer scrid = semesterCoursesRepo.findScrid(semesterId, Long.parseLong(courseId));
+                Long scrid = semesterCoursesRepo.findScrid(semesterId, Long.parseLong(courseId));
                 Long tcrid = termCoursesRepo.findTcrid(Long.parseLong(courseId), termId);
                 StudentAdjustmentCourses sacid = studentAdjustmentRepo.findSacid(tcrid.intValue(), srgid);
 
@@ -354,7 +354,7 @@ public class CourseAddDropSaveService {
     public void addNewGradeImprovementCourseIds(Set<String> courseIds, Long srgid, Long termId, Long semesterId, Long studentId) {
         if(courseIds != null) {
             for (String courseId : courseIds) {
-                Integer scrid = semesterCoursesRepo.findScrid(semesterId, Long.parseLong(courseId));
+                Long scrid = semesterCoursesRepo.findScrid(semesterId, Long.parseLong(courseId));
                 Long tcrid = termCoursesRepo.findTcrid(Long.parseLong(courseId), termId);
                 StudentAdjustmentCourses sacid = studentAdjustmentRepo.findSacid(tcrid.intValue(), srgid);
 
@@ -421,7 +421,7 @@ public class CourseAddDropSaveService {
     public void addNewAuditCourseIds(Set<String> courseIds, Long srgid, Long termId, Long semesterId, Long studentId) {
         if(courseIds != null) {
             for (String courseId : courseIds) {
-                Integer scrid = semesterCoursesRepo.findScrid(semesterId, Long.parseLong(courseId));
+                Long scrid = semesterCoursesRepo.findScrid(semesterId, Long.parseLong(courseId));
                 Long tcrid = termCoursesRepo.findTcrid(Long.parseLong(courseId), termId);
                 StudentAdjustmentCourses sacid = studentAdjustmentRepo.findSacid(tcrid.intValue(), srgid);
 

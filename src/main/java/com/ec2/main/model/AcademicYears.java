@@ -30,7 +30,7 @@ public class AcademicYears {
     private Long ayrrowstate;
 
     @Column(name = "ayrfield1")
-    private Integer ayrfield1;
+    private Long ayrfield1;
 
 
     public Long getAyrid() { return ayrid; }
@@ -54,7 +54,7 @@ public class AcademicYears {
     public Long getAyrrowstate() { return ayrrowstate; }
     public void setAyrrowstate(Long ayrrowstate) { this.ayrrowstate = ayrrowstate; }
 
-    public Integer getAyrfield1() { return ayrfield1; }
-    public void setAyrfield1(Integer ayrfield1) { this.ayrfield1 = ayrfield1; }
+    public Long getAyrfield1() { return ayrfield1; }
+    public void setAyrfield1(Long ayrfield1) { this.ayrfield1 = ayrfield1; }
 
 }

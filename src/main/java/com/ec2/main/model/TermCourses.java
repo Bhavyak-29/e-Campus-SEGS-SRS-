@@ -42,7 +42,7 @@ public class TermCourses {
     private LocalDateTime tcrlastupdatedat;
 
     @Column(name = "tcrrowstate")
-    private Integer tcrrowstate;
+    private Long tcrrowstate;
 
     @Column(name = "tcrcrsid", insertable = false, updatable = false)
     private Long tcrcrsid;
@@ -101,8 +101,8 @@ public class TermCourses {
     public LocalDateTime getTcrlastupdatedat() { return tcrlastupdatedat; }
     public void setTcrlastupdatedat(LocalDateTime tcrlastupdatedat) { this.tcrlastupdatedat = tcrlastupdatedat; }
 
-    public Integer getTcrrowstate() { return tcrrowstate; }
-    public void setTcrrowstate(Integer tcrrowstate) { this.tcrrowstate = tcrrowstate; }
+    public Long getTcrrowstate() { return tcrrowstate; }
+    public void setTcrrowstate(Long tcrrowstate) { this.tcrrowstate = tcrrowstate; }
 
     public Courses getCourse() {
         return course;

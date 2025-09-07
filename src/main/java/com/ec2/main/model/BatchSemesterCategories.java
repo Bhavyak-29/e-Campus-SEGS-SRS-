@@ -18,7 +18,7 @@ public class BatchSemesterCategories {
     private Long bscstcid;
 
     @Column(name = "bscsemesters")
-    private Integer bscsemesters;
+    private Long bscsemesters;
 
     @Column(name = "bsccreatedby")
     private Long bsccreatedby;
@@ -45,8 +45,8 @@ public class BatchSemesterCategories {
     public Long getBscstcid() { return bscstcid; }
     public void setBscstcid(Long bscstcid) { this.bscstcid = bscstcid; }
 
-    public Integer getBscsemesters() { return bscsemesters; }
-    public void setBscsemesters(Integer bscsemesters) { this.bscsemesters = bscsemesters; }
+    public Long getBscsemesters() { return bscsemesters; }
+    public void setBscsemesters(Long bscsemesters) { this.bscsemesters = bscsemesters; }
 
     public Long getBsccreatedby() { return bsccreatedby; }
     public void setBsccreatedby(Long bsccreatedby) { this.bsccreatedby = bsccreatedby; }

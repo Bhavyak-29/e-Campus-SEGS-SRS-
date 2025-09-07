@@ -26,7 +26,7 @@ public class Enrollment {
     private Courses course;
 
     @Column(name = "ENRROWSTATE")
-    private Integer rowState;
+    private Long rowState;
 
     @Column(name = "ENRSTATUS")
     private String status; // e.g., enrolled, dropped, completed
@@ -66,11 +66,11 @@ public class Enrollment {
         this.course = course;
     }
 
-    public Integer getRowState() {
+    public Long getRowState() {
         return rowState;
     }
 
-    public void setRowState(Integer rowState) {
+    public void setRowState(Long rowState) {
         this.rowState = rowState;
     }
 

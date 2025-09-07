@@ -25,7 +25,7 @@ public class StudentRegistrationCourses {
     private String srctype;
 
     @Column(name = "srcscrid")
-    private Integer srcscrid;
+    private Long srcscrid;
 
     @Column(name = "srcstatus")
     private String srcstatus;
@@ -67,8 +67,8 @@ public class StudentRegistrationCourses {
     public String getSrctype() { return srctype; }
     public void setSrctype(String srctype) { this.srctype = srctype; }
 
-    public Integer getSrcscrid() { return srcscrid; }
-    public void setSrcscrid(Integer srcscrid) { this.srcscrid = srcscrid; }
+    public Long getSrcscrid() { return srcscrid; }
+    public void setSrcscrid(Long srcscrid) { this.srcscrid = srcscrid; }
 
     public String getSrcstatus() { return srcstatus; }
     public void setSrcstatus(String srcstatus) { this.srcstatus = srcstatus; }

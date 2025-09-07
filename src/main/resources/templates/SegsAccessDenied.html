@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dhirubhai Ambani - Institute of Information and Communication Technology</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styleSEGS.css}" />
+</head>
+<body>
+    <h1>
+        &nbsp;&nbsp;&nbsp;&nbsp;
+        <b><u><font face="Arial" size="3">SEGS Login Error:</font></u></b>
+    </h1>
+
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        <b>Failure Reason:&nbsp;</b>
+    </p>
+    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+        <b th:text="${errorMessage}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</b>
+    </p>
+
+    <p><b>&nbsp;</b></p>
+    <p align="center">
+        <input type="button" 
+               class="btn" 
+               value="<< BACK" 
+               name="btnMenu" 
+               th:onclick="'window.location.href=\'' + @{/auth/homepage} + '\''"/>
+    </p>
+</body>
+</html>

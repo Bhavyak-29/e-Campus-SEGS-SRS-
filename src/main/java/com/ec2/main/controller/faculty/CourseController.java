@@ -117,7 +117,7 @@ public class CourseController {
             model.addAttribute("termCourses", termCourses);
 
             // optional: control checkboxes based on session userId
-            Integer userId = (Integer) session.getAttribute("userid");
+            Long userId = (Long) session.getAttribute("userid");
             model.addAttribute("showOverlap", userId != null && (userId == 7 || userId == 20 || userId == 1148));
         }
 

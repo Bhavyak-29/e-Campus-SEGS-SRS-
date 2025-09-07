@@ -9,7 +9,7 @@ public class SemesterCourses {
 
     @Id
     @Column(name = "scrid")
-    private Integer scrid;
+    private Long scrid;
 
     @Column(name = "scrstrid")
     private Long scrstrid;
@@ -39,11 +39,11 @@ public class SemesterCourses {
     private Long scrrowstate;
 
     @Column(name = "scrtcrid")
-    private Integer scrtcrid;
+    private Long scrtcrid;
 
 
-    public Integer getScrid() { return scrid; }
-    public void setScrid(Integer scrid) { this.scrid = scrid; }
+    public Long getScrid() { return scrid; }
+    public void setScrid(Long scrid) { this.scrid = scrid; }
 
     public Long getScrstrid() { return scrstrid; }
     public void setScrstrid(Long scrstrid) { this.scrstrid = scrstrid; }
@@ -72,7 +72,7 @@ public class SemesterCourses {
     public Long getScrrowstate() { return scrrowstate; }
     public void setScrrowstate(Long scrrowstate) { this.scrrowstate = scrrowstate; }
 
-    public Integer getScrtcrid() { return scrtcrid; }
-    public void setScrtcrid(Integer scrtcrid) { this.scrtcrid = scrtcrid; }
+    public Long getScrtcrid() { return scrtcrid; }
+    public void setScrtcrid(Long scrtcrid) { this.scrtcrid = scrtcrid; }
 
 }

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Repository;
 import com.ec2.main.model.Addresses;
 
 @Repository
-public interface AddressesRepository extends JpaRepository<Addresses, Integer> {
+public interface AddressesRepository extends JpaRepository<Addresses, Long> {
     @Query("SELECT a FROM Addresses a WHERE a.adrid IN :addressIds " +
            "ORDER BY CASE WHEN a.adrid = :currAdrId THEN 1 WHEN a.adrid = :prmtAdrId THEN 2 ELSE 3 END")
     List<Addresses> findAddressesByIdsWithCustomOrder(

@@ -24,7 +24,7 @@ public class StudentAdjustmentCourses {
     private String sactype;
 
     @Column(name = "sacscrid")
-    private Integer sacscrid;
+    private Long sacscrid;
 
     @Column(name = "sacstatus")
     private String sacstatus;
@@ -66,8 +66,8 @@ public class StudentAdjustmentCourses {
     public String getSactype() { return sactype; }
     public void setSactype(String sactype) { this.sactype = sactype; }
 
-    public Integer getSacscrid() { return sacscrid; }
-    public void setSacscrid(Integer sacscrid) { this.sacscrid = sacscrid; }
+    public Long getSacscrid() { return sacscrid; }
+    public void setSacscrid(Long sacscrid) { this.sacscrid = sacscrid; }
 
     public String getSacstatus() { return sacstatus; }
     public void setSacstatus(String sacstatus) { this.sacstatus = sacstatus; }

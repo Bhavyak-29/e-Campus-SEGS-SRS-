@@ -1,0 +1,1021 @@
+{
+  "menuSettings": {
+    "styles": {
+      "LowBgColor": "#69a2dd",
+      "LowSubBgColor": "#FFFEF6",
+      "HighBgColor": "#FFFEF6",
+      "HighSubBgColor": "#69a2dd",
+      "FontLowColor": "white",
+      "FontSubLowColor": "#205AA7",
+      "FontHighColor": "#205AA7",
+      "FontSubHighColor": "white",
+      "BorderColor": "black",
+      "BorderSubColor": "black",
+      "BorderWidth": 1,
+      "BorderBtwnElmnts": 1,
+      "FontFamily": "Arial, Helvetica",
+      "FontSize": 8,
+      "FontBold": 1,
+      "FontItalic": 0,
+      "MenuTextCentered": "left",
+      "MenuCentered": "left",
+      "MenuVerticalCentered": "top",
+      "StartTop": 32,
+      "StartLeft": 0,
+      "VerCorrect": 0,
+      "HorCorrect": 0,
+      "LeftPadding": 5,
+      "TopPadding": 3,
+      "FirstLineHorizontal": 1,
+      "MenuFramesVertical": 1,
+      "DissapearDelay": 1000
+    }
+  },
+  "menus": {
+    "STUDENT": {
+      "NoOffFirstLineMenus": 6,
+      "menuItems": [
+        {
+          "id": "S1",
+          "text": "Home",
+          "url": "/auth/student-homepage",
+          "width": 50,
+          "height": 18,
+          "hasChildren": false
+        },
+        {
+          "id": "S2",
+          "text": "Student Detail",
+          "url": "",
+          "width": 100,
+          "height": 18,
+          "hasChildren": true,
+          "children": [
+            {
+              "id": "S21",
+              "text": "Student Profile",
+              "url": "",
+              "width": 100,
+              "height": 18,
+              "hasChildren": false
+            },
+            {
+              "id": "S22",
+              "text": "InternShipDetails",
+              "url": "",
+              "width": 100,
+              "height": 18,
+              "hasChildren": false
+            }
+          ]
+        },
+        {
+          "id": "S3",
+          "text": "Registration",
+          "url": "",
+          "width": 80,
+          "height": 18,
+          "hasChildren": false
+        },
+        {
+          "id": "S4",
+          "text": "Course Adjustements",
+          "url": "",
+          "width": 130,
+          "height": 18,
+          "hasChildren": true,
+          "children": [
+            {
+              "id": "S41",
+              "text": "Add-Drop Course",
+              "url": "",
+              "width": 130,
+              "height": 18,
+              "hasChildren": false
+            },
+            {
+              "id": "S42",
+              "text": "Drop Course",
+              "url": "",
+              "width": 130,
+              "height": 18,
+              "hasChildren": false
+            }
+          ]
+        },
+
+        {
+          "id": "S5",
+          "text": "Utilities",
+          "url": "",
+          "width": 80,
+          "height": 18,
+          "hasChildren": true,
+          "children": [
+            {
+              "id": "S51",
+              "text": "Change Password",
+              "url": "/auth/change-password",
+              "width": 120,
+              "height": 18,
+              "hasChildren": false
+            }
+          ]
+        },
+        {
+          "id": "S6",
+          "text": "LOGOUT",
+          "url": "/auth/login",
+          "width": 50,
+          "height": 18,
+          "hasChildren": false
+        }
+
+
+      ]
+    },
+    "HOMEPAGE": {
+      "NoOffFirstLineMenus": 5,
+      "menuItems": [
+        {
+        "id": "H1",
+        "text": "EDUSYS",
+        "url": "",
+        "width": 180,
+        "height": 18
+        },
+        {
+          "id": "H2",
+          "text": "SRS",
+          "url": "",
+          "width": 180,
+          "height": 18
+        },
+        {
+          "id": "H3",
+          "text": "CDS",
+          "url": "",
+          "width": 180,
+          "height": 18
+        },
+        {
+          "id": "H4",
+          "text": "SEGS",
+          "url": "/edu/segs/SegsLoginServ",
+          "width": 220,
+          "height": 18
+        },
+        {
+          "id": "H5",
+          "text": "LOGOUT",
+          "url": "/auth/login",
+          "width": 180,
+          "height": 18
+        }
+      ]
+    },
+    "SEGS-ADMIN": {
+      "NoOffFirstLineMenus": 6,
+      "menuItems": [
+        {
+          "id": "A1",
+          "text": "Transaction",
+          "url": "",
+          "width": 128,
+          "height": 18,
+          "hasChildren": true,
+          "children": [
+            {
+              "id": "A11",
+              "text": "Course Submission",
+              "url": "",
+              "width": 128,
+              "height": 18
+            },
+            {
+              "id": "A12",
+              "text": "Compute SPI",
+              "url": "",
+              "width": 128,
+              "height": 18
+            },
+            {
+              "id": "A13",
+              "text": "Result Status",
+              "url": "",
+              "width": 128,
+              "height": 18
+            },
+            {
+              "id": "A14",
+              "text": "Compute Final CPI",
+              "url": "",
+              "width": 128,
+              "height": 18
+            },
+            {
+              "id": "A15",
+              "text": "Grade Modification",
+              "url": "",
+              "width": 128,
+              "height": 18
+            }
+          ]
+        },
+        {
+          "id": "A2",
+          "text": "Application Admin",
+          "url": "",
+          "width": 133,
+          "height": 18,
+          "hasChildren": true,
+          "children": [
+            {
+              "id": "A21",
+              "text": "Grade",
+              "url": "",
+              "width": 133,
+              "height": 18
+            },
+            {
+              "id": "A22",
+              "text": "Assessment Grade",
+              "url": "",
+              "width": 133,
+              "height": 18
+            },
+            {
+              "id": "A23",
+              "text": "Exam Types",
+              "url": "",
+              "width": 156,
+              "height": 18
+            },
+            {
+              "id": "A24",
+              "text": "Ip Addresses",
+              "url": "",
+              "width": 156,
+              "height": 18
+            }
+          ]
+        },
+        {
+          "id": "A3",
+          "text": "Reports",
+          "url": "",
+          "width": 128,
+          "height": 18,
+          "hasChildren": true,
+          "children": [
+            {
+              "id": "A31",
+              "text": "Course",
+              "url": "",
+              "width": 128,
+              "height": 18,
+              "hasChildren": true,
+              "children": [
+                {
+                  "id": "A311",
+                  "text": "Master List",
+                  "url": "",
+                  "width": 156,
+                  "height": 18
+                },
+                {
+                  "id": "A312",
+                  "text": "Term Courses",
+                  "url": "",
+                  "width": 156,
+                  "height": 20
+                },
+                {
+                  "id": "A313",
+                  "text": "Registrations",
+                  "hasChildren": true,
+                  "width": 133,
+                  "height": 18,
+                  "children": [
+                    {
+                      "id": "A3131",
+                      "text": "Applied",
+                      "hasChildren": true,
+                      "width": 133,
+                      "height": 18,
+                      "children": [
+                        {
+                          "id": "A31311",
+                          "text": "Term Wise",
+                          "url": "",
+                          "width": 133,
+                          "height": 18
+                        },
+                        {
+                          "id": "A31312",
+                          "text": "Course Wise",
+                          "url": "",
+                          "width": 133,
+                          "height": 18
+                        }
+                      ]
+                    },
+                    {
+                      "id": "A3132",
+                      "text": "Registered",
+                      "hasChildren": true,
+                      "width": 133,
+                      "height": 18,
+                      "children": [
+                        {
+                          "id": "A31321",
+                          "text": "Term wise",
+                          "url": "",
+                          "width": 133,
+                          "height": 18
+                        },
+                        {
+                          "id": "A31322",
+                          "text": "Course wise",
+                          "url": "",
+                          "width": 133,
+                          "height": 18
+                        }
+                      ]
+                    },
+                    {
+                      "id": "A3133",
+                      "text": "Studentwise",
+                      "url": "",
+                      "width": 133,
+                      "height": 18
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "A32",
+              "text": "Attendance",
+              "hasChildren": true,
+              "width": 133,
+              "height": 18
+            },
+            {
+              "id": "A33",
+              "text": "Result",
+              "hasChildren": true,
+              "width": 128,
+              "height": 18,
+              "children": [
+                {
+                  "id": "A331",
+                  "text": "Coursewise",
+                  "hasChildren": true,
+                  "width": 128,
+                  "height": 18,
+                  "children": [
+                    {
+                      "id": "A3311",
+                      "text": "Exam Specific",
+                      "url": "",
+                      "width": 128,
+                      "height": 18
+                    },
+                    {
+                      "id": "A3312",
+                      "text": "Current",
+                      "url": "",
+                      "width": 128,
+                      "height": 18
+                    }
+                  ]
+                },
+                {
+                  "id": "A332",
+                  "text": "Studentwise",
+                  "url": "",
+                  "width": 128,
+                  "height": 18
+                },
+                {
+                  "id": "A333",
+                  "text": "Semesterwise",
+                  "url": "",
+                  "width": 128,
+                  "height": 20
+                },
+                {
+                  "id": "A334",
+                  "text": "SPI-CPI Distribution",
+                  "url": "",
+                  "width": 128,
+                  "height": 18
+                }
+              ]
+            },
+            {
+              "id": "A34",
+              "text": "Grade Card",
+              "hasChildren": true,
+              "width": 128,
+              "height": 18,
+              "children": [
+                {
+                  "id": "A341",
+                  "text": "Semester wise",
+                  "url": "",
+                  "width": 128,
+                  "height": 18
+                },
+                {
+                  "id": "A342",
+                  "text": "Student wise",
+                  "url": "",
+                  "width": 128,
+                  "height": 18
+                },
+                {
+                  "id": "A343",
+                  "text": "Serial No Batchwise",
+                  "hasChildren": true,
+                  "width": 128,
+                  "height": 18
+                },
+                {
+                  "id": "A344",
+                  "text": "Serial No.Student wise",
+                  "url": "",
+                  "width": 128,
+                  "height": 18
+                },
+                {
+                  "id": "A345",
+                  "text": "Serial No. Search",
+                  "url": "",
+                  "width": 128,
+                  "height": 18
+                }
+              ]
+            },
+            {
+              "id": "A35",
+              "text": "Grade Distribution",
+              "hasChildren": true,
+              "width": 128,
+              "height": 18,
+              "children": [
+                {
+                  "id": "A351",
+                  "text": "All Courses",
+                  "url": "",
+                  "width": 128,
+                  "height": 18
+                },
+                {
+                  "id": "A352",
+                  "text": "Term Wise",
+                  "url": "",
+                  "width": 128,
+                  "height": 18
+                },
+                {
+                  "id": "A353",
+                  "text": "Semester wise",
+                  "url": "",
+                  "width": 128,
+                  "height": 18
+                }
+              ]
+            },
+            {
+              "id": "A36",
+              "text": "Student Info",
+              "url": "",
+              "width": 133,
+              "height": 18
+            },
+
+
+            {
+              "id": "A37",
+              "text": "Miscellaneous",
+              "hasChildren": true,
+              "width": 128,
+              "height": 18,
+              "children": [
+                {
+                  "id": "A371",
+                  "text": "Earned Credits",
+                  "url": "",
+                  "width": 128,
+                  "height": 18
+                },
+                {
+                  "id": "A372",
+                  "text": "Toppers List",
+                  "url": "",
+                  "width": 128,
+                  "height": 18
+                },
+                {
+                  "id": "A373",
+                  "text": "SPI-CPI List",
+                  "url": "",
+                  "width": 128,
+                  "height": 18
+                },
+                {
+                  "id": "A374",
+                  "text": "Student List",
+                  "url": "",
+                  "width": 128,
+                  "height": 18
+                },
+                {
+                  "id": "A375",
+                  "text": "Backlog",
+                  "hasChildren": true,
+                  "width": 160,
+                  "height": 18,
+                  "children": [
+                    {
+                      "id": "A3751",
+                      "text": "Batchwise",
+                      "url": "",
+                      "width": 160,
+                      "height": 18
+                    },
+                    {
+                      "id": "A3752",
+                      "text": "Coursewise",
+                      "url": "",
+                      "width": 160,
+                      "height": 18
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "A4",
+          "text": "Degree",
+          "url": "",
+          "width": 128,
+          "height": 18,
+          "hasChildren": true,
+          "children": [
+            {
+              "id": "A41",
+              "text": "Degree Criteria Master",
+              "url": "",
+              "width": 160,
+              "height": 18
+            },
+            {
+              "id": "A42",
+              "text": "Batch Degree Criteria",
+              "url": "",
+              "width": 160,
+              "height": 18
+            },
+            {
+              "id": "A43",
+              "text": "Student Degree Criteria",
+              "url": "",
+              "width": 160,
+              "height": 18
+            },
+            {
+              "id": "A44",
+              "text": "Degree Criteria Report",
+              "url": "",
+              "width": 160,
+              "height": 18
+            }
+          ]
+        },
+        {
+          "id": "A5",
+          "text": "Help",
+          "url": "",
+          "width": 128,
+          "height": 18,
+          "hasChildren": true,
+          "children": [
+            {
+              "id": "A51",
+              "text": "About Application",
+              "url": "",
+              "width": 128,
+              "height": 18
+            },
+            {
+              "id": "A52",
+              "text": "Work Flow of SEGS",
+              "url": "",
+              "width": 128,
+              "height": 20
+            },
+            {
+              "id": "A53",
+              "text": "Contact Us",
+              "url": "",
+              "width": 128,
+              "height": 18
+            }
+          ]
+        },
+        {
+          "id": "A6",
+          "text": "Logout",
+          "url": "/auth/login",
+          "width": 128,
+          "height": 18,
+          "hasChildren": false
+        }
+      ]
+    },
+    "SEGS-FACULTY": {
+      "NoOffFirstLineMenus": 5,
+      "menuItems": [
+        {
+        "id": "F1",
+        "text": "Transaction",
+        "url": "",
+        "width": 128,
+        "height": 18,
+        "hasChildren": true,
+        "children": [
+          {
+            "id": "F11",
+            "text": "Direct Grade Entry",
+            "url": "",
+            "width": 128,
+            "height": 18
+          },
+          {
+            "id": "F12",
+            "text": "Course Feedback",
+            "url": "",
+            "width": 156,
+            "height": 18
+          },
+          {
+            "id": "F13",
+            "text": "Modify Grade",
+            "url": "",
+            "width": 156,
+            "height": 18
+          },
+          {
+            "id": "F14",
+            "text": "Revise I Grade",
+            "url": "",
+            "width": 156,
+            "height": 18
+          },
+          {
+            "id": "F15",
+            "text": "Allocate TA",
+            "url": "",
+            "width": 128,
+            "height": 18
+          },
+          {
+            "id": "F16",
+            "text": "Approval Status",
+            "url": "",
+            "width": 160,
+            "height": 18
+          }
+        ]
+      },
+        {
+          "id": "F2",
+          "text": "Reports (Your Course)",
+          "url": "",
+          "width": 140,
+          "height": 18,
+          "hasChildren": true,
+          "children": [
+            {
+              "id": "F21",
+              "text": "Marks",
+              "url": "",
+              "width": 140,
+              "height": 18,
+              "hasChildren": true,
+              "children": [
+                {
+                  "id": "F211",
+                  "text": "Course",
+                  "url": "",
+                  "width": 140,
+                  "height": 18
+                }
+              ]
+            },
+            {
+              "id": "F22",
+              "text": "Results",
+              "url": "",
+              "width": 140,
+              "height": 18,
+              "hasChildren": true,
+              "children": [
+                {
+                  "id": "F221",
+                  "text": "Grade Freq",
+                  "url": "",
+                  "width": 140,
+                  "height": 18
+                },
+                {
+                  "id": "F222",
+                  "text": "Grade List",
+                  "url": "",
+                  "width": 140,
+                  "height": 18,
+                  "hasChildren": true,
+                  "children": [
+                    {
+                      "id": "F2221",
+                      "text": "Exam Specific",
+                      "url": "",
+                      "width": 140,
+                      "height": 18
+                    },
+                    {
+                      "id": "F2222",
+                      "text": "Updated Grade",
+                      "url": "",
+                      "width": 140,
+                      "height": 18
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "F23",
+              "text": "Course Evaluation",
+              "url": "",
+              "height": 18
+            },
+            {
+              "id": "F24",
+              "text": "Attendance Report",
+              "url": "",
+              "width": 140,
+              "height": 18
+            }
+          ]
+        },
+        {
+          "id": "F3",
+          "text": "Reports (All Courses)",
+          "url": "",
+          "width": 133,
+          "height": 18,
+          "hasChildren": true,
+          "children": [
+            {
+              "id": "F31",
+              "text": "Student Info",
+              "url": "",
+              "width": 133,
+              "height": 18,
+              "hasChildren": true,
+              "children": [
+                {
+                  "id": "F311",
+                  "text": "Studentwise",
+                  "url": "",
+                  "width": 133,
+                  "height": 18
+                },
+                {
+                  "id": "F312",
+                  "text": "Batchwise",
+                  "url": "",
+                  "width": 133,
+                  "height": 18
+                }
+              ]
+            },
+            {
+              "id": "F32",
+              "text": "Course",
+              "url": "",
+              "width": 128,
+              "height": 18,
+              "hasChildren": true,
+              "children": [
+                {
+                  "id": "F321",
+                  "text": "Master List",
+                  "url": "",
+                  "width": 156,
+                  "height": 18
+                },
+                {
+                  "id": "F322",
+                  "text": "Term Courses",
+                  "url": "",
+                  "width": 156,
+                  "height": 18
+                }
+              ]
+            },
+            {
+              "id": "F33",
+              "text": "Registrations",
+              "url": "",
+              "width": 133,
+              "height": 18,
+              "hasChildren": true,
+              "children": [
+                {
+                  "id": "F331",
+                  "text": "Studentwise",
+                  "url": "",
+                  "width": 133,
+                  "height": 18
+                },
+                {
+                  "id": "F332",
+                  "text": "Applied",
+                  "url": "",
+                  "width": 133,
+                  "height": 18,
+                  "hasChildren": true,
+                  "children": [
+                    {
+                      "id": "F3321",
+                      "text": "Term Wise",
+                      "url": "",
+                      "width": 133,
+                      "height": 18
+                    },
+                    {
+                      "id": "F3322",
+                      "text": "Course Wise",
+                      "url": "",
+                      "width": 133,
+                      "height": 18
+                    }
+                  ]
+                },
+                {
+                  "id": "F333",
+                  "text": "Registered",
+                  "url": "",
+                  "width": 133,
+                  "height": 18,
+                  "hasChildren": true,
+                  "children": [
+                    {
+                      "id": "F3331",
+                      "text": "Term wise",
+                      "url": "",
+                      "width": 133,
+                      "height": 18
+                    },
+                    {
+                      "id": "F3332",
+                      "text": "Course wise",
+                      "url": "",
+                      "width": 133,
+                      "height": 18
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "F34",
+              "text": "Attendance",
+              "url": "",
+              "width": 133,
+              "height": 18,
+              "hasChildren": true,
+              "children": [
+                {
+                  "id": "F341",
+                  "text": "Studentwise",
+                  "url": "",
+                  "width": 133,
+                  "height": 18
+                },
+                {
+                  "id": "F342",
+                  "text": "Coursewise",
+                  "url": "",
+                  "width": 133,
+                  "height": 18
+                },
+                {
+                  "id": "F343",
+                  "text": "Semesterwise",
+                  "url": "",
+                  "width": 133,
+                  "height": 18
+                }
+              ]
+            },
+            {
+              "id": "F35",
+              "text": "Result",
+              "url": "",
+              "width": 128,
+              "height": 18,
+              "hasChildren": true,
+              "children": [
+                {
+                  "id": "F351",
+                  "text": "Studentwise",
+                  "url": "",
+                  "width": 128,
+                  "height": 18
+                },
+                {
+                  "id": "F352",
+                  "text": "Coursewise",
+                  "url": "",
+                  "width": 133,
+                  "height": 18,
+                  "hasChildren": true,
+                  "children": [
+                    {
+                      "id": "F3521",
+                      "text": "Exam Specific",
+                      "url": "",
+                      "width": 133,
+                      "height": 18
+                    },
+                    {
+                      "id": "MF3522",
+                      "text": "Updated Grade",
+                      "url": "",
+                      "width": 133,
+                      "height": 18
+                    }
+                  ]
+                },
+                {
+                  "id": "F353",
+                  "text": "SPI-CPI List",
+                  "url": "",
+                  "width": 128,
+                  "height": 18
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "F4",
+          "text": "Help",
+          "url": "",
+          "width": 128,
+          "height": 18,
+          "hasChildren": true,
+          "children": [
+            {
+              "id": "F41",
+              "text": "About Application",
+              "url": "",
+              "width": 128,
+              "height": 18
+            },
+            {
+              "id": "F42",
+              "text": "Work Flow of SEGS",
+              "url": "",
+              "width": 128,
+              "height": 18
+            },
+            {
+              "id": "F43",
+              "text": "Contact Us",
+              "url": "",
+              "width": 128,
+              "height": 18
+            }
+          ]
+        },
+        {
+          "id": "F5",
+          "text": "Logout",
+          "url": "/auth/login",
+          "width": 128,
+          "height": 18,
+          "hasChildren": false
+        }
+      ]
+    }
+  }
+}

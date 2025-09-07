@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>SEGS - Undefined User Error</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styleSEGS.css}">
+</head>
+<body>
+    <div class="error-container">
+        <h1>
+            <span class="indent"></span>
+            <b><u><font face="Arial" size="3">SEGS Login Error:</font></u></b>
+        </h1>
+
+        <div class="error-content">
+            <p class="error-message">
+                <b>Failure Reason: System can not find your user category.</b>
+            </p>
+
+            <p class="error-instruction">
+                <b>Please contact your system administrator.</b>
+            </p>
+        </div>
+
+        <div class="button-container">
+            <input type="button" 
+                   value="Home Page" 
+                   class="btn" 
+                   name="btnMenu" 
+                   th:onclick="'window.location.href=\'' + @{/auth/homepage} + '\''">
+        </div>
+    </div>
+
+    <style>
+        .error-container {
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .indent {
+            display: inline-block;
+            width: 2em;
+        }
+
+        .error-content {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #fff3f3;
+            border-left: 4px solid #dc3545;
+            border-radius: 4px;
+        }
+
+        .error-message, .error-instruction {
+            margin: 10px 0;
+            padding-left: 3em;
+        }
+
+        .button-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</body>
+</html>

@@ -17,7 +17,7 @@ public class ExamType {
     private String title;
 
     @Column(name = "row_st")
-    private Integer rowState;
+    private Long rowState;
 
     @ManyToOne
     @JoinColumn(name = "CRSID") // ← replace with actual column name in table
@@ -39,11 +39,11 @@ public class ExamType {
         this.title = title;
     }
 
-    public Integer getRowState() {
+    public Long getRowState() {
         return rowState;
     }
 
-    public void setRowState(Integer rowState) {
+    public void setRowState(Long rowState) {
         this.rowState = rowState;
     }
 

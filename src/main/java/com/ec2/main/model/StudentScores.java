@@ -15,7 +15,7 @@ public class StudentScores {
     private Long sscstdid;
 
     @Column(name = "ssctcrid")
-    private Integer ssctcrid;
+    private Long ssctcrid;
 
     @Column(name = "sscgrade")
     private String sscgrade;
@@ -42,7 +42,7 @@ public class StudentScores {
     private LocalDateTime ssclastupdatedat;
 
     @Column(name = "sscrowstate")
-    private Integer sscrowstate;
+    private Long sscrowstate;
 
 
     public Long getSscid() { return sscid; }
@@ -51,8 +51,8 @@ public class StudentScores {
     public Long getSscstdid() { return sscstdid; }
     public void setSscstdid(Long sscstdid) { this.sscstdid = sscstdid; }
 
-    public Integer getSsctcrid() { return ssctcrid; }
-    public void setSsctcrid(Integer ssctcrid) { this.ssctcrid = ssctcrid; }
+    public Long getSsctcrid() { return ssctcrid; }
+    public void setSsctcrid(Long ssctcrid) { this.ssctcrid = ssctcrid; }
 
     public String getSscgrade() { return sscgrade; }
     public void setSscgrade(String sscgrade) { this.sscgrade = sscgrade; }
@@ -78,7 +78,7 @@ public class StudentScores {
     public LocalDateTime getSsclastupdatedat() { return ssclastupdatedat; }
     public void setSsclastupdatedat(LocalDateTime ssclastupdatedat) { this.ssclastupdatedat = ssclastupdatedat; }
 
-    public Integer getSscrowstate() { return sscrowstate; }
-    public void setSscrowstate(Integer sscrowstate) { this.sscrowstate = sscrowstate; }
+    public Long getSscrowstate() { return sscrowstate; }
+    public void setSscrowstate(Long sscrowstate) { this.sscrowstate = sscrowstate; }
 
 }

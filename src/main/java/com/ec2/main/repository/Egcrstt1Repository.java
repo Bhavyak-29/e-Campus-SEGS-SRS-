@@ -25,7 +25,7 @@ public interface Egcrstt1Repository extends JpaRepository<Egcrstt1, Egcrstt1Id> 
     List<Egcrstt1> findAllById_StudId(Long studId);
     
     @Query("SELECT e.obtainedGradeId FROM Egcrstt1 e WHERE e.rowStatus <> 'D'")
-    List<Integer> findAllValidGradeIds();
+    List<Long> findAllValidGradeIds();
 
     @Query(value = """
     SELECT g.grad_lt, et.examtype_title

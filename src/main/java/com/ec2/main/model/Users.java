@@ -1,7 +1,14 @@
 package com.ec2.main.model;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "users", schema="ec2")
@@ -61,6 +68,10 @@ public class Users {
 
     @Column(name = "uid_older")
     private Long uidOlder;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "urole", referencedColumnName = "rid", insertable = false, updatable = false)
+    private Role role;
 
     public Users() {
         
@@ -126,4 +137,12 @@ public class Users {
 
     public Long getUidOlder() { return uidOlder; }
     public void setUidOlder(Long uidOlder) { this.uidOlder = uidOlder; }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
+    }
 }

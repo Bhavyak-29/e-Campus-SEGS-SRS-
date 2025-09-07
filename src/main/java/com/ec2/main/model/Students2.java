@@ -19,13 +19,13 @@ public class Students2 {
     private String stdgender;
 
     @Column(name = "stdcurradrid")
-    private Integer stdcurradrid;
+    private Long stdcurradrid;
 
     @Column(name = "stdprmtadrid")
-    private Integer stdprmtadrid;
+    private Long stdprmtadrid;
 
     @Column(name = "stdemrgadrid")
-    private Integer stdemrgadrid;
+    private Long stdemrgadrid;
 
     @Column(name = "stdplustwo")
     private BigDecimal stdplustwo;
@@ -58,14 +58,14 @@ public class Students2 {
     public String getStdgender() { return stdgender; }
     public void setStdgender(String stdgender) { this.stdgender = stdgender; }
 
-    public Integer getStdcurradrid() { return stdcurradrid; }
-    public void setStdcurradrid(Integer stdcurradrid) { this.stdcurradrid = stdcurradrid; }
+    public Long getStdcurradrid() { return stdcurradrid; }
+    public void setStdcurradrid(Long stdcurradrid) { this.stdcurradrid = stdcurradrid; }
 
-    public Integer getStdprmtadrid() { return stdprmtadrid; }
-    public void setStdprmtadrid(Integer stdprmtadrid) { this.stdprmtadrid = stdprmtadrid; }
+    public Long getStdprmtadrid() { return stdprmtadrid; }
+    public void setStdprmtadrid(Long stdprmtadrid) { this.stdprmtadrid = stdprmtadrid; }
 
-    public Integer getStdemrgadrid() { return stdemrgadrid; }
-    public void setStdemrgadrid(Integer stdemrgadrid) { this.stdemrgadrid = stdemrgadrid; }
+    public Long getStdemrgadrid() { return stdemrgadrid; }
+    public void setStdemrgadrid(Long stdemrgadrid) { this.stdemrgadrid = stdemrgadrid; }
 
     public BigDecimal getStdplustwo() { return stdplustwo; }
     public void setStdplustwo(BigDecimal stdplustwo) { this.stdplustwo = stdplustwo; }

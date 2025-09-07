@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>SEGS - Access Denied</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/styleSEGS.css}">
+</head>
+<body>
+    <h1>
+        <span class="title-prefix">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <b><u><font face="Arial" size="3">SEGS Login Error:</font></u></b>
+    </h1>
+
+    <p class="error-message">
+        <span class="message-prefix">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        <b>Failure Reason: For Faculty user: because of maintenance Application is not available till 4 pm,
+        or You are a valid user but not allowed to access this system.</b>
+    </p>
+
+    <p align="center">
+        <input type="button" 
+               value="Home Page" 
+               class="btn" 
+               name="btnMenu" 
+               th:onclick="'window.location.href=\'' + @{/auth/homepage} + '\''">
+    </p>
+
+    <style>
+        .title-prefix {
+            display: inline-block;
+            width: 2em;
+        }
+        
+        .error-message {
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #fff3f3;
+            border-left: 4px solid #dc3545;
+        }
+        
+        .message-prefix {
+            display: inline-block;
+            width: 3em;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+</body>
+</html>

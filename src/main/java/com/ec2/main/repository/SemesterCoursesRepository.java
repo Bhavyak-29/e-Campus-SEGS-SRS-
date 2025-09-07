@@ -11,7 +11,7 @@ import java.util.*;
 import org.springframework.data.repository.query.Param;
 
 @Repository
-public interface SemesterCoursesRepository extends JpaRepository<SemesterCourses, Integer> {
+public interface SemesterCoursesRepository extends JpaRepository<SemesterCourses, Long> {
     // Custom queries can be added here
     @Query(value = "SELECT * FROM ec2.SEMESTERCOURSES sc, ec2.COURSES c, ec2.SEMESTERS s WHERE sc.SCRROWSTATE > 0 AND s.STRROWSTATE > 0 AND c.CRSROWSTATE > 0 AND c.CRSID = sc.SCRCRSID AND s.STRID = sc.SCRSTRID AND sc.SCRELECTIVE = 'N' AND sc.SCRSTRID = :semesterId", nativeQuery = true)
     List<SemesterCourses> getccbysemid(@Param("semesterId") Long semesterId);
@@ -23,6 +23,6 @@ public interface SemesterCoursesRepository extends JpaRepository<SemesterCourses
     List<SemesterCourses> getBECourses(@Param("studentId") Long studentId, @Param("semesterId") Long semesterId, @Param("batchId") Long batchId);
 
     @Query(value = "SELECT sc.SCRID FROM ec2.SEMESTERCOURSES sc WHERE sc.SCRSTRID = :semesterId AND sc.SCRCRSID = :courseId", nativeQuery = true)
-    Integer findScrid(@Param("semesterId") Long semesterId, @Param("courseId") Long courseId);
+    Long findScrid(@Param("semesterId") Long semesterId, @Param("courseId") Long courseId);
 
 }

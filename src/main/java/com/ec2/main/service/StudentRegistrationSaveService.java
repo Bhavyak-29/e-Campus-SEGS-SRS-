@@ -63,7 +63,7 @@ public class StudentRegistrationSaveService {
                 src.setSrcrowstate((long) 1);
 
                 Long tcrid = termCoursesRepo.findTcrid(Long.parseLong(courseId), termId);
-                Integer scrid = semesterCoursesRepo.findScrid(semesterId, Long.parseLong(courseId));
+                Long scrid = semesterCoursesRepo.findScrid(semesterId, Long.parseLong(courseId));
                 Optional<Long> srcid = registrationCoursesRepo.findMaxSrcid();
                 src.setSrctcrid(tcrid);
                 src.setSrcscrid(scrid);
@@ -87,7 +87,7 @@ public class StudentRegistrationSaveService {
                 src.setSrcrowstate((long) 1);
 
                 Long tcrid = termCoursesRepo.findTcrid(Long.parseLong(courseId), termId);
-                Integer scrid = semesterCoursesRepo.findScrid(semesterId, Long.parseLong(courseId));
+                Long scrid = semesterCoursesRepo.findScrid(semesterId, Long.parseLong(courseId));
                 Optional<Long> srcid = registrationCoursesRepo.findMaxSrcid();
                 src.setSrctcrid(tcrid);
                 src.setSrcscrid(scrid);
@@ -111,7 +111,7 @@ public class StudentRegistrationSaveService {
                 src.setSrcrowstate((long) 1);
 
                 Long tcrid = termCoursesRepo.findTcrid(Long.parseLong(courseId), termId);
-                Integer scrid = semesterCoursesRepo.findScrid(semesterId, Long.parseLong(courseId));
+                Long scrid = semesterCoursesRepo.findScrid(semesterId, Long.parseLong(courseId));
                 Optional<Long> srcid = registrationCoursesRepo.findMaxSrcid();
                 src.setSrctcrid(tcrid);
                 src.setSrcscrid(scrid);
@@ -135,7 +135,7 @@ public class StudentRegistrationSaveService {
                 src.setSrcrowstate((long) 1);
 
                 Long tcrid = termCoursesRepo.findTcrid(Long.parseLong(courseId), termId);
-                Integer scrid = semesterCoursesRepo.findScrid(semesterId, Long.parseLong(courseId));
+                Long scrid = semesterCoursesRepo.findScrid(semesterId, Long.parseLong(courseId));
                 Optional<Long> srcid = registrationCoursesRepo.findMaxSrcid();
                 src.setSrctcrid(tcrid);
                 src.setSrcscrid(scrid);
@@ -160,7 +160,7 @@ public class StudentRegistrationSaveService {
                 src.setSrcrowstate((long) 1);
 
                 Long tcrid = termCoursesRepo.findTcrid(Long.parseLong(courseId), termId);
-                Integer scrid = semesterCoursesRepo.findScrid(semesterId, Long.parseLong(courseId));
+                Long scrid = semesterCoursesRepo.findScrid(semesterId, Long.parseLong(courseId));
                 Optional<Long> srcid = registrationCoursesRepo.findMaxSrcid();
                 src.setSrctcrid(tcrid);
                 src.setSrcscrid(scrid);

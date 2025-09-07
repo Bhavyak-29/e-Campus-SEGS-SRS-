@@ -164,7 +164,7 @@ public class BulkRegistrationService {
                 System.out.println("Registering course ID: " + courseId + " for SRGID: " + srgid);
                 
                 Long tcrid = termCoursesRepository.findTcrid(courseId, termId);
-                Integer scrid = semesterCoursesRepository.findScrid(strid, courseId);
+                Long scrid = semesterCoursesRepository.findScrid(strid, courseId);
                 
                 System.out.println("Term Course ID (TCRID): " + tcrid);
                 System.out.println("Semester Course ID (SCRID): " + scrid);
