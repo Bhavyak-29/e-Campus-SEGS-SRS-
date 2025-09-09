@@ -1,163 +1,102 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
+  <head>
     <title>Select Academic Year and Term</title>
     <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" th:href="@{/css/ecampus.css}" />
-</head>
-<body>
-
-<table>
-    <tr>
-        <td colspan="3" class="top-bar">
-            <a href="/" style="text-decoration: none; color: inherit;">
-                <span style="font-size: 24px; font-weight: bold; cursor: pointer;">DA-IICT</span>
-            </a>
-            <span style="font-size: 16px;">&nbsp;Dhirubhai Ambani Institute of Information & Communication Technology</span>
-        </td>
-    </tr>
-
-    
-    <tr class="nav-bar">
-        <td colspan="3">
-            <table width="100%">
-                <tr>
-                    <td>
-                        <div class="dropdown">
-                            <button class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
-                                Transaction
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li class="dropdown-submenu position-relative">
-                                    <a class="dropdown-item" href="/directGradeEntry">Direct Grade Entry</a>
-                            
-                                </li>
-                                <li><a class="dropdown-item" href="#">Modify Grade</a></li>
-                                <li><a class="dropdown-item" href="#">Revise I Grade</a></li>
-                                <li><a class="dropdown-item" href="#">Approval Status</a></li>
-                            </ul>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="dropdown">
-                            <button class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
-                                Reports (Your Course)
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Marks</a></li>
-                                <li><a class="dropdown-item" href="#">Results</a></li>
-                                <li><a class="dropdown-item" href="#">Course Evaluation</a></li>
-                            </ul>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="dropdown">
-                            <div class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" data-bs-toggle="dropdown">
-                                Reports (All Courses)
-                            </div>
-                            <ul class="dropdown-menu">
-                                <li class="dropdown-submenu position-relative">
-                                    <a class="dropdown-item dropdown-toggle" href="#">Student Info</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="/students/search">Studentwise</a></li>
-                                        <li><a class="dropdown-item" href="/students/batch">Batchwise</a></li>
-                                    </ul>
-                                </li>
-                                <li class="dropdown-submenu position-relative">
-                                    <a class="dropdown-item dropdown-toggle" href="#">Course</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="/courses/master-list">Master List</a></li>
-                                        <li><a class="dropdown-item" href="/courses/term">Term Courses</a></li>
-                                    </ul>
-                                </li>                                
-                                <li class="dropdown-submenu position-relative">
-                                    <a class="dropdown-item dropdown-toggle" href="#">Registrations</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="/registrations/search">Student-wise</a></li>
-                                        <li><a class="dropdown-item" href="/registrations/term">Term-wise</a></li>
-                                        <li><a class="dropdown-item" href="/registrations/courses">Course-wise</a></li>
-                                    </ul>
-                                </li>                                                                                              
-                                <li><a class="dropdown-item" href="#">Result</a></li>
-                            </ul>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="dropdown">
-                            <button class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
-                                Help
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">About Application</a></li>
-                                <li><a class="dropdown-item" href="#">Workflow of SEGS</a></li>
-                                <li><a class="dropdown-item" href="#">Contact US</a></li>
-                            </ul>
-                        </div>
-                    </td>
-                    <td>
-                    <a class="btn btn-logout-modern w-100" style="color:white;font-weight:bold;" href="/logout">
-                        Logout
-                    </a>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-
-    <tr>
-        <td class="sidemenu"></td>
-        <td class="content">
+  </head>
+  <body>
+    <table>
+      <div th:insert="fragments/header :: mainHeader"></div>
+      <div class="container mt-5 text-center">
+        <tr>
+          <td class="sidemenu"></td>
+          <td class="content">
             <div class="container mt-4" th:if="${termCourses == null}">
-                <div class="card p-4 shadow-sm border-0 rounded-4">
-                    <h5 class="text-center fw-bold mb-3">Select Academic Year and Term</h5>
-        
-                    <form th:action="@{/registrations/term}" method="get" class="row gy-3 gx-4 justify-content-center align-items-end">
-                        <!-- Academic Year Dropdown -->
-                        <div class="col-md-4">
-                            <label for="academicYearId" class="form-label fw-semibold">Academic Year</label>
-                            <select class="form-select" id="academicYearId" name="academicYearId" onchange="this.form.submit()">
-                                <option value="" disabled th:selected="${academicYearId == null}">Select Academic Year</option>
-                                <option th:each="ayr : ${academicYears}"
-                                        th:value="${ayr.ayrid}"
-                                        th:text="${ayr.ayrname}"
-                                        th:selected="${ayr.ayrid == academicYearId}">
-                                </option>
-                            </select>
-                        </div>
-        
-                        <!-- Term Dropdown -->
-                        <div class="col-md-4">
-                            <label for="termId" class="form-label fw-semibold">Term</label>
-                            <select class="form-select" id="termId" name="termId"
-                                    th:disabled="${academicYearId == null}" onchange="this.form.submit()">
-                                <option value="" disabled th:selected="${termId == null}">Select Term</option>
-                                <option th:each="term : ${terms}"
-                                        th:value="${term.trmid}"
-                                        th:text="${term.trmname}"
-                                        th:selected="${term.trmid == termId}">
-                                </option>
-                            </select>
-                        </div>
-                    </form>
-                </div>
+              <div class="card p-4 shadow-sm border-0 rounded-4">
+                <h5 class="text-center fw-bold mb-3">
+                  Select Academic Year and Term
+                </h5>
+
+                <form
+                  th:action="@{/registrations/term}"
+                  method="get"
+                  class="row gy-3 gx-4 justify-content-center align-items-end"
+                >
+                  <!-- Academic Year Dropdown -->
+                  <div class="col-md-4">
+                    <label for="academicYearId" class="form-label fw-semibold"
+                      >Academic Year</label
+                    >
+                    <select
+                      class="form-select"
+                      id="academicYearId"
+                      name="academicYearId"
+                      onchange="this.form.submit()"
+                    >
+                      <option
+                        value=""
+                        disabled
+                        th:selected="${academicYearId == null}"
+                      >
+                        Select Academic Year
+                      </option>
+                      <option
+                        th:each="ayr : ${academicYears}"
+                        th:value="${ayr.ayrid}"
+                        th:text="${ayr.ayrname}"
+                        th:selected="${ayr.ayrid == academicYearId}"
+                      ></option>
+                    </select>
+                  </div>
+
+                  <!-- Term Dropdown -->
+                  <div class="col-md-4">
+                    <label for="termId" class="form-label fw-semibold"
+                      >Term</label
+                    >
+                    <select
+                      class="form-select"
+                      id="termId"
+                      name="termId"
+                      th:disabled="${academicYearId == null}"
+                      onchange="this.form.submit()"
+                    >
+                      <option value="" disabled th:selected="${termId == null}">
+                        Select Term
+                      </option>
+                      <option
+                        th:each="term : ${terms}"
+                        th:value="${term.trmid}"
+                        th:text="${term.trmname}"
+                        th:selected="${term.trmid == termId}"
+                      ></option>
+                    </select>
+                  </div>
+                </form>
+              </div>
             </div>
-        </td>
-        
-        <td class="sidemenu"></td>
-    </tr>
+          </td>
 
-    <tr>
-        <td class="sidemenu"></td>
-        <td class="footer" colspan="1">
-            &copy; 2002 DA-IICT, Near Indroda Circle, Ahmedabad-Gandhinagar Highway, Gandhinagar - 382 009, Gujarat, India.<br>
+          <td class="sidemenu"></td>
+        </tr>
+
+        <tr>
+          <td class="sidemenu"></td>
+          <td class="footer" colspan="1">
+            &copy; 2002 DA-IICT, Near Indroda Circle, Ahmedabad-Gandhinagar
+            Highway, Gandhinagar - 382 009, Gujarat, India.<br />
             Designed, developed and maintained by Bhavya, Sumit & Harsh
-        </td>
-        <td class="sidemenu"></td>
-    </tr>
-</table>
-
-</body>
+          </td>
+          <td class="sidemenu"></td>
+        </tr>
+      </div>
+    </table>
+  </body>
 </html>

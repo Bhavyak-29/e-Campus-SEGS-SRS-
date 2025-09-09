@@ -1,12 +1,9 @@
-<!-- grade_chart.html -->
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <title>Grade Chart</title>
-    <!-- Bootstrap 5 CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" th:href="@{/css/ecampus.css}" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -15,41 +12,38 @@
 <body>
     <table>
         <div th:insert="fragments/header :: mainHeader"></div>
-
         <div class="container mt-5 text-center">
             <tr>
-            <td class="sidemenu"></td>
-            <td class="content">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <a href="/directGradeEntry/gradeLeftFrame" class="btn btn-dark ms-3" style="white-space: nowrap;">⬅
-                        Back to Menu</a>
-                </div>
-                <h2 th:text="'Grades for ' + ${courseName} + ' (' + ${termName} + ')'"></h2>
-                <canvas id="gradeChart" width="650" height="650" style="max-width: 900px;
+                <td class="sidemenu"></td>
+                <td class="content">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <a href="/directGradeEntry/gradeLeftFrame" class="btn btn-dark ms-3"
+                            style="white-space: nowrap;">⬅
+                            Back to Menu</a>
+                    </div>
+                    <h2 th:text="'Grades for ' + ${courseName} + ' (' + ${termName} + ')'"></h2>
+                    <canvas id="gradeChart" width="650" height="650" style="max-width: 900px;
                         margin: 30px auto;
                         display: block;
                         border-radius: 12px;
                         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.52);">
-                </canvas>
-            </td>
-            <td class="sidemenu"></td>
-        </tr>
+                    </canvas>
+                </td>
+                <td class="sidemenu"></td>
+            </tr>
 
-        <tr>
-
-            <td class="sidemenu"></td>
-            <td class="footer" colspan="1">
-                &copy; 2002 DA-IICT, Near Indroda Circle, Ahmedabad-Gandhinagar Highway, Gandhinagar - 382 009, Gujarat,
-                India.<br>
-                Designed, developed and maintained by Bhavya, Sumit & Harsh</a>
-            </td>
-            <td class="sidemenu"></td>
-        </tr>
+            <tr>
+                <td class="sidemenu"></td>
+                <td class="footer" colspan="1">
+                    &copy; 2002 DA-IICT, Near Indroda Circle, Ahmedabad-Gandhinagar Highway, Gandhinagar - 382 009,
+                    Gujarat,
+                    India.<br>
+                    Designed, developed and maintained by Bhavya, Sumit & Harsh</a>
+                </td>
+                <td class="sidemenu"></td>
+            </tr>
         </div>
-        
     </table>
-
-
     <script>
         fetch('/grades/chart-data')
             .then(res => res.json())
@@ -71,23 +65,19 @@
                     }
                 });
 
-                const labels = Object.keys(gradeCounts); // preserve original grade order
+                const labels = Object.keys(gradeCounts);
                 const counts = labels.map(grade => gradeCounts[grade]);
 
                 const backgroundColors = [
                     'rgb(23, 6, 178)',
-                    'rgba(237, 24, 24, 0.88)',  // Royal Blue
-
-                    'rgb(6, 139, 156)',  // Emerald Green
+                    'rgba(237, 24, 24, 0.88)',
+                    'rgb(6, 139, 156)',
                     'rgb(170, 82, 0)',
-                    'rgb(225, 9, 121)',  // Soft Orange   // Soft Red
-                    // Sky Blue
-                    'rgb(128, 9, 9)',  // Soft Purple
-                    'rgba(164, 175, 13, 0.74)',  // Rose Pink
-                    'rgb(2, 90, 56)',  // Neon Cyan
+                    'rgb(225, 9, 121)',
+                    'rgb(128, 9, 9)',
+                    'rgba(164, 175, 13, 0.74)',
+                    'rgb(2, 90, 56)',
                 ];
-
-
 
                 const ctx = document.getElementById('gradeChart').getContext('2d');
                 new Chart(ctx, {
@@ -126,9 +116,5 @@
                 });
             });
     </script>
-
-
-
 </body>
-
 </html>

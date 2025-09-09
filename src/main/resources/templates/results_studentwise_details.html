@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,22 +15,31 @@
         .content {
             padding: 30px;
             background-color: #fff;
-            min-height: 500px; /* Ensures content area has height */
+            min-height: 500px;
+            /* Ensures content area has height */
             vertical-align: top;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
             border-radius: 8px;
             /* No margin here, as it's within the table cell */
         }
+
         .sidemenu {
-            width: 50px; /* Adjust as needed for the table layout */
-            background-color: #f4f7f6; /* Match body background */
+            width: 50px;
+            /* Adjust as needed for the table layout */
+            background-color: #f4f7f6;
+            /* Match body background */
         }
+
         /* Specific styles for results content to fit within the .content cell */
         .page-content-wrapper {
-             max-width: 900px; /* Adjust max-width to fit nicely */
-             margin: 0 auto; /* Center content within the cell */
-             padding: 0; /* Remove default container padding to avoid double padding */
+            max-width: 900px;
+            /* Adjust max-width to fit nicely */
+            margin: 0 auto;
+            /* Center content within the cell */
+            padding: 0;
+            /* Remove default container padding to avoid double padding */
         }
+
         h1 {
             color: #2c3e50;
             text-align: center;
@@ -37,6 +47,7 @@
             font-size: 2.5em;
             font-weight: bold;
         }
+
         .student-info {
             background-color: #ecf0f1;
             padding: 20px;
@@ -48,20 +59,24 @@
             flex-wrap: wrap;
             gap: 15px;
         }
+
         .student-info p {
             margin: 0;
             font-size: 1.1em;
             color: #34495e;
         }
+
         .student-info p strong {
             color: #2c3e50;
         }
+
         .no-results-msg {
             text-align: center;
             color: #7f8c8d;
             padding: 20px;
             font-style: italic;
         }
+
         .back-link {
             display: inline-block;
             margin-top: 30px;
@@ -72,9 +87,11 @@
             border-radius: 8px;
             transition: background-color 0.3s ease;
         }
+
         .back-link:hover {
             background-color: #7f8c8d;
         }
+
         /* Accordion Custom Styles */
         .accordion-button {
             background-color: #34495e;
@@ -85,29 +102,35 @@
             padding: 15px 20px;
             transition: background-color 0.3s ease;
         }
+
         .accordion-button:not(.collapsed) {
             background-color: #3498db;
             color: white;
-            box-shadow: inset 0 -1px 0 rgba(0,0,0,.125);
+            box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .125);
         }
+
         .accordion-item {
             border: 1px solid #ddd;
             border-radius: 8px;
             margin-bottom: 15px;
-            overflow: hidden; /* Ensures rounded corners apply to content */
+            overflow: hidden;
+            /* Ensures rounded corners apply to content */
         }
+
         .accordion-body {
             padding: 20px;
             background-color: #fff;
             border-top: 1px solid #ddd;
         }
+
         .semester-card {
             border: 1px solid #e0e0e0;
             border-radius: 8px;
             margin-bottom: 20px;
             overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
         }
+
         .semester-header {
             background-color: #f0f3f5;
             padding: 15px;
@@ -116,240 +139,162 @@
             font-weight: bold;
             font-size: 1.1em;
         }
-        .table-bordered th, .table-bordered td {
+
+        .table-bordered th,
+        .table-bordered td {
             border: 1px solid #dee2e6;
         }
+
         .table-light th {
             background-color: #f8f9fa;
             color: #495057;
         }
     </style>
 </head>
+
 <body>
 
-<table>
-    <tr>
-        <td colspan="3" class="top-bar">
-            <div class="top-bar-content">
-                <a href="/" class="brand-name">DA-IICT</a>
-                <span class="brand-description">
-                    Dhirubhai Ambani Institute of Information & Communication Technology
-                </span>
-            </div>
-        </td>
-    </tr>
+    <table>
+        <div th:insert="fragments/header :: mainHeader"></div>
+        <div class="container mt-5 text-center">
+            <tr>
+                <td class="sidemenu"></td>
+                <td class="content">
+                    <!-- START of Results Specific Content -->
+                    <div class="page-content-wrapper">
+                        <h1 th:text="${student.stdfirstname + ' ' + student.stdlastname + ' - Academic Results'}"></h1>
 
-    <tr class="nav-bar">
-        <td colspan="3">
-            <table width="100%">
-                <tr>
-                    <td>
-                        <div class="dropdown">
-                            <button class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
-                                Transaction
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li class="dropdown-submenu position-relative">
-                                    <a class="dropdown-item" href="/directGradeEntry">Direct Grade Entry</a>
-                            
-                                </li>
-                                <li><a class="dropdown-item" href="#">Modify Grade</a></li>
-                                <li><a class="dropdown-item" href="#">Revise I Grade</a></li>
-                                <li><a class="dropdown-item" href="#">Approval Status</a></li>
-                            </ul>
+                        <div class="student-info">
+                            <p><strong>Student ID:</strong> <span th:text="${student.stdinstid}"></span></p>
+                            <p><strong>Name:</strong> <span
+                                    th:text="${student.stdfirstname + ' ' + student.stdlastname}"></span></p>
                         </div>
-                    </td>
-                    <td>
-                        <div class="dropdown">
-                            <button class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
-                                Reports (Your Course)
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Marks</a></li>
-                                <li><a class="dropdown-item" href="#">Results</a></li>
-                                <li><a class="dropdown-item" href="#">Course Evaluation</a></li>
-                            </ul>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="dropdown">
-                            <div class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" data-bs-toggle="dropdown">
-                                Reports (All Courses)
-                            </div>
-                            <ul class="dropdown-menu">
-                                <li class="dropdown-submenu position-relative">
-                                    <a class="dropdown-item dropdown-toggle" href="#">Student Info</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="/students/search">Studentwise</a></li>
-                                        <li><a class="dropdown-item" href="/students/batch">Batchwise</a></li>
-                                    </ul>
-                                </li>
-                                <li class="dropdown-submenu position-relative">
-                                    <a class="dropdown-item dropdown-toggle" href="#">Course</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="/courses/master-list">Master List</a></li>
-                                        <li><a class="dropdown-item" href="/courses/term">Term Courses</a></li>
-                                    </ul>
-                                </li>                                
-                                <li class="dropdown-submenu position-relative">
-                                    <a class="dropdown-item dropdown-toggle" href="#">Registrations</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="/registrations/search">Student-wise</a></li>
-                                        <li><a class="dropdown-item" href="/registrations/term">Term-wise</a></li>
-                                        <li><a class="dropdown-item" href="/registrations/courses">Course-wise</a></li>
-                                    </ul>
-                                </li>                                                                                              
-                                <li class="dropdown-submenu position-relative">
-                                    <a class="dropdown-item dropdown-toggle" href="#">Results</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="/results/studentwise/search">Student-wise</a></li>
-                                        <li class="dropdown-submenu position-relative">
-                                            <a class="dropdown-item dropdown-toggle" href="#">Course-wise</a>
-                                            <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" href="#">Exam Specific</a></li>
-                                                <li><a class="dropdown-item" href="#">Updated Grade</a></li>
-                                            </ul>
-                                        </li>
-                                        <li><a class="dropdown-item" href="#">SPI-CPI List</a></li>
-                                    </ul>
-                                </li>                                
-                            </ul>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="dropdown">
-                            <button class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
-                                Help
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">About Application</a></li>
-                                <li><a class="dropdown-item" href="#">Workflow of SEGS</a></li>
-                                <li><a class="dropdown-item" href="#">Contact US</a></li>
-                            </ul>
-                        </div>
-                    </td>
-                    <td>
-                    <a class="btn btn-logout-modern w-100" style="color:white;font-weight:bold;" href="/logout">
-                        Logout
-                    </a>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
 
-    <tr>
-        <td class="sidemenu"></td>
-        <td class="content">
-            <!-- START of Results Specific Content -->
-            <div class="page-content-wrapper">
-                <h1 th:text="${student.stdfirstname + ' ' + student.stdlastname + ' - Academic Results'}"></h1>
-
-                <div class="student-info">
-                    <p><strong>Student ID:</strong> <span th:text="${student.stdinstid}"></span></p>
-                    <p><strong>Name:</strong> <span th:text="${student.stdfirstname + ' ' + student.stdlastname}"></span></p>
-                </div>
-
-                <div class="accordion mb-4" id="resultsAccordion">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseResults" aria-expanded="false" aria-controls="collapseResults">
-                                <strong>Academic Results Overview for <span th:text="${student.stdfirstname + ' ' + student.stdlastname}">Student Name</span></strong>
-                            </button>
-                        </h2>
-                        <div id="collapseResults" class="accordion-collapse collapse show" data-bs-parent="#resultsAccordion">
-                            <div class="accordion-body">
-                                <div th:if="${registrations.isEmpty()}" class="no-results-msg">
-                                    <p>No academic results (registrations) found for this student.</p>
-                                </div>
-                                <div th:each="reg : ${registrations}" class="semester-card">
-                                    <div class="semester-header">
-                                        <h5 class="mb-0" th:text="${reg.semester != null ? reg.semester.strname : 'N/A'}">Semester Name</h5>
-                                    </div>
-                                    <div class="p-3">
-                                        <!-- Course List Heading -->
-                                        <h6 class="mb-3">Courses Registered in <span th:text="${reg.semester != null ? reg.semester.strname : 'N/A'}"></span></h6>
-
-                                        <!-- Results Table -->
-                                        <table class="table table-bordered">
-                                            <thead class="table-light">
-                                                <tr>
-                                                    <th>Sr No.</th>
-                                                    <th>Course Name</th>
-                                                    <th>Course Code</th>
-                                                    <th>Grade Obtained</th>
-                                                    <th>Total Credits</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr th:each="course, iter : ${regCourses[reg.srgid]}">
-                                                    <td th:text="${iter.index + 1}">1</td>
-                                                    <td th:text="${course[1]}">Course Name</td>
-                                                    <td th:text="${course[2]}">Code</td>
-                                                    <td>
-                                                        <div th:if="${gradeExamMap[course[0]] != null and !gradeExamMap[course[0]].isEmpty()}">
-                                                            <div th:each="grade : ${gradeExamMap[course[0]]}"
-                                                                 th:text="${grade[0]}"></div> <!-- Assuming grade[0] is grad_lt -->
-                                                        </div>
-                                                        <div th:unless="${gradeExamMap[course[0]] != null and !gradeExamMap[course[0]].isEmpty()}">No Grade</div>
-                                                    </td>
-                                                    <td th:text="${course[4]}">-</td>
-                                                </tr>
-                                                <tr th:if="${regCourses[reg.srgid] == null or regCourses[reg.srgid].isEmpty()}">
-                                                    <td colspan="5" class="text-center">No courses registered for this semester.</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-
-                                        <!-- Performance Summary Table -->
-                                        <div th:if="${regResults[reg.srgid] != null and !regResults[reg.srgid].isEmpty()}" class="mt-3">
-                                            <table class="table table-bordered">
-                                                <thead class="table-light text-center">
-                                                    <tr>
-                                                        <th>Credits Registered</th>
-                                                        <th>Credits Earned</th>
-                                                        <th>Grade Points Earned</th>
-                                                        <th>SPI</th>
-                                                        <th>CPI</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody class="text-center">
-                                                    <tr th:with="res=${regResults[reg.srgid][0]}">
-                                                        <td th:text="${res.creditsRegistered != null ? res.creditsRegistered : '-'}">-</td>
-                                                        <td th:text="${res.creditsEarned != null ? res.creditsEarned : '-'}">-</td>
-                                                        <td th:text="${res.gradePointsEarned != null ? res.gradePointsEarned : '-'}">-</td>
-                                                        <td th:text="${res.spi != null ? res.spi : '-'}">-</td>
-                                                        <td th:text="${res.cpi != null ? res.cpi : '-'}">-</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                        <div class="accordion mb-4" id="resultsAccordion">
+                            <div class="accordion-item">
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                        data-bs-target="#collapseResults" aria-expanded="false"
+                                        aria-controls="collapseResults">
+                                        <strong>Academic Results Overview for <span
+                                                th:text="${student.stdfirstname + ' ' + student.stdlastname}">Student
+                                                Name</span></strong>
+                                    </button>
+                                </h2>
+                                <div id="collapseResults" class="accordion-collapse collapse show"
+                                    data-bs-parent="#resultsAccordion">
+                                    <div class="accordion-body">
+                                        <div th:if="${registrations.isEmpty()}" class="no-results-msg">
+                                            <p>No academic results (registrations) found for this student.</p>
                                         </div>
-                                        <div th:unless="${regResults[reg.srgid] != null and !regResults[reg.srgid].isEmpty()}" class="mt-3 no-results-msg">
-                                            <p>No semester performance summary available.</p>
+                                        <div th:each="reg : ${registrations}" class="semester-card">
+                                            <div class="semester-header">
+                                                <h5 class="mb-0"
+                                                    th:text="${reg.semester != null ? reg.semester.strname : 'N/A'}">
+                                                    Semester Name</h5>
+                                            </div>
+                                            <div class="p-3">
+                                                <!-- Course List Heading -->
+                                                <h6 class="mb-3">Courses Registered in <span
+                                                        th:text="${reg.semester != null ? reg.semester.strname : 'N/A'}"></span>
+                                                </h6>
+
+                                                <!-- Results Table -->
+                                                <table class="table table-bordered">
+                                                    <thead class="table-light">
+                                                        <tr>
+                                                            <th>Sr No.</th>
+                                                            <th>Course Name</th>
+                                                            <th>Course Code</th>
+                                                            <th>Grade Obtained</th>
+                                                            <th>Total Credits</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr th:each="course, iter : ${regCourses[reg.srgid]}">
+                                                            <td th:text="${iter.index + 1}">1</td>
+                                                            <td th:text="${course[1]}">Course Name</td>
+                                                            <td th:text="${course[2]}">Code</td>
+                                                            <td>
+                                                                <div
+                                                                    th:if="${gradeExamMap[course[0]] != null and !gradeExamMap[course[0]].isEmpty()}">
+                                                                    <div th:each="grade : ${gradeExamMap[course[0]]}"
+                                                                        th:text="${grade[0]}"></div>
+                                                                    <!-- Assuming grade[0] is grad_lt -->
+                                                                </div>
+                                                                <div
+                                                                    th:unless="${gradeExamMap[course[0]] != null and !gradeExamMap[course[0]].isEmpty()}">
+                                                                    No Grade</div>
+                                                            </td>
+                                                            <td th:text="${course[4]}">-</td>
+                                                        </tr>
+                                                        <tr
+                                                            th:if="${regCourses[reg.srgid] == null or regCourses[reg.srgid].isEmpty()}">
+                                                            <td colspan="5" class="text-center">No courses registered
+                                                                for this semester.</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                                <!-- Performance Summary Table -->
+                                                <div th:if="${regResults[reg.srgid] != null and !regResults[reg.srgid].isEmpty()}"
+                                                    class="mt-3">
+                                                    <table class="table table-bordered">
+                                                        <thead class="table-light text-center">
+                                                            <tr>
+                                                                <th>Credits Registered</th>
+                                                                <th>Credits Earned</th>
+                                                                <th>Grade Points Earned</th>
+                                                                <th>SPI</th>
+                                                                <th>CPI</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody class="text-center">
+                                                            <tr th:with="res=${regResults[reg.srgid][0]}">
+                                                                <td
+                                                                    th:text="${res.creditsRegistered != null ? res.creditsRegistered : '-'}">
+                                                                    -</td>
+                                                                <td
+                                                                    th:text="${res.creditsEarned != null ? res.creditsEarned : '-'}">
+                                                                    -</td>
+                                                                <td
+                                                                    th:text="${res.gradePointsEarned != null ? res.gradePointsEarned : '-'}">
+                                                                    -</td>
+                                                                <td th:text="${res.spi != null ? res.spi : '-'}">-</td>
+                                                                <td th:text="${res.cpi != null ? res.cpi : '-'}">-</td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                                <div th:unless="${regResults[reg.srgid] != null and !regResults[reg.srgid].isEmpty()}"
+                                                    class="mt-3 no-results-msg">
+                                                    <p>No semester performance summary available.</p>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
+                        <a th:href="@{/results/studentwise/search}" class="back-link">Back to Search</a>
                     </div>
-                </div>
+                </td>
+                <td class="sidemenu"></td>
+            </tr>
 
-                <a th:href="@{/results/studentwise/search}" class="back-link">Back to Search</a>
-            </div>
-            <!-- END of Results Specific Content -->
-        </td>
-        <td class="sidemenu"></td>
-    </tr>
-
-    <tr>
-        <td class="sidemenu"></td>
-        <td class="footer" colspan="1">
-            &copy; 2002 DA-IICT, Near Indroda Circle, Ahmedabad-Gandhinagar Highway, Gandhinagar - 382 009, Gujarat, India.<br>
-            Designed, developed and maintained by Bhavya, Sumit & Harsh</a>
-        </td>
-        <td class="sidemenu"></td>
-    </tr>
-</table>
+            <tr>
+                <td class="sidemenu"></td>
+                <td class="footer" colspan="1">
+                    &copy; 2002 DA-IICT, Near Indroda Circle, Ahmedabad-Gandhinagar Highway, Gandhinagar - 382 009,
+                    Gujarat, India.<br>
+                    Designed, developed and maintained by Bhavya, Sumit & Harsh</a>
+                </td>
+                <td class="sidemenu"></td>
+            </tr>
+        </div>
+    </table>
 
 </body>
+
 </html>

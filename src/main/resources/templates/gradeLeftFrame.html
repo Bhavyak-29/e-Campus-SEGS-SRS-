@@ -8,14 +8,12 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/css/ecampus.css}" />
     <style>
-        /* Add these new styles */
         body {
             display: flex;
             flex-direction: column;
             min-height: 100vh !important;
             margin: 0;
             background-image: url('/images/segsimg2.png') !important;
-            /* or use Thymeleaf: url([[@{/images/segsbgimg.jpg}]]) */
             background-repeat: no-repeat;
             background-size: cover;
             background-position: center;
@@ -61,13 +59,10 @@
             list-style-type: none;
             padding-left: 15px;
         }
-
-        /* Style for the clickable h6 */
         .sidebar h6.clickable {
             cursor: pointer;
-            user-select: none; /* Prevent text selection on click */
+            user-select: none; 
         }
-        /* Style for the indicator arrow */
         .sidebar h6.clickable .arrow {
             float: right;
             transition: transform 0.3s ease-in-out;
@@ -90,16 +85,6 @@
                     <li><a th:href="@{/grades/update}">Modify Grade</a></li>
                 </ul>
             </div>
-            <!-- <div class="menu-section">
-                <h6>Reports</h6>
-                <ul>
-                    <li><a th:href="@{/directGradeEntry/grades/chart-view3}">Line Graph</a></li>
-                    <li><a th:href="@{/directGradeEntry/grades/chart-view}">Bar Graph</a></li>
-                    <li><a th:href="@{/directGradeEntry/grades/chart-view2}">Pie Chart</a></li>
-                    <li><a th:href="@{/directGradeEntry/gradeOptions}">Exam Specific Grades</a></li>
-                    <li><a th:href="@{/directGradeEntry/updatedGrades}">Updated Grades</a></li>
-                </ul>
-            </div> -->
         </div>
         <div class="main-content2 d-flex flex-column justify-content-center align-items-center text-center"
             style="height: 70vh; background-color:transparent; border-radius: 12px; ">

@@ -8,57 +8,54 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
     <style>
-        /* --- New/Adjusted Styles for the SPI/CPI List Page Content --- */
         .container-fluid.main-content-fluid {
             max-width: 1200px;
-            margin: 0 auto; /* Center the content within the `td.content` */
-            padding-top: 0; /* Remove top padding as the .content already has it */
-            padding-bottom: 20px; /* Add bottom padding */
-            background-color: #f8f9fa; /* Match background */
+            margin: 0 auto; 
+            padding-top: 0; 
+            padding-bottom: 20px; 
+            background-color: #f8f9fa; 
         }
 
-        /* Filter Form Enhancements */
         .filter-form {
             background-color: #ffffff;
-            padding: 25px 30px; /* Increased padding for more space */
-            border-radius: 10px; /* Slightly more rounded corners */
-            box-shadow: 0 6px 15px rgba(0,0,0,0.1); /* Stronger, softer shadow */
-            margin-bottom: 30px; /* More space below the form */
-            border: 1px solid #e0e0e0; /* Subtle border */
+            padding: 25px 30px; 
+            border-radius: 10px; 
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1); 
+            margin-bottom: 30px; 
+            border: 1px solid #e0e0e0;
         }
 
         .filter-form h5 {
             color: #343a40;
             font-weight: 600;
-            margin-bottom: 20px; /* Space below heading */
-            text-align: center; /* Center the filter heading */
+            margin-bottom: 20px; 
+            text-align: center; 
         }
 
-        /* Adjust form-row to use align-items-center for vertical alignment */
         .filter-form form.form-row {
-            align-items: flex-end; /* Align items to the bottom, useful for labels/inputs of different heights */
+            align-items: flex-end; 
         }
 
         .filter-form .form-group {
-            margin-bottom: 1rem; /* Standard Bootstrap spacing */
-            display: flex; /* Use flexbox for inner alignment of label and input */
-            flex-direction: column; /* Stack label and input */
-            justify-content: flex-end; /* Push content to the bottom if column height varies */
+            margin-bottom: 1rem; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: flex-end; 
         }
 
         .filter-form .form-control {
-            border-radius: 5px; /* Slightly rounded inputs */
+            border-radius: 5px; 
             border: 1px solid #ced4da;
-            padding: 0.675rem 0.75rem; /* Slightly larger padding for better touch targets */
+            padding: 0.675rem 0.75rem;
             font-size: 0.95rem;
-            height: calc(1.5em + 0.75rem + 2px); /* Standard Bootstrap form control height */
+            height: calc(1.5em + 0.75rem + 2px); 
         }
 
         .filter-form label {
-            font-weight: 600; /* Bolder labels */
+            font-weight: 600; 
             color: #495057;
-            margin-bottom: 0.5rem; /* Space between label and input */
-            display: block; /* Ensure label takes full width */
+            margin-bottom: 0.5rem; 
+            display: block; 
         }
 
         .filter-form .btn {
@@ -66,7 +63,6 @@
             padding: 0.675rem 1rem;
             font-weight: 600;
             font-size: 0.95rem;
-            /* Remove margin-top from individual buttons as they will be in a separate row */
         }
         .filter-form .btn-primary {
             background-color: #007bff;
@@ -76,7 +72,7 @@
         .filter-form .btn-primary:hover {
             background-color: #0056b3;
             border-color: #0056b3;
-            transform: translateY(-1px); /* Slight lift on hover */
+            transform: translateY(-1px); 
         }
         .filter-form .btn-info {
             background-color: #17a2b8;
@@ -89,58 +85,56 @@
             transform: translateY(-1px);
         }
 
-        /* Table Enhancements */
         .table-container {
-            border-radius: 10px; /* Match form border-radius */
-            box-shadow: 0 6px 15px rgba(0,0,0,0.1); /* Match form shadow */
-            overflow: hidden; /* Ensures rounded corners apply to content */
-            border: 1px solid #e0e0e0; /* Subtle border */
+            border-radius: 10px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1); 
+            overflow: hidden; 
+            border: 1px solid #e0e0e0; 
         }
 
         .table {
-            margin-bottom: 0; /* Remove default table margin */
+            margin-bottom: 0; 
         }
 
         .table thead.thead-dark th {
-            background-color: #343a40; /* Darker header */
+            background-color: #343a40; 
             color: #ffffff;
             font-weight: 600;
-            padding: 1rem 0.75rem; /* Increased padding for header cells */
-            vertical-align: middle; /* Center text vertically */
+            padding: 1rem 0.75rem; 
+            vertical-align: middle; 
         }
 
         .table th a {
-            color: #ffffff; /* White text for header links */
+            color: #ffffff; 
             text-decoration: none;
             display: flex;
             align-items: center;
-            justify-content: space-between; /* Pushes icon to the right */
+            justify-content: space-between; 
             width: 100%;
         }
         .table th a:hover {
-            color: #cce5ff; /* Lighter shade on hover */
+            color: #cce5ff; 
         }
         .table th a i {
-            margin-left: 10px; /* More space for sort icon */
+            margin-left: 10px; 
         }
 
         .table tbody tr:nth-child(odd) {
-            background-color: #f2f2f2; /* Lighter stripe for readability */
+            background-color: #f2f2f2; 
         }
         .table tbody tr:hover {
-            background-color: #e9ecef; /* Subtle highlight on hover */
+            background-color: #e9ecef;
         }
         .table td {
-            padding: 0.75rem; /* Standard cell padding */
-            border-top: 1px solid #e0e0e0; /* Lighter border for cells */
+            padding: 0.75rem; 
+            border-top: 1px solid #e0e0e0; 
         }
         .table-striped tbody tr:nth-of-type(odd) {
-            background-color: rgba(0,0,0,.03); /* Default bootstrap stripe */
+            background-color: rgba(0,0,0,.03); 
         }
 
-        /* Back to Selector Button */
-        .mb-3.back-button-container { /* Added a class for specific styling */
-            margin-bottom: 20px; /* Space between back button and form */
+        .mb-3.back-button-container { 
+            margin-bottom: 20px; 
         }
         .mb-3.back-button-container .btn-secondary {
             background-color: #6c757d;
@@ -157,11 +151,9 @@
         .mb-3.back-button-container .btn-secondary i {
             margin-right: 8px;
         }
-
-        /* Excel Export Button */
         .excel-export-btn {
-            margin-top: 30px; /* More space above export button */
-            text-align: right; /* Align to the right */
+            margin-top: 30px; 
+            text-align: right; 
         }
         .excel-export-btn .btn-success {
             background-color: #28a745;
@@ -179,25 +171,22 @@
         .excel-export-btn .btn-success i {
             margin-right: 8px;
         }
-
-        /* Responsive adjustments for the filter form columns */
-        @media (max-width: 991.98px) { /* Adjust breakpoint for medium screens */
+        @media (max-width: 991.98px) {
             .filter-form .form-group.col-md-3,
             .filter-form .form-group.col-md-2 {
-                flex: 0 0 50%; /* Make columns 50% width on medium screens */
+                flex: 0 0 50%; 
                 max-width: 50%;
             }
-            /* Ensure buttons stack correctly on smaller screens if they don't fit inline */
             .filter-form .button-group .col-md-auto {
                 flex: 0 0 100%;
                 max-width: 100%;
-                margin-bottom: 10px; /* Add space between stacked buttons */
+                margin-bottom: 10px; 
             }
         }
-        @media (max-width: 767.98px) { /* Further adjust for small screens */
+        @media (max-width: 767.98px) { 
             .filter-form .form-group.col-md-3,
             .filter-form .form-group.col-md-2 {
-                flex: 0 0 100%; /* Make columns full width on small screens */
+                flex: 0 0 100%; 
                 max-width: 100%;
             }
             .filter-form .button-group .col-md-auto {
@@ -206,140 +195,30 @@
                 margin-bottom: 10px;
             }
         }
-
-        /* Custom style to make the form group labels and inputs align well in a single row */
         .form-row.align-items-center .form-group {
-            margin-bottom: 0; /* Remove bottom margin to keep them in a line */
+            margin-bottom: 0; 
         }
         .form-row.align-items-center .form-group label {
-            margin-bottom: 0.25rem; /* Smaller margin for labels */
-            font-size: 0.875rem; /* Slightly smaller font size for labels */
+            margin-bottom: 0.25rem; 
+            font-size: 0.875rem; 
         }
         .form-row.align-items-center .form-group .form-control {
-            height: calc(1.5em + 0.5rem + 2px); /* Smaller height for inputs */
-            padding: 0.25rem 0.5rem; /* Smaller padding for inputs */
+            height: calc(1.5em + 0.5rem + 2px); 
+            padding: 0.25rem 0.5rem; 
         }
         .filter-form .button-row {
             display: flex;
-            justify-content: flex-end; /* Align buttons to the right */
-            gap: 15px; /* Space between buttons */
-            margin-top: 20px; /* Space above the button row */
+            justify-content: flex-end; 
+            gap: 15px; 
+            margin-top: 20px; 
         }
     </style>
 </head>
 <body>
 
 <table>
-   <tr>
-        <td colspan="3" class="top-bar">
-            <div class="top-bar-content">
-                <a href="/" class="brand-name">DA-IICT</a>
-                <span class="brand-description">
-                    Dhirubhai Ambani Institute of Information & Communication Technology
-                </span>
-            </div>
-        </td>
-    </tr>
-
-    <tr class="nav-bar">
-        <td colspan="3">
-            <table width="100%">
-                <tr>
-                    <td>
-                        <div class="dropdown">
-                            <button class="btn btn-modern-nav dropdown-toggle w-100" type="button" data-bs-toggle="dropdown">
-                                Transaction
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li class="dropdown-submenu position-relative">
-                                    <a class="dropdown-item" href="/directGradeEntry">Direct Grade Entry</a>
-                                </li>
-                                <li><a class="dropdown-item" href="#">Modify Grade</a></li>
-                                <li><a class="dropdown-item" href="#">Revise I Grade</a></li>
-                                <li><a class="dropdown-item" href="#">Approval Status</a></li>
-                            </ul>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="dropdown">
-                            <button class="btn btn-modern-nav dropdown-toggle w-100" type="button" data-bs-toggle="dropdown">
-                                Reports (Your Course)
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">Marks</a></li>
-                                <li><a class="dropdown-item" href="#">Results</a></li>
-                                <li><a class="dropdown-item" href="#">Course Evaluation</a></li>
-                            </ul>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="dropdown">
-                            <div class="btn btn-modern-nav dropdown-toggle w-100" data-bs-toggle="dropdown">
-                                Reports (All Courses)
-                            </div>
-                            <ul class="dropdown-menu">
-                                <li class="dropdown-submenu position-relative">
-                                    <a class="dropdown-item dropdown-toggle" href="#">Student Info</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="/students/search">Studentwise</a></li>
-                                        <li><a class="dropdown-item" href="/students/batch">Batchwise</a></li>
-                                    </ul>
-                                </li>
-                                <li class="dropdown-submenu position-relative">
-                                    <a class="dropdown-item dropdown-toggle" href="#">Course</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="/courses/master-list">Master List</a></li>
-                                        <li><a class="dropdown-item" href="/courses/term">Term Courses</a></li>
-                                    </ul>
-                                </li>                                
-                                <li class="dropdown-submenu position-relative">
-                                    <a class="dropdown-item dropdown-toggle" href="#">Registrations</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="/registrations/search">Student-wise</a></li>
-                                        <li><a class="dropdown-item" href="/registrations/term">Term-wise</a></li>
-                                        <li><a class="dropdown-item" href="/registrations/courses">Course-wise</a></li>
-                                    </ul>
-                                </li>                                                                                              
-                                <li class="dropdown-submenu position-relative">
-                                    <a class="dropdown-item dropdown-toggle" href="#">Results</a>
-                                    <ul class="dropdown-menu">
-                                        <li><a class="dropdown-item" href="/results/studentwise/search">Student-wise</a></li>
-                                        <li class="dropdown-submenu position-relative">
-                                            <a class="dropdown-item dropdown-toggle" href="#">Course-wise</a>
-                                            <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" href="#">Exam Specific</a></li>
-                                                <li><a class="dropdown-item" href="#">Updated Grade</a></li>
-                                            </ul>
-                                        </li>
-                                        <li><a class="dropdown-item" href="/results/spicpi/selector">SPI-CPI List</a></li>
-                                    </ul>
-                                </li>                                
-                            </ul>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="dropdown">
-                            <button class="btn btn-modern-nav dropdown-toggle w-100" type="button" data-bs-toggle="dropdown">
-                                Help
-                            </button>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="#">About Application</a></li>
-                                <li><a class="dropdown-item" href="#">Workflow of SEGS</a></li>
-                                <li><a class="dropdown-item" href="#">Contact US</a></li>
-                            </ul>
-                        </div>
-                    </td>
-                    <td>
-                    <a class="btn btn-logout-modern w-100" href="/logout">
-                        Logout
-                    </a>
-                    </td>
-                </tr>
-            </table>
-        </td>
-    </tr>
-
-    
+   <div th:insert="fragments/header :: mainHeader"></div>
+    <div class="container mt-5 text-center">
     <tr>
         <td class="sidemenu"></td>
         <td class="content">
@@ -542,6 +421,7 @@
         </td>
         <td class="sidemenu"></td>
     </tr>
+    </div>
 </table>
 
 <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>

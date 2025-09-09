@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>Faculty Page</title>
@@ -7,115 +8,122 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" th:href="@{/css/ecampus.css}" />
-    
+
 </head>
+
 <body>
-<table style="width:100%;">
-    <div th:insert="fragments/header :: mainHeader"></div>
-</table>
+    <table style="width:100%;">
+        <div th:insert="fragments/header :: mainHeader"></div>
+    </table>
 
-<!-- Main Search Section -->
-<div class="container mt-5" style="max-width: 1000px;">
-    <div class="text-center mb-4">
-        <h2>Search Students</h2>
+    <!-- Main Search Section -->
+    <div class="container mt-5" style="max-width: 1000px;">
+        <div class="text-center mb-4">
+            <h2>Search Students</h2>
+        </div>
+
+        <form th:action="@{/students/search}" method="get" class="mb-4">
+            <div class="row">
+                <div class="col-md-4 mb-3">
+                    <input type="text" class="form-control" name="fname" placeholder="First Name"
+                        th:value="${param.fname}" />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <input type="text" class="form-control" name="lname" placeholder="Last Name"
+                        th:value="${param.lname}" />
+                </div>
+                <div class="col-md-4 mb-3">
+                    <input type="text" class="form-control" name="instId" placeholder="Institute ID"
+                        th:value="${param.instId}" />
+                </div>
+            </div>
+            <div class="text-center">
+                <button type="submit" class="btn btn-primary px-5">Search</button>
+            </div>
+        </form>
+
+        <!-- Search Results -->
+        <div th:if="${studentsPage != null}">
+            <div th:if="${!studentsPage.empty}">
+                <table class="table table-bordered table-striped mt-3">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Institute ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="student : ${studentsPage.content}">
+                            <td th:text="${student.stdinstid}"></td>
+                            <td th:text="${student.stdfirstname + ' ' + student.stdlastname}"></td>
+                            <td th:text="${student.stdemail}"></td>
+                            <td>
+                                <a th:href="@{/students/{id}(id=${student.stdinstid})}"
+                                    class="btn btn-sm btn-success">View Info</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <!-- Pagination -->
+                <nav>
+                    <ul class="pagination justify-content-center">
+
+                        <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
+                            <a class="page-link"
+                                th:href="@{/students/search(page=${currentPage - 1}, size=${studentsPage.size}, fname=${param.fname}, lname=${param.lname}, instId=${param.instId})}">
+                                Previous
+                            </a>
+                        </li>
+
+                        <li class="page-item" th:if="${currentPage > 3}">
+                            <a class="page-link"
+                                th:href="@{/students/search(page=0, size=${studentsPage.size}, fname=${param.fname}, lname=${param.lname}, instId=${param.instId})}">1</a>
+                        </li>
+
+                        <li class="page-item disabled" th:if="${currentPage > 4}">
+                            <span class="page-link">...</span>
+                        </li>
+
+                        <li class="page-item"
+                            th:each="i : ${#numbers.sequence((currentPage > 2 ? currentPage - 2 : 0), (currentPage + 2 < totalPages - 1 ? currentPage + 2 : totalPages - 1))}"
+                            th:classappend="${i == currentPage} ? 'active'">
+                            <a class="page-link"
+                                th:href="@{/students/search(page=${i}, size=${studentsPage.size}, fname=${param.fname}, lname=${param.lname}, instId=${param.instId})}"
+                                th:text="${i + 1}">1</a>
+                        </li>
+
+                        <li class="page-item disabled" th:if="${currentPage + 3 < totalPages}">
+                            <span class="page-link">...</span>
+                        </li>
+
+                        <li class="page-item" th:if="${currentPage + 2 < totalPages - 1}">
+                            <a class="page-link"
+                                th:href="@{/students/search(page=${totalPages - 1}, size=${studentsPage.size}, fname=${param.fname}, lname=${param.lname}, instId=${param.instId})}"
+                                th:text="${totalPages}">Last</a>
+                        </li>
+
+                        <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
+                            <a class="page-link"
+                                th:href="@{/students/search(page=${currentPage + 1}, size=${studentsPage.size}, fname=${param.fname}, lname=${param.lname}, instId=${param.instId})}">
+                                Next
+                            </a>
+                        </li>
+
+                    </ul>
+                </nav>
+            </div>
+        </div>
     </div>
-
-    <form th:action="@{/students/search}" method="get" class="mb-4">
-        <div class="row">
-            <div class="col-md-4 mb-3">
-                <input type="text" class="form-control" name="fname" placeholder="First Name" th:value="${param.fname}" />
-            </div>
-            <div class="col-md-4 mb-3">
-                <input type="text" class="form-control" name="lname" placeholder="Last Name" th:value="${param.lname}" />
-            </div>
-            <div class="col-md-4 mb-3">
-                <input type="text" class="form-control" name="instId" placeholder="Institute ID" th:value="${param.instId}" />
-            </div>
-        </div>
-        <div class="text-center">
-            <button type="submit" class="btn btn-primary px-5">Search</button>
-        </div>
-    </form>
-
-    <!-- Search Results -->
-    <div th:if="${studentsPage != null}">
-        <div th:if="${!studentsPage.empty}">
-            <table class="table table-bordered table-striped mt-3">
-                <thead class="table-dark">
-                    <tr>
-                        <th>Institute ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th>Details</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="student : ${studentsPage.content}">
-                        <td th:text="${student.stdinstid}"></td>
-                        <td th:text="${student.stdfirstname + ' ' + student.stdlastname}"></td>
-                        <td th:text="${student.stdemail}"></td>
-                        <td>
-                            <a th:href="@{/students/{id}(id=${student.stdinstid})}" class="btn btn-sm btn-success">View Info</a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-
-            <!-- Pagination -->
-            <nav>
-                <ul class="pagination justify-content-center">
-
-                    <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
-                        <a class="page-link"
-                           th:href="@{/students/search(page=${currentPage - 1}, size=${studentsPage.size}, fname=${param.fname}, lname=${param.lname}, instId=${param.instId})}">
-                            Previous
-                        </a>
-                    </li>
-
-                    <li class="page-item" th:if="${currentPage > 3}">
-                        <a class="page-link"
-                           th:href="@{/students/search(page=0, size=${studentsPage.size}, fname=${param.fname}, lname=${param.lname}, instId=${param.instId})}">1</a>
-                    </li>
-
-                    <li class="page-item disabled" th:if="${currentPage > 4}">
-                        <span class="page-link">...</span>
-                    </li>
-
-                    <li class="page-item"
-                        th:each="i : ${#numbers.sequence((currentPage > 2 ? currentPage - 2 : 0), (currentPage + 2 < totalPages - 1 ? currentPage + 2 : totalPages - 1))}"
-                        th:classappend="${i == currentPage} ? 'active'">
-                        <a class="page-link"
-                           th:href="@{/students/search(page=${i}, size=${studentsPage.size}, fname=${param.fname}, lname=${param.lname}, instId=${param.instId})}"
-                           th:text="${i + 1}">1</a>
-                    </li>
-
-                    <li class="page-item disabled" th:if="${currentPage + 3 < totalPages}">
-                        <span class="page-link">...</span>
-                    </li>
-
-                    <li class="page-item" th:if="${currentPage + 2 < totalPages - 1}">
-                        <a class="page-link"
-                           th:href="@{/students/search(page=${totalPages - 1}, size=${studentsPage.size}, fname=${param.fname}, lname=${param.lname}, instId=${param.instId})}"
-                           th:text="${totalPages}">Last</a>
-                    </li>
-
-                    <li class="page-item" th:classappend="${currentPage == totalPages - 1} ? 'disabled'">
-                        <a class="page-link"
-                           th:href="@{/students/search(page=${currentPage + 1}, size=${studentsPage.size}, fname=${param.fname}, lname=${param.lname}, instId=${param.instId})}">
-                            Next
-                        </a>
-                    </li>
-
-                </ul>
-            </nav>
-        </div>
+    <!-- Footer -->
+    <div class="footer mt-5" colspan="1">
+        &copy; 2002 DA-IICT, Near Indroda Circle, Ahmedabad-Gandhinagar Highway, Gandhinagar - 382 009, Gujarat,
+        India.<br>
+        Designed, developed and maintained by Bhavya, Sumit & Harsh</a>
     </div>
-</div>
-<!-- Footer -->
-<div class="footer mt-5" colspan="1">
-    &copy; 2002 DA-IICT, Near Indroda Circle, Ahmedabad-Gandhinagar Highway, Gandhinagar - 382 009, Gujarat, India.<br>
-    Designed, developed and maintained by Bhavya, Sumit & Harsh</a>
-</div>
 
 </body>
+
 </html>

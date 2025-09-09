@@ -68,7 +68,6 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/results") // Base path for all result-related functionalities
 public class ResultController {
 
-    // Repositories (Existing)
     @Autowired
     private StudentsRepository studentsRepository;
     @Autowired
@@ -88,7 +87,6 @@ public class ResultController {
     @Autowired
     private SemestersRepository semestersRepository;
 
-    // New Repositories for CourseWise -> Exam Specific
     @Autowired
     private AcademicYearsRepository academicYearsRepository; // Assuming this is your AcademicYear entity repository
     @Autowired
