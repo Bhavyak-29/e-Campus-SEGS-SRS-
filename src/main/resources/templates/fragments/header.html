@@ -10,8 +10,6 @@
     <link rel="stylesheet" th:href="@{/css/ecampus.css}" />
 </head>
 <body>
-
-<!-- Header Fragment -->
 <div th:fragment="mainHeader">
     <table>
         <tr>
@@ -29,7 +27,6 @@
             <td colspan="3">
                 <table width="100%">
                     <tr>
-                        <!-- Transaction Dropdown -->
                         <td>
                             <div class="dropdown">
                                 <button class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
@@ -39,21 +36,15 @@
                                     <li><a class="dropdown-item" href="/directGradeEntry">Direct Grade Entry</a></li>
                                     <li><a class="dropdown-item" href="/grades/update">Modify Grade</a></li>
                                     <li><a class="dropdown-item" href="/grades/reviseIGrade">Revise I Grade</a></li>
-                                    <li><a class="dropdown-item" href="#">Approval Status</a></li>
                                 </ul>
                             </div>
                         </td>
-
-                        <!-- Reports (Your Course) Dropdown -->
                         <td>
                             <div class="dropdown">
                                 <button class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
                                     Reports (Your Course)
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li>
-                                        <a class="dropdown-item" href="#">Marks</a>
-                                    </li>
                                     <li class="dropdown-submenu position-relative">
                                     <a class="dropdown-item dropdown-toggle" href="#">Result</a>
                                         <ul class="dropdown-menu">
@@ -76,10 +67,8 @@
                                                         Updated Grades
                                                     </a></li>
                                                 </ul>
-                                                
                                             </li>
                                         </ul>
-                                    <li><a class="dropdown-item" href="#">Course Evaluation</a></li>
                                 </ul>
                             </div>
                         </td>
@@ -130,8 +119,6 @@
                                 </ul>
                             </div>
                         </td>
-
-                        <!-- Help Dropdown -->
                         <td>
                             <div class="dropdown">
                                 <button class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
@@ -144,8 +131,6 @@
                                 </ul>
                             </div>
                         </td>
-
-                        <!-- Logout Button -->
                         <td>
                             <a class="btn btn-logout-modern w-100" style="color:white;font-weight:bold;" href="/auth/login">
                                 Logout

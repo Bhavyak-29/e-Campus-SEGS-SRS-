@@ -91,21 +91,34 @@ public class facultyController {
     @Autowired
     private Eggradm1Repository Eggradm1Repository;
 
-
     @RequestMapping("/directGradeEntry")
     public String directGradeEntry(ModelMap model) {
-        List<Terms> terms = facultyService.getAllTerms();
-        List<Egcrstt1> examTypes = facultyService.getAllExamTypes();
         List<AcademicYears> academicYears = facultyService.getAllAcademicYears();
+        List<Terms> terms = facultyService.getAllTerms();
         List<Courses> courses = facultyService.getAllCourses();
+        List<Egcrstt1> examTypes = facultyService.getAllExamTypes();
+        AcademicYears latestAY = academicYears.stream()
+                .max(Comparator.comparingLong(AcademicYears::getAyrid))
+                .orElse(null);
+        Terms latestTerm = null;
+        if (latestAY != null) {
+            latestTerm = terms.stream()
+                    .filter(t -> t.getAcademicYear().getAyrid().equals(latestAY.getAyrid()))
+                    .max(Comparator.comparingLong(Terms::getTrmid))
+                    .orElse(null);
+        }
 
-        model.addAttribute("terms", terms);
-        model.addAttribute("examTypes", examTypes);
         model.addAttribute("academicYears", academicYears);
+        model.addAttribute("terms", terms);
         model.addAttribute("courses", courses);
+        model.addAttribute("examTypes", examTypes);
+
+        model.addAttribute("latestAY", latestAY != null ? latestAY.getAyrid() : null);
+        model.addAttribute("latestTerm", latestTerm != null ? latestTerm.getTrmid() : null);
 
         return "directGradeEntry";
     }
+
 
     @GetMapping("/directGradeEntry/updatedGrades")
 public String showUpdatedGrades(@RequestParam(required = false) List<String> selectedGrades,
@@ -158,7 +171,7 @@ public String showUpdatedGrades(@RequestParam(required = false) List<String> sel
 
         model.addAttribute("termName", termName);
         model.addAttribute("courseName", courseName);
-        return "gradeLeftFrame"; // make sure this matches your Thymeleaf template
+        return "gradeLeftFrame";
     }
 
 
@@ -272,8 +285,6 @@ public String showUpdatedGrades(@RequestParam(required = false) List<String> sel
                 return "gradeOptions";
     }
 
-
-    //StudentInfo -> StudentWise
     @GetMapping("/students/search")
     public String searchStudents(
             @RequestParam(required = false) String fname,
@@ -316,13 +327,7 @@ public String showUpdatedGrades(@RequestParam(required = false) List<String> sel
         
         if (students.isEmpty()) throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Student not found");
         Students student = students.get(0);
-        // System.out.println("Student: " + student);
-        // System.out.println("STDID: " + student.getStdid());
-
-    
         StudentProfile profile = studentProfileRepository.findByStdid(student.getStdid());
-        // System.out.println(profile);
-        // System.out.println("------------------------------------");
         List<Long> addressIds = new ArrayList<>();
         if (student.getPrmtAdrId() != null) addressIds.add(student.getPrmtAdrId());
         if (student.getCurrAdrId() != null) addressIds.add(student.getCurrAdrId());
@@ -340,9 +345,6 @@ public String showUpdatedGrades(@RequestParam(required = false) List<String> sel
     
         List<StudentRegistration> registrations = studentRegistrationRepository
                 .findAllRegistrationsByStudentIdOrderBySemesterSequence(student.getStdid());
-
-        // System.out.println(registrations);
-        // System.out.println("-------------------------------");
         Map<Long, List<Object[]>> regCourses = new LinkedHashMap<>();
         Map<Long, List<StudentSemesterResult>> regResults = new LinkedHashMap<>();
     
@@ -354,26 +356,22 @@ public String showUpdatedGrades(@RequestParam(required = false) List<String> sel
                     .findByStudentRegistration_SrgidAndRowStateGreaterThan(reg.getSrgid(), (short) 0));
         }
     
-        // === Egcrstt1 Result Grouping ===
         List<Egcrstt1> resultRecords = Egcrstt1Repository.findAllById_StudId(student.getStdid());
     
         Map<Long, List<Egcrstt1>> resultsGrouped = resultRecords.stream()
                 .filter(r -> !"D".equalsIgnoreCase(r.getRowStatus()))
                 .collect(Collectors.groupingBy(r -> r.getId().getTcrid(), LinkedHashMap::new, Collectors.toList()));
     
-        // === Grade + Exam Title Table Data ===
         Map<Long, List<Object[]>> gradeExamMap = new LinkedHashMap<>();
         for (Long tcrid : resultsGrouped.keySet()) {
             List<Object[]> gradeAndTitles = Egcrstt1Repository.findGradeAndExamTitle(student.getStdid(), tcrid);
             gradeExamMap.put(tcrid, gradeAndTitles);
         }
     
-        // === Grade Info Map (ID to Grade Master) ===
         Map<Integer, Eggradm1> gradeMap = Eggradm1Repository.findAll().stream()
                 .filter(g -> g.getGrad_id() != null)
                 .collect(Collectors.toMap(g -> g.getGrad_id().intValue(), g -> g));
     
-        // === Model Attributes ===
         model.addAttribute("student", student);
         model.addAttribute("profile", profile);
         model.addAttribute("permAddress", permAddr);
@@ -383,18 +381,13 @@ public String showUpdatedGrades(@RequestParam(required = false) List<String> sel
         model.addAttribute("regResults", regResults);
         model.addAttribute("fromPage", from);
     
-        model.addAttribute("egcrResults", resultsGrouped);          // grouped raw Egcrstt1 rows
-        model.addAttribute("gradeMap", gradeMap);                   // grade ID → object
-        model.addAttribute("gradeExamMap", gradeExamMap);           // tcrid → list of [grad_lt, examtype_title]
-        // System.out.println("Egcrstt1 results: " + resultRecords.size());
-        // System.out.println("--------------------------------");
-        // System.out.println("Grades: " + gradeMap.size());
+        model.addAttribute("egcrResults", resultsGrouped);  
+        model.addAttribute("gradeMap", gradeMap);  
+        model.addAttribute("gradeExamMap", gradeExamMap);
 
         return "student_details";
     }
     
-
-    // StudentInfo → Batchwise
     @GetMapping("/students/batch")
     public String showProgramAndBatchSelection(@RequestParam(value = "programId", required = false) Long programId,
                                             Model model) {
