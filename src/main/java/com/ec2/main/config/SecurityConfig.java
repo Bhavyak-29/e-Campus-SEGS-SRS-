@@ -56,6 +56,9 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**", "/images/**", "/css/**", "/js/**", "/api/**").permitAll()
                         .anyRequest().authenticated()
                 )
+                .csrf(csrf -> csrf
+                    .ignoringRequestMatchers("/grades/uploadcsv")
+                )         
                 .formLogin(form -> form
                         .loginPage("/auth/login")
                         .loginProcessingUrl("/auth/process-login")
