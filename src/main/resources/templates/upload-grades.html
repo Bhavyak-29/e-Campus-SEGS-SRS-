@@ -12,7 +12,7 @@
 
   <body>
     <table style="width: 100%">
-      <div th:insert="fragments/commonHeader :: mainHeader"></div>
+      <div th:insert="fragments/header :: mainHeader"></div>
     </table>
     <div class="container mt-5">
       <div class="d-flex justify-content-between align-items-center mb-3">
@@ -215,6 +215,17 @@
                   >Expected columns: studentid, grade</small
                 >
               </div>
+
+              <div id="csvPreview" class="mt-3 d-none">
+                <h6>CSV Preview:</h6>
+                <div style="max-height: 400px; overflow-y: auto;">
+                  <table class="table table-bordered" id="csvPreviewTable">
+                    <thead></thead>
+                    <tbody></tbody>
+                  </table>
+                </div>
+              </div>
+
               <div class="text-center">
                 <button type="submit" class="btn btn-success">
                   Upload CSV
@@ -234,37 +245,74 @@
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
-        const form = document.getElementById("csvUploadForm");
-        const alertBox = document.getElementById("upload-alert");
+      const form = document.getElementById("csvUploadForm");
+      const alertBox = document.getElementById("upload-alert");
+      const fileInput = document.getElementById("file");
+      const previewDiv = document.getElementById("csvPreview");
+      const previewTable = document.getElementById("csvPreviewTable");
 
-        form.addEventListener("submit", function (e) {
-          e.preventDefault(); // prevent form from submitting the normal way
+      // 🔹 Handle CSV Preview
+      fileInput.addEventListener("change", function () {
+        const file = fileInput.files[0];
+        if (!file) return;
 
-          const formData = new FormData(form);
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const text = e.target.result;
+          const rows = text.trim().split("\n").map(r => r.split(","));
 
-          fetch("/grades/uploadcsv", {
-            method: "POST",
-            body: formData,
-          })
-            .then((res) => res.json().then((data) => ({ ok: res.ok, data })))
-            .then(({ ok, data }) => {
-              showAlert(data.message, ok ? "success" : "danger");
-            })
-            .catch((err) => {
-              showAlert("Something went wrong. Please try again.", "danger");
+          if (rows.length > 0) {
+            // Clear old preview
+            previewTable.querySelector("thead").innerHTML = "";
+            previewTable.querySelector("tbody").innerHTML = "";
+
+            // Header
+            const headerRow = rows[0]
+              .map(col => `<th>${col.trim()}</th>`)
+              .join("");
+            previewTable.querySelector("thead").innerHTML = `<tr>${headerRow}</tr>`;
+
+            // Limit preview to first 10 rows
+            rows.slice(1).forEach(r => {
+              const rowHtml = r.map(col => `<td>${col.trim()}</td>`).join("");
+              previewTable.querySelector("tbody").innerHTML += `<tr>${rowHtml}</tr>`;
             });
-        });
 
-        function showAlert(message, type) {
-          alertBox.className = `alert alert-${type}`;
-          alertBox.textContent = message;
-          alertBox.classList.remove("d-none");
-
-          setTimeout(() => {
-            alertBox.classList.add("d-none");
-          }, 8000); // hide after 4 seconds
-        }
+            previewDiv.classList.remove("d-none");
+          }
+        };
+        reader.readAsText(file);
       });
+
+      // 🔹 Handle actual upload
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const formData = new FormData(form);
+
+        fetch("/grades/uploadcsv", {
+          method: "POST",
+          body: formData,
+        })
+          .then((res) => res.json().then((data) => ({ ok: res.ok, data })))
+          .then(({ ok, data }) => {
+            showAlert(data.message, ok ? "success" : "danger");
+          })
+          .catch(() => {
+            showAlert("Something went wrong. Please try again.", "danger");
+          });
+      });
+
+      function showAlert(message, type) {
+        alertBox.className = `alert alert-${type}`;
+        alertBox.textContent = message;
+        alertBox.classList.remove("d-none");
+
+        setTimeout(() => {
+          alertBox.classList.add("d-none");
+        }, 8000);
+      }
+    });
     </script>
   </body>
 </html>
