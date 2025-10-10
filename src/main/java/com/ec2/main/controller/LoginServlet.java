@@ -63,13 +63,16 @@ public class LoginServlet {
     public String loginPage(
             @RequestParam(value = "error", required = false) String error,
             @RequestParam(value = "logout", required = false) String logout,
-            Model model) {
+            Model model, HttpSession session) {
 
         if (error != null) {
             model.addAttribute("error", "Invalid university ID or password.");
         }
-
+        // if(session!=null) {
+        //     session.invalidate();
+        // }
         if (logout != null) {
+            session.invalidate();
             model.addAttribute("message", "You have been logged out successfully.");
         }
 

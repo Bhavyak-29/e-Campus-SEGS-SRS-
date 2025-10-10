@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.ec2.main.model.DropdownItem;
 import com.ec2.main.model.Grade;
+import com.ec2.main.model.GradeChangeStatusDTO;
 import com.ec2.main.model.GradeUploadForm;
 import com.ec2.main.model.StudentGradeDTO;
 
@@ -32,4 +33,16 @@ public interface GradeService {
     String getTermName(Long termId);
 
     String getCourseName(Long courseId);
+
+    void submitGradeChange(Long facultyId, Long tcrid, Long examtypeId, String studId, String newGradeLetter, String remarks);
+
+    List<GradeChangeStatusDTO> getGradeChangeStatuses(Long facultyId, String facultyUsername,Long tcrid);
+
+    List<GradeChangeStatusDTO> getPendingDeanRequests();
+
+    public List<GradeChangeStatusDTO> getPendingRegistrarRequests();
+
+    boolean processDeanAction(Long gmdid, Long deanId, String action);
+
+    boolean processRegistrarAction(Long gmdid, Long deanId, String action);
 }

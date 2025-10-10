@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Grade Change Request Status</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/ecampus.css}" />
+</head>
+<body class="bg-light">
+<div th:insert="fragments/commonHeader :: mainHeader"></div>
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <a
+          href="/directGradeEntry/gradeLeftFrame"
+          class="btn btn-dark ms-3"
+          style="white-space: nowrap"
+          >⬅ Back to Menu</a>
+    </div>
+
+    <h2 class="mb-4 text-center">Grade Modification Request Status</h2>
+
+    <table class="table table-bordered table-striped shadow-sm">
+        <thead class="table-dark">
+            <tr>
+                <th>Student ID</th>
+                <th>Current Grade</th>
+                <th>New Grade</th>
+                <th>Remarks</th>
+                <th>Submitted</th>
+                <th>Dean Approval</th>
+                <th th:if="${session.userid eq 1150}">Action</th>
+                <th>Registrar Approval</th>
+                <th th:if="${session.userid eq 20}">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="status : ${statuses}">
+                <td th:text="${status.studentInstituteId}"></td>
+                <td th:text="${status.presentGradeLetter}"></td>
+                <td th:text="${status.newGradeLetter}"></td>
+                <td th:text="${status.remarks != null ? status.remarks : '-'}"></td>
+
+                <!-- Submitted -->
+                <td>
+                    <span th:if="${status.statusSubmitted == 'Submitted Successfully'}" 
+                          class="badge bg-success" 
+                          th:text="${status.statusSubmitted}"></span>
+                    <span th:if="${status.statusSubmitted != 'Submitted Successfully'}" 
+                          class="badge bg-secondary" 
+                          th:text="${status.statusSubmitted}"></span>
+                </td>
+
+                <!-- Dean Approval -->
+                <td>
+                    <span th:if="${status.statusDean == 'Approved'}" 
+                          class="badge bg-success">Approved</span>
+                    <span th:if="${status.statusDean == 'Rejected'}" 
+                          class="badge bg-danger">Rejected</span>
+                    <span th:if="${status.statusDean == 'Pending'}" 
+                          class="badge bg-warning text-dark">Pending</span>
+                </td>                
+
+                <!-- Actions Set 1 -->
+                <td th:if="${session.userid eq 1150}">
+                    <div class="d-flex justify-content-center">
+                        <form th:action="@{/grades/approval/dean/action}" method="post" th:object="${status}">
+                            <input type="hidden" name="gmdid" th:value="${status.gmdid}" />
+                            <input type="hidden" name="action" value="approve"/>
+                            <button type="submit" class="btn btn-success btn-sm me-2">Approve</button>
+                        </form>
+                        <form th:action="@{/grades/approval/dean/action}" method="post" th:object="${status}">
+                            <input type="hidden" name="gmdid" th:value="${status.gmdid}" />
+                            <input type="hidden" name="action" value="reject"/>
+                            <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                        </form>
+                    </div>
+                </td>
+
+                <td>
+                    <span th:if="${status.statusRegistrar == 'Approved'}" 
+                          class="badge bg-success">Approved</span>
+                    <span th:if="${status.statusRegistrar == 'Rejected'}" 
+                          class="badge bg-danger">Rejected</span>
+                    <span th:if="${status.statusRegistrar == 'Pending'}" 
+                          class="badge bg-warning text-dark">Pending</span>
+                </td>
+
+                <!-- Actions Set 2 -->
+                <td th:if="${session.userid eq 20}">
+                    <div class="d-flex justify-content-center">
+                        <form th:action="@{/grades/approval/registrar/action}" method="post" th:object="${status}">
+                            <input type="hidden" name="gmdid" th:value="${status.gmdid}" />
+                            <input type="hidden" name="action" value="approve"/>
+                            <button type="submit" class="btn btn-success btn-sm me-2">Approve</button>
+                        </form>
+                        <form th:action="@{/grades/approval/registrar/action}" method="post" th:object="${status}">
+                            <input type="hidden" name="gmdid" th:value="${status.gmdid}" />
+                            <input type="hidden" name="action" value="reject"/>
+                            <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

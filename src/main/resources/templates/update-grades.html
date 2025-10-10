@@ -14,6 +14,7 @@
     <table style="width: 100%">
       <div th:insert="fragments/commonHeader :: mainHeader"></div>
     </table>
+
     <div class="container mt-5">
       <div class="d-flex justify-content-between align-items-center mb-3">
         <a
@@ -23,9 +24,12 @@
           >⬅ Back to Menu</a
         >
       </div>
+
       <div class="w-75 mx-auto card shadow p-4">
         <h2 class="text-center mb-4">Modify Grades</h2>
+
         <ul class="nav nav-tabs" id="gradeUploadTabs" role="tablist"></ul>
+
         <div class="tab-content mt-4" id="gradeUploadTabsContent">
           <div
             class="tab-pane fade show active"
@@ -43,10 +47,13 @@
                   <tr>
                     <th>Student ID</th>
                     <th>Name</th>
-                    <th>Email</th>
-                    <th>Grade</th>
+                    <th>Current Grade</th>
+                    <th>New Grade</th>
+                    <th>Remarks</th>
+                    <th>Checkbox</th>
                   </tr>
                 </thead>
+
                 <tbody>
                   <tr
                     th:each="student, iterStat : ${gradeForm.gradesList}"
@@ -72,61 +79,37 @@
                     <!-- Display student info -->
                     <td th:text="${student.studentId}"></td>
                     <td th:text="${student.studentName}"></td>
-                    <td th:text="${student.studentEmail}"></td>
+                    <td th:text="${student.grade}"></td>
 
                     <!-- Grade selection dropdown -->
                     <td>
                       <select
                         class="form-control"
-                        th:name="|gradesList[${index}].grade|"
+                        th:name="|gradesList[${index}].modifiedGrade|"
                       >
-                        <option
-                          value="AA"
-                          th:selected="${student.grade == 'AA'}"
-                        >
-                          AA
-                        </option>
-                        <option
-                          value="AB"
-                          th:selected="${student.grade == 'AB'}"
-                        >
-                          AB
-                        </option>
-                        <option
-                          value="BB"
-                          th:selected="${student.grade == 'BB'}"
-                        >
-                          BB
-                        </option>
-                        <option
-                          value="BC"
-                          th:selected="${student.grade == 'BC'}"
-                        >
-                          BC
-                        </option>
-                        <option
-                          value="CC"
-                          th:selected="${student.grade == 'CC'}"
-                        >
-                          CC
-                        </option>
-                        <option
-                          value="CD"
-                          th:selected="${student.grade == 'CD'}"
-                        >
-                          CD
-                        </option>
-                        <option
-                          value="DD"
-                          th:selected="${student.grade == 'DD'}"
-                        >
-                          DD
-                        </option>
-                        <option value="F" th:selected="${student.grade == 'F'}">
-                          F
-                        </option>
+                        <option value="">-- Select New Grade --</option>
+                        <option value="AA" th:if="${student.grade != 'AA'}">AA</option>
+                        <option value="AB" th:if="${student.grade != 'AB'}">AB</option>
+                        <option value="BB" th:if="${student.grade != 'BB'}">BB</option>
+                        <option value="BC" th:if="${student.grade != 'BC'}">BC</option>
+                        <option value="CC" th:if="${student.grade != 'CC'}">CC</option>
+                        <option value="CD" th:if="${student.grade != 'CD'}">CD</option>
+                        <option value="DD" th:if="${student.grade != 'DD'}">DD</option>
+                        <option value="F" th:if="${student.grade != 'F'}">F</option>
                       </select>
                     </td>
+
+                    <!-- New Remarks input field -->
+                    <td>
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Enter remarks"
+                        th:name="|gradesList[${index}].remarks|"
+                        th:value="${student.remarks}"
+                      />
+                    </td>
+
                     <td>
                       <input
                         type="checkbox"
@@ -136,6 +119,7 @@
                   </tr>
                 </tbody>
               </table>
+
               <button
                 type="submit"
                 class="btn btn-success mx-auto d-block"
@@ -161,7 +145,7 @@
         const alertBox = document.getElementById("upload-alert");
 
         form.addEventListener("submit", function (e) {
-          e.preventDefault(); // prevent form from submitting the normal way
+          e.preventDefault();
 
           const formData = new FormData(form);
 
@@ -173,7 +157,7 @@
             .then(({ ok, data }) => {
               showAlert(data.message, ok ? "success" : "danger");
             })
-            .catch((err) => {
+            .catch(() => {
               showAlert("Something went wrong. Please try again.", "danger");
             });
         });
@@ -185,7 +169,7 @@
 
           setTimeout(() => {
             alertBox.classList.add("d-none");
-          }, 8000); // hide after 4 seconds
+          }, 8000);
         }
       });
     </script>

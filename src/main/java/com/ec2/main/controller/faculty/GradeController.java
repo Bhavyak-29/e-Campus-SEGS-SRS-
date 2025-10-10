@@ -12,11 +12,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ec2.main.model.Grade;
+import com.ec2.main.model.GradeChangeStatusDTO;
 import com.ec2.main.model.StudentGradeDTO;
 import com.ec2.main.model.StudentGradeDTOWrapper;
 import com.ec2.main.repository.TermCoursesRepository;
@@ -146,7 +148,7 @@ public class GradeController {
     public String updateGrades(@ModelAttribute("gradeForm") StudentGradeDTOWrapper gradeWrapper,
                              HttpSession session,
                              RedirectAttributes redirectAttributes) {
-
+        Long uid = (Long) session.getAttribute("userid");
         Long trmid = (Long) session.getAttribute("TRMID");
         Long crsid = (Long) session.getAttribute("CRSID");
         Long examTypeId = (Long) session.getAttribute("examTypeId");
@@ -171,10 +173,26 @@ public class GradeController {
             return "redirect:/directGradeEntry/gradeOptions";
         }
         
-        gradeService.saveOrUpdateGrades(gradesToProcess, tcrid, examTypeId);
+        //gradeService.saveOrUpdateGrades(gradesToProcess, tcrid, examTypeId);
+        for (StudentGradeDTO gradeDTO : gradesToProcess) {
+        try {
+            gradeService.submitGradeChange(
+                    uid,
+                    tcrid,
+                    examTypeId,
+                    gradeDTO.getStudentId(),
+                    gradeDTO.getModifiedGrade(),
+                    gradeDTO.getRemarks()
+            );
+            
+        } catch (Exception e) {
+            // Log error and continue with others
+            System.err.println("Failed to update grade for studentId=" + gradeDTO.getStudentId() + ": " + e.getMessage());
+        }
+    }
         redirectAttributes.addFlashAttribute("success", "Grades updated successfully!");
 
-        return "redirect:/directGradeEntry/gradeOptions";
+        return "redirect:/grades/approval/status";
     }
 
 
@@ -266,4 +284,93 @@ public class GradeController {
 
         return "redirect:/directGradeEntry/gradeOptions";
     }
+
+    @GetMapping("/approval/status")
+    public String viewStatus(ModelMap model, HttpSession session) {
+        Long crsid = (Long) session.getAttribute("CRSID");
+        Long trmid = (Long) session.getAttribute("TRMID");
+        Long tcrid = termCourseRepository.findTcridByCrsidAndTrmid(crsid,trmid);
+        Long facultyId = (Long) session.getAttribute("userid");
+        session.setAttribute("userid",facultyId);
+        Long facultyUsername = (Long) session.getAttribute("userid");
+        if (trmid == null || crsid == null || tcrid == null) {
+            return "redirect:/directGradeEntry";
+        }
+        List<GradeChangeStatusDTO> statuses = gradeService
+                .getGradeChangeStatuses(facultyId, facultyUsername.toString(),tcrid);
+        model.addAttribute("statuses", statuses);
+        return "gradeStatus"; 
+    }
+
+    @GetMapping("/approval/dean")
+    public String viewPendingDeanRequests(ModelMap model, HttpSession session) {
+        Long userId = (Long) session.getAttribute("userid");
+        if (userId == null || userId != 1150) { // Dean AP
+            return "redirect:/accessDenied";
+        }
+
+        List<GradeChangeStatusDTO> pendingRequests = gradeService.getPendingDeanRequests();
+        model.addAttribute("statuses", pendingRequests);
+        return "gradeStatus"; // Reuse your same HTML view
+    }
+
+    @GetMapping("/approval/registrar")
+    public String viewPendingRegistrarRequests(ModelMap model, HttpSession session) {
+        Long userId = (Long) session.getAttribute("userid");
+        if (userId == null || userId != 20) { // Dean AP
+            return "redirect:/accessDenied";
+        }
+
+        List<GradeChangeStatusDTO> pendingRequests = gradeService.getPendingRegistrarRequests();
+        model.addAttribute("statuses", pendingRequests);
+        return "gradeStatus"; // Reuse your same HTML view
+    }
+
+    @PostMapping("/approval/dean/action")
+    public String deanAction(
+            @RequestParam Long gmdid,
+            @RequestParam String action,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+
+        Long deanId = (Long) session.getAttribute("userid");
+        if (deanId == null || deanId != 1150) {
+            redirectAttributes.addFlashAttribute("error", "Unauthorized access");
+            return "redirect:/accessDenied";
+        }
+
+        boolean success = gradeService.processDeanAction(gmdid, deanId, action);
+        if (success) {
+            redirectAttributes.addFlashAttribute("message", "Action completed successfully");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Action failed");
+        }
+
+        return "redirect:/grades/approval/dean";
+    }
+
+    @PostMapping("/approval/registrar/action")
+    public String registrarAction(
+            @RequestParam Long gmdid,
+            @RequestParam String action,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
+
+        Long deanId = (Long) session.getAttribute("userid");
+        if (deanId == null || deanId != 20) {
+            redirectAttributes.addFlashAttribute("error", "Unauthorized access");
+            return "redirect:/accessDenied";
+        }
+
+        boolean success = gradeService.processRegistrarAction(gmdid, deanId, action);
+        if (success) {
+            redirectAttributes.addFlashAttribute("message", "Action completed successfully");
+        } else {
+            redirectAttributes.addFlashAttribute("error", "Action failed");
+        }
+
+        return "redirect:/grades/approval/registrar";
+    }
+
+
 }

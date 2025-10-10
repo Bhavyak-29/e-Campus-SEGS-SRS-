@@ -23,7 +23,7 @@
             <td colspan="3">
                 <table class="w-100" style="table-layout: fixed;">
                     <tr>
-                        <td th:if="${session.roleId eq '901' or session.roleId eq '913'}">
+                        <td th:if="${session.roleId eq '901' or session.roleId eq '913' or session.roleId eq '905'}">
                             <div class="dropdown">
                                 <button class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
                                     Transaction
@@ -32,11 +32,30 @@
                                     <li><a class="dropdown-item" th:href="@{/directGradeEntry}">Direct Grade Entry</a></li>
                                     <li><a class="dropdown-item" th:href="@{/grades/update}">Modify Grade</a></li>
                                     <li><a class="dropdown-item" th:href="@{/grades/reviseIGrade}">Revise I Grade</a></li>
+                                    <li>
+                                        <a class="dropdown-item"
+                                        th:if="${session.userid eq 1150}"
+                                        th:href="@{/grades/approval/dean}">
+                                        Approval Status
+                                        </a>
+
+                                        <a class="dropdown-item"
+                                        th:if="${session.userid eq 20}"
+                                        th:href="@{/grades/approval/registrar}">
+                                        Approval Status
+                                        </a>
+
+                                        <a class="dropdown-item"
+                                        th:if="${session.userid ne 1150 and session.userid ne 20}"
+                                        th:href="@{/grades/approval/status}">
+                                        Approval Status
+                                        </a>
+                                    </li>
                                 </ul>
                             </div>
                         </td>
 
-                        <td th:if="${session.roleId eq '901' or session.roleId eq '913'}">
+                        <td th:if="${session.roleId eq '901' or session.roleId eq '913' or session.roleId eq '905'}">
                             <div class="dropdown">
                                 <button class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
                                     Reports (Your Course)
@@ -66,7 +85,7 @@
                             </div>
                         </td>
 
-                        <td th:if="${session.roleId eq '901' or session.roleId eq '913'}">
+                        <td th:if="${session.roleId eq '901' or session.roleId eq '913' or session.roleId eq '905'}">
                             <div class="dropdown">
                                 <button class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
                                     Reports (All Courses)
