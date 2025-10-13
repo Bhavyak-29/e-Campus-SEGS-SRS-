@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -96,7 +97,22 @@ public class CourseController {
             workbook.write(response.getOutputStream());
         }
     }
+    
+    @GetMapping("/course-maintenance")
+    public String showCourseListAdmin(Model model) {
+        // Fetch all courses
+        List<Courses> courses = coursesRepository.findAll();
 
+        // Add the courses to the model for Thymeleaf
+        model.addAttribute("courses", courses);
+
+        // Return the Thymeleaf template for the admin course list
+        return "courseList"; // Make sure this is the file name: src/main/resources/templates/courseList.html
+    }
+    @GetMapping("/course-edit")
+    public String showEditCourseForm(Model model) {
+        return "courseEdit"; // Thymeleaf template for editing
+    }
     @GetMapping("/term")
     public String showTermCourseSelector(
             @RequestParam(value = "academicYearId", required = false) Long academicYearId,
