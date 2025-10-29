@@ -53,25 +53,34 @@ public class CourseController {
     private AcademicYearsRepository academicYearsRepository;
 
 
-    // View: Display Master Course List
- @GetMapping("/master-list")
+// View: Display Master Course List (with full-text search + pagination)
+@GetMapping("/master-list")
 public String showCourseMasterList(
         Model model,
         @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "10") int size
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(required = false) String keyword
 ) {
     Pageable pageable = PageRequest.of(page, size);
+    Page<Courses> coursesPage;
 
-    // Fetch only active courses (CRSROWSTATE > 0)
-    Page<Courses> coursesPage = coursesRepository.findByCrsrowstateGreaterThan(0, pageable);
+    // If search keyword present, perform full-text search
+    if (keyword != null && !keyword.trim().isEmpty()) {
+        coursesPage = coursesRepository.searchCourses(keyword.trim(), pageable);
+    } else {
+        // Default: show all active courses (CRSROWSTATE > 0)
+        coursesPage = coursesRepository.findByCrsrowstateGreaterThan(0, pageable);
+    }
 
     model.addAttribute("coursesPage", coursesPage);
     model.addAttribute("currentPage", page);
     model.addAttribute("pageSize", size);
     model.addAttribute("totalPages", coursesPage.getTotalPages());
+    model.addAttribute("keyword", keyword); // so search box retains text
 
     return "courseList"; // Thymeleaf template
 }
+
 
     @GetMapping("/excel")
     public void downloadCourseExcel(HttpServletResponse response) throws IOException {

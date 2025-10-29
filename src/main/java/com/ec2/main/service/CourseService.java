@@ -4,7 +4,8 @@ import com.ec2.main.model.Courses;
 import com.ec2.main.repository.CoursesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -75,5 +76,14 @@ public Courses updateCourse(Long id, Courses updatedCourse) {
     // Delete course
     public void deleteCourse(Long id) {
         courseRepository.deleteById(id);
+    }
+
+    
+    public Page<Courses> searchCourses(String keyword, Pageable pageable) {
+        if (keyword == null || keyword.trim().isEmpty()) {
+            // return all active courses if no keyword
+            return courseRepository.findByCrsrowstateGreaterThan(0, pageable);
+        }
+        return courseRepository.searchCourses(keyword, pageable);
     }
 }

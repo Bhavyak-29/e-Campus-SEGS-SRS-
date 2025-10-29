@@ -29,6 +29,31 @@ public interface CoursesRepository extends JpaRepository<Courses, Long> {
     List<Courses> findByCrsrowstateGreaterThan(Long rowState);
     Page<Courses> findByCrsrowstateGreaterThan(int rowState, Pageable pageable);
 
+  @Query(
+    value = """
+        SELECT * FROM ec2.COURSES 
+        WHERE CRSROWSTATE > 0 
+          AND to_tsvector('english',
+                coalesce(CRSNAME, '') || ' ' ||
+                coalesce(CRSDISCIPLINE, '') || ' ' ||
+                coalesce(CRSASSESSMENTTYPE, '') || ' ' ||
+                coalesce(CRSCODE, '')
+              ) @@ to_tsquery('english', :keyword || ':*')
+        ORDER BY CRSNAME
+        """,
+    countQuery = """
+        SELECT count(*) FROM ec2.COURSES 
+        WHERE CRSROWSTATE > 0 
+          AND to_tsvector('english',
+                coalesce(CRSNAME, '') || ' ' ||
+                coalesce(CRSDISCIPLINE, '') || ' ' ||
+                coalesce(CRSASSESSMENTTYPE, '') || ' ' ||
+                coalesce(CRSCODE, '')
+              ) @@ to_tsquery('english', :keyword || ':*')
+        """,
+    nativeQuery = true
+)
+Page<Courses> searchCourses(@Param("keyword") String keyword, Pageable pageable);
 
 
 

@@ -70,49 +70,6 @@
             <a th:href="@{/courses/master-list}" class="btn btn-dark">Back</a>
         </div>
     </form>
-
-    <!-- Pagination -->
-    <div class="mt-4">
-        <nav>
-            <ul class="pagination justify-content-center">
-                <!-- Previous Button -->
-                <li class="page-item" th:classappend="${currentPage == 0} ? 'disabled'">
-                    <a class="page-link" th:href="@{/courses/master-list(page=${currentPage - 1}, size=${pageSize})}">Previous</a>
-                </li>
-                
-                <!-- Display First Page if the current page is far from 0 -->
-                <li class="page-item" th:if="${currentPage > 2}">
-                    <a class="page-link" th:href="@{/courses/master-list(page=0, size=${pageSize})}">1</a>
-                </li>
-                
-                <!-- Ellipsis if there are pages in between -->
-                <li class="page-item" th:if="${currentPage > 3}">
-                    <span class="page-link">...</span>
-                </li>
-                
-                <!-- Pages around current page (currentPage - 2 to currentPage + 2) -->
-                <li class="page-item" th:each="i : ${#numbers.sequence(currentPage - 2, currentPage + 2)}"
-                    th:classappend="${i == currentPage} ? 'active'">
-                    <a class="page-link" th:href="@{/courses/master-list(page=${i}, size=${pageSize})}" th:text="${i + 1}"></a>
-                </li>
-                
-                <!-- Ellipsis if the current page is far from the last page -->
-                <li class="page-item" th:if="${currentPage < totalPages - 3}">
-                    <span class="page-link">...</span>
-                </li>
-                
-                <!-- Display Last Page if the current page is far from the last page -->
-                <li class="page-item" th:if="${currentPage < totalPages - 2}">
-                    <a class="page-link" th:href="@{/courses/master-list(page=${totalPages - 1}, size=${pageSize})}" th:text="${totalPages}"></a>
-                </li>
-
-                <!-- Next Button -->
-                <li class="page-item" th:classappend="${currentPage + 1 == totalPages} ? 'disabled'">
-                    <a class="page-link" th:href="@{/courses/master-list(page=${currentPage + 1}, size=${pageSize})}">Next</a>
-                </li>
-            </ul>
-        </nav>
-    </div>
 </div>
 
 </body>
