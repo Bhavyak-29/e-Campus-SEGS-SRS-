@@ -78,12 +78,36 @@ public Courses updateCourse(Long id, Courses updatedCourse) {
         courseRepository.deleteById(id);
     }
 
-    
+   // ✅ Archive course (set crsrowstate = 0)
+    public void archiveCourse(Long id) {
+        Courses course = courseRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Course not found"));
+        course.setCrsrowstate(0L); // archived
+        course.setCrslastupdatedat(LocalDateTime.now());
+        courseRepository.save(course);
+    }
+
+    // ✅ Restore an archived course (set crsrowstate = 1)
+    public void restoreCourse(Long id) {
+        Courses course = courseRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Course not found"));
+        course.setCrsrowstate(1L); // active
+        course.setCrslastupdatedat(LocalDateTime.now());
+        courseRepository.save(course);
+    }
+
+
+    // ✅ Get paginated archived courses
+    public Page<Courses> getArchivedCourses(Pageable pageable) {
+        return courseRepository.findByCrsrowstateEquals(0, pageable);
+    }
+
+    // ✅ Search active courses
     public Page<Courses> searchCourses(String keyword, Pageable pageable) {
         if (keyword == null || keyword.trim().isEmpty()) {
-            // return all active courses if no keyword
             return courseRepository.findByCrsrowstateGreaterThan(0, pageable);
         }
         return courseRepository.searchCourses(keyword, pageable);
     }
+
 }

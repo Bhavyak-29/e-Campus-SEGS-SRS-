@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.ec2.main.model.AcademicYears;
 import com.ec2.main.model.Courses;
@@ -81,6 +82,25 @@ public String showCourseMasterList(
     return "courseList"; // Thymeleaf template
 }
 
+
+    @GetMapping("/archived")
+    public String showArchivedCourses(Model model) {
+        List<Courses> archivedCourses = coursesRepository.findByCrsrowstate(0);
+        model.addAttribute("archivedCourses", archivedCourses);
+        return "courseArchived"; // New Thymeleaf template
+    }
+
+    @GetMapping("/restore/{id}")
+    public String restoreArchivedCourse(@PathVariable("id") Long id) {
+        courseService.restoreCourse(id); // sets CRSROWSTATE = 1
+        return "redirect:/courses/archived";
+    }
+    @GetMapping("/archive/{id}")
+public String archiveCourse(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    courseService.archiveCourse(id);
+    redirectAttributes.addFlashAttribute("message", "Course archived successfully!");
+    return "redirect:/courses/master-list"; // go back to list page
+}
 
     @GetMapping("/excel")
     public void downloadCourseExcel(HttpServletResponse response) throws IOException {

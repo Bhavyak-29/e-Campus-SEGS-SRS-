@@ -24,12 +24,13 @@ public interface CoursesRepository extends JpaRepository<Courses, Long> {
     
     @Query(value = "SELECT crs.CRSID FROM ec2.COURSES crs WHERE crs.CRSROWSTATE > 0 AND crs.CRSCODE = :courseCode", nativeQuery = true)
     Long findCourseIdByName(@Param("courseCode") String courseCode);
+List<Courses> findByCrsrowstate(int state);
 
     List<Courses> findByTerm_Trmid(Long trmId);
     List<Courses> findByCrsrowstateGreaterThan(Long rowState);
     Page<Courses> findByCrsrowstateGreaterThan(int rowState, Pageable pageable);
 
-  @Query(
+ @Query(
     value = """
         SELECT * FROM ec2.COURSES 
         WHERE CRSROWSTATE > 0 
@@ -38,7 +39,10 @@ public interface CoursesRepository extends JpaRepository<Courses, Long> {
                 coalesce(CRSDISCIPLINE, '') || ' ' ||
                 coalesce(CRSASSESSMENTTYPE, '') || ' ' ||
                 coalesce(CRSCODE, '')
-              ) @@ to_tsquery('english', :keyword || ':*')
+              ) @@ to_tsquery(
+                    'english',
+                    regexp_replace(:keyword, '\\s+', ' & ', 'g') || ':*'
+              )
         ORDER BY CRSNAME
         """,
     countQuery = """
@@ -49,12 +53,15 @@ public interface CoursesRepository extends JpaRepository<Courses, Long> {
                 coalesce(CRSDISCIPLINE, '') || ' ' ||
                 coalesce(CRSASSESSMENTTYPE, '') || ' ' ||
                 coalesce(CRSCODE, '')
-              ) @@ to_tsquery('english', :keyword || ':*')
+              ) @@ to_tsquery(
+                    'english',
+                    regexp_replace(:keyword, '\\s+', ' & ', 'g') || ':*'
+              )
         """,
     nativeQuery = true
 )
 Page<Courses> searchCourses(@Param("keyword") String keyword, Pageable pageable);
 
-
+Page<Courses> findByCrsrowstateEquals(int rowState, Pageable pageable);
 
 }

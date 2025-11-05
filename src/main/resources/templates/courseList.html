@@ -92,8 +92,9 @@
     </div>
 
     <div class="mb-3">
-        <a class="btn btn-primary" th:href="@{/courses/new}">Add Course</a>
-        <a class="btn btn-success" th:href="@{/courses/excel}">Download Excel</a>
+        <a class="btn btn-primary" th:href="@{/courses/new}" style = "margin-right:20px;">Add Course</a>
+        <a class="btn btn-success" th:href="@{/courses/excel}" style = "margin-right:20px;">Download Excel</a>
+        <a class="btn btn-dark" th:href="@{/courses/archived}"style = "margin-right:20px;">View Archived Courses</a>
     </div>
 
     <!-- Course Table -->
@@ -126,8 +127,11 @@
                     <td th:text="${course.crscreditpoints}"></td>
                     <td>
                         <a class="btn btn-sm btn-warning" th:href="@{'/courses/edit/' + ${course.crsid}}">Edit</a>
-                        <a class="btn btn-sm btn-danger" th:href="@{'/courses/delete/' + ${course.crsid}}"
-                           onclick="return confirmDelete([[${course.crsid}]])">Delete</a>
+                        <a class="btn btn-sm btn-secondary"
+   th:href="@{/courses/archive/{crsid}(crsid=${course.crsid})}"
+   onclick="return confirm('Archive this course?');">
+   <i class="bi bi-archive"></i> Archive
+</a>
                     </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(coursesPage.content)}">
