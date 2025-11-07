@@ -4,18 +4,25 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ec2.main.model.AcademicYears;
@@ -38,6 +45,9 @@ public class CourseController {
     private CoursesRepository coursesRepository;
 
     @Autowired
+    private com.ec2.main.service.CourseService courseService;
+
+    @Autowired
     private TermCoursesRepository termCoursesRepository;
 
     @Autowired
@@ -47,13 +57,53 @@ public class CourseController {
     private AcademicYearsRepository academicYearsRepository;
 
 
-    // View: Display Master Course List
-    @GetMapping("/master-list")
-    public String showCourseMasterList(Model model) {
-        List<Courses> courses = coursesRepository.findAll();
-        model.addAttribute("courses", courses);
-        return "course_list"; // Thymeleaf template under resources/templates/
+// View: Display Master Course List (with full-text search + pagination)
+@GetMapping("/master-list")
+public String showCourseMasterList(
+        Model model,
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int size,
+        @RequestParam(required = false) String keyword
+) {
+    Pageable pageable = PageRequest.of(page, size);
+    Page<Courses> coursesPage;
+
+    // If search keyword present, perform full-text search
+    if (keyword != null && !keyword.trim().isEmpty()) {
+        coursesPage = coursesRepository.searchCourses(keyword.trim(), pageable);
+    } else {
+        // Default: show all active courses (CRSROWSTATE > 0)
+        coursesPage = coursesRepository.findByCrsrowstateGreaterThan(0, pageable);
     }
+
+    model.addAttribute("coursesPage", coursesPage);
+    model.addAttribute("currentPage", page);
+    model.addAttribute("pageSize", size);
+    model.addAttribute("totalPages", coursesPage.getTotalPages());
+    model.addAttribute("keyword", keyword); // so search box retains text
+
+    return "courseList"; // Thymeleaf template
+}
+
+
+    @GetMapping("/archived")
+    public String showArchivedCourses(Model model) {
+        List<Courses> archivedCourses = coursesRepository.findByCrsrowstate(0);
+        model.addAttribute("archivedCourses", archivedCourses);
+        return "courseArchived"; // New Thymeleaf template
+    }
+
+    @GetMapping("/restore/{id}")
+    public String restoreArchivedCourse(@PathVariable("id") Long id) {
+        courseService.restoreCourse(id); // sets CRSROWSTATE = 1
+        return "redirect:/courses/archived";
+    }
+    @GetMapping("/archive/{id}")
+public String archiveCourse(@PathVariable Long id, RedirectAttributes redirectAttributes) {
+    courseService.archiveCourse(id);
+    redirectAttributes.addFlashAttribute("message", "Course archived successfully!");
+    return "redirect:/courses/master-list"; // go back to list page
+}
 
     @GetMapping("/excel")
     public void downloadCourseExcel(HttpServletResponse response) throws IOException {
@@ -101,20 +151,37 @@ public class CourseController {
         }
     }
     
-    @GetMapping("/course-maintenance")
-    public String showCourseListAdmin(Model model) {
-        // Fetch all courses
-        List<Courses> courses = coursesRepository.findAll();
-
-        // Add the courses to the model for Thymeleaf
-        model.addAttribute("courses", courses);
-
-        // Return the Thymeleaf template for the admin course list
-        return "courseList"; // Make sure this is the file name: src/main/resources/templates/courseList.html
+   @GetMapping("/new")
+    public String showNewCourseForm(Model model) {
+        model.addAttribute("course", new Courses());
+        return "courseNew"; // Thymeleaf template for adding/editing
     }
-    @GetMapping("/course-edit")
-    public String showEditCourseForm(Model model) {
-        return "courseEdit"; // Thymeleaf template for editing
+
+    @PostMapping("/save")
+    public String saveCourse(@ModelAttribute("course") Courses course) {
+        courseService.addCourse(course);
+        return "redirect:/courses/master-list";
+    }
+
+@PostMapping("/update/{id}")
+public String updateCourse(@PathVariable("id") Long id, @ModelAttribute("course") Courses updatedCourse) {
+    courseService.updateCourse(id, updatedCourse);
+    return "redirect:/courses/master-list"; // fixed
+}
+
+@GetMapping("/delete/{id}")
+public String deleteCourse(@PathVariable("id") Long id) {
+    courseService.deleteCourse(id);
+    return "redirect:/courses/master-list"; // fixed
+}
+
+
+     // Show form to edit course
+    @GetMapping("/edit/{id}")
+    public String showEditCourseForm(@PathVariable("id") Long id, Model model) {
+        Courses course = courseService.getCourseById(id);
+        model.addAttribute("course", course);
+        return "courseNew"; // reuse same form
     }
     @GetMapping("/term")
     public String showTermCourseSelector(

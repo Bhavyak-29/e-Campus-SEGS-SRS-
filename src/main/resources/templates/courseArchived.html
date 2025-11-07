@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>DA-IICT - Course List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/ecampus.css}" />
+    <style>
+        /* Pagination styling */
+        .pagination-container {
+            max-width: 100%;
+            overflow: hidden;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        .pagination {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* 🌟 Modern Search Bar Styling */
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 50px;
+            padding: 6px 14px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease-in-out;
+            max-width: 420px;
+        }
+
+        .search-bar:focus-within {
+            border-color: #0d6efd;
+            box-shadow: 0 0 8px rgba(13, 110, 253, 0.25);
+        }
+
+        .search-bar input {
+            border: none;
+            outline: none;
+            flex: 1;
+            padding: 8px 10px;
+            font-size: 0.95rem;
+            border-radius: 50px;
+            background: transparent;
+        }
+
+        .search-bar button {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            border: none;
+            background-color: #0d6efd;
+            color: #fff;
+            transition: background-color 0.3s;
+        }
+
+        .search-bar button:hover {
+            background-color: #0b5ed7;
+        }
+
+        /* Icon sizing */
+        .search-bar i {
+            font-size: 1.1rem;
+        }
+    </style>
+
+    <script>
+        function confirmDelete(courseId) {
+            return confirm('Are you sure you want to delete course ID ' + courseId + '?');
+        }
+    </script>
+</head>
+<body>
+
+<!-- Common Header -->
+<div th:insert="~{fragments/commonHeader :: mainHeader}"></div>
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="fw-bold mb-0">Archived Courses</h2>
+        <a class="btn btn-dark" th:href="@{/courses/master-list}">Back to Active Courses</a>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped text-center align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Sr. No.</th>
+                    <th>Course Code</th>
+                    <th>Course Name</th>
+                    <th>Discipline</th>
+                    <th>Credits</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Iterate archived courses -->
+                <tr th:each="course, iterStat : ${archivedCourses}">
+                    <td th:text="${iterStat.index + 1}"></td>
+                    <td th:text="${course.crscode}"></td>
+                    <td th:text="${course.crsname}"></td>
+                    <td th:text="${course.crsdiscipline}"></td>
+                    <td th:text="${course.crscreditpoints}"></td>
+                    <td>
+                        <a class="btn btn-sm btn-success"
+                           th:href="@{'/courses/restore/' + ${course.crsid}}"
+                           onclick="return confirm('Restore this archived course?');">
+                           Restore
+                        </a>
+                    </td>
+                </tr>
+
+                <!-- No data case -->
+                <tr th:if="${#lists.isEmpty(archivedCourses)}">
+                    <td colspan="6" class="text-muted">No archived courses available.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="text-center mt-5 mb-3">
+        <p class="text-muted">&copy; 2025 DA-IICT</p>
+    </div>
+</div>
+
+</body>
+</html>
