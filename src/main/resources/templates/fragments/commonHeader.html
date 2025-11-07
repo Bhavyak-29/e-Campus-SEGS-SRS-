@@ -154,15 +154,28 @@
                         
                         <td th:if="${session.userid eq 99001}">
                             <div class="dropdown">
-                                <button class="btn btn-modern-nav dropdown-toggle w-160 fw-bold" type="button" data-bs-toggle="dropdown">
+                                <button class="btn btn-modern-nav dropdown-toggle w-160 fw-bold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Admin
                                 </button>
                                 <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" th:href="@{/courses/course-maintenance}">Add/Display</a></li>
-                                    <li><a class="dropdown-item" th:href="@{/courses/course-edit}">Edit</a></li>
-                                    <li><a class="dropdown-item" th:href="@{/admin/course-maintenance}">Disable</a></li>
-                                    <li><a class="dropdown-item" th:href="@{/admin/course-maintenance}">Archive</a></li>
-                                    <li><a class="dropdown-item" th:href="@{/admin/course-types}">Course Types [Core / Elective]</a></li>
+
+                                    <!-- Nested Dropdown: Course Master Maintenance -->
+                                    <li class="dropdown-submenu">
+                                        <a class="dropdown-item dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                                            Course Master
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" th:href="@{/courses/course-maintenance}">Add / Display</a></li>
+                                            <li><a class="dropdown-item" th:href="@{/courses/course-edit}">Edit</a></li>
+                                            <li><a class="dropdown-item" th:href="@{/admin/course-maintenance}">Disable</a></li>
+                                            <li><a class="dropdown-item" th:href="@{/admin/course-maintenance}">Archive</a></li>
+                                        </ul>
+                                    </li>
+
+                                    <!-- Direct Links -->
+                                    <li><a class="dropdown-item" th:href="@{/admin/defineElectives}">Manage Electives</a></li>
+                                    <li><a class="dropdown-item" th:href="@{/admin/assign-faculty}">Assign Faculty</a></li>
+
                                 </ul>
                             </div>
                         </td>

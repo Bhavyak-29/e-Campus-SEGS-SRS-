@@ -22,4 +22,29 @@ public interface CoursesRepository extends JpaRepository<Courses, Long> {
 
     List<Courses> findByTerm_Trmid(Long trmId);
 
+    @Query(value = """
+SELECT crs.*
+FROM ec2.COURSEGROUPCOURSES cgc
+JOIN ec2.COURSES crs ON crs.CRSID = cgc.CGCCRSID
+WHERE cgc.CGCROWSTATE > 0
+  AND crs.CRSROWSTATE > 0
+  AND cgc.CGCCGPID = :cgpid
+  AND crs.CRSID IN (
+      SELECT tc.tcrcrsid
+      FROM ec2.TERMCOURSEAVAILABLEFOR tca
+      JOIN ec2.TERMCOURSES tc ON tca.tcatcrid = tc.tcrid
+      WHERE tca.tcaprgid = :prgid
+        AND tcastatus = 'T'
+        AND tca.tcarowstate > 0
+        AND tc.tcrrowstate > 0
+        AND tc.tcrtrmid = :trmid
+  )
+""", nativeQuery = true)
+List<Courses> findCoursesByGroupProgramAndTerm(@Param("cgpid") Long cgpid,@Param("prgid") Long prgid,@Param("trmid") Long trmid);
+
+List<Courses> findByCrsnameContainingIgnoreCaseOrCrscodeContainingIgnoreCase(String name, String code);
+
+@Query("SELECT c FROM Courses c WHERE LOWER(c.crsname) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(c.crscode) LIKE LOWER(CONCAT('%', :query, '%'))")
+List<Courses> searchCourses(@Param("query") String query);
+
 }

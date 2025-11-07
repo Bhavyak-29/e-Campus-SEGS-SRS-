@@ -58,6 +58,7 @@ public class SecurityConfig {
                 )
                 .csrf(csrf -> csrf
                     .ignoringRequestMatchers("/grades/uploadcsv")
+                    .ignoringRequestMatchers("/admin/defineElectives/**")
                 )         
                 .formLogin(form -> form
                         .loginPage("/auth/login")

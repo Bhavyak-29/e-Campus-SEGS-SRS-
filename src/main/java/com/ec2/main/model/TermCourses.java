@@ -11,7 +11,7 @@ public class TermCourses {
     @Column(name = "tcrid")
     private Long tcrid;
 
-    @Column(name = "tcrtrmid",insertable = false, updatable = false)
+    @Column(name = "tcrtrmid")
     private Long tcrtrmid;
 
     @Column(name = "tcrtype")
@@ -44,22 +44,25 @@ public class TermCourses {
     @Column(name = "tcrrowstate")
     private Long tcrrowstate;
 
-    @Column(name = "tcrcrsid", insertable = false, updatable = false)
+    @Column(name = "tcrslot")
+    private Integer tcrslot;
+
+    @Column(name = "tcrcrsid")
     private Long tcrcrsid;
 
     @ManyToOne
-    @JoinColumn(name = "tcrcrsid", referencedColumnName = "crsid")
+    @JoinColumn(name = "tcrcrsid", referencedColumnName = "crsid", insertable = false, updatable = false)
     private Courses course;
 
-    @Column(name = "tcrfacultyid", insertable = false, updatable = false)
+    @Column(name = "tcrfacultyid")
     private Long tcrfacultyid;
 
     @ManyToOne
-    @JoinColumn(name = "tcrfacultyid", referencedColumnName = "uid")
+    @JoinColumn(name = "tcrfacultyid", referencedColumnName = "uid", insertable = false, updatable = false)
     private Users user;
 
     @ManyToOne
-    @JoinColumn(name = "tcrtrmid",referencedColumnName= "trmid")
+    @JoinColumn(name = "tcrtrmid",referencedColumnName= "trmid", insertable = false, updatable = false)
     private Terms term;
 
     public Long getTcrid() { return tcrid; }
@@ -103,6 +106,9 @@ public class TermCourses {
 
     public Long getTcrrowstate() { return tcrrowstate; }
     public void setTcrrowstate(Long tcrrowstate) { this.tcrrowstate = tcrrowstate; }
+
+    public Integer getTcrslot() { return tcrslot; }
+    public void setTcrslot(Integer tcrslot) { this.tcrslot = tcrslot; }
 
     public Courses getCourse() {
         return course;
