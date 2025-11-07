@@ -13,6 +13,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import com.ec2.main.model.Users;
+import com.ec2.main.repository.UsersRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -91,6 +98,7 @@ public class facultyController {
     @Autowired
     private Eggradm1Repository Eggradm1Repository;
 
+    
     @RequestMapping("/directGradeEntry")
     public String directGradeEntry(ModelMap model) {
         List<AcademicYears> academicYears = facultyService.getAllAcademicYears();
