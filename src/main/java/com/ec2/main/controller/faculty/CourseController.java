@@ -1,7 +1,9 @@
 package com.ec2.main.controller.faculty;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ec2.main.model.AcademicYears;
 import com.ec2.main.model.Courses;
@@ -285,4 +288,26 @@ public String deleteCourse(@PathVariable("id") Long id) {
             workbook.write(response.getOutputStream());
         }
     }
+
+    // @GetMapping("/search")
+    // public List<Courses> searchCourses(@RequestParam("query") String query) {
+    //     return coursesRepository.findByCrsnameContainingIgnoreCaseOrCrscodeContainingIgnoreCase(query, query);
+    // }
+
+    @GetMapping("/search")
+    @ResponseBody
+    public List<Map<String, Object>> searchCourses(@RequestParam("q") String query) {
+        List<Courses> courseList = coursesRepository.searchCourses(query);
+        List<Map<String, Object>> results = new ArrayList<>();
+
+        for (Courses c : courseList) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("crsid", c.getCrsid());
+            map.put("crscode", c.getCrscode());
+            map.put("crsname", c.getCrsname());
+            map.put("crscreditpoints", c.getCrscreditpoints());
+            results.add(map);
+        }
+        return results;
+        }
 }

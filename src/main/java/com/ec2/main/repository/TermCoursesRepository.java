@@ -4,7 +4,8 @@ import com.ec2.main.model.DropdownItem;
 import com.ec2.main.model.TermCourses;
 
 import lombok.Lombok;
-
+import jakarta.transaction.Transactional;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -68,5 +69,49 @@ public interface TermCoursesRepository extends JpaRepository<TermCourses, Long> 
 
     // This method is for showUpdatedGradeListReport to get TermCourse details
     List<TermCourses> findByTerm_TrmidAndTcrrowstateGreaterThan(Long termId, int rowstate);
+
+//     @Query(value = """
+//         SELECT 
+//             t.*, 
+//             c.crscode, 
+//             c.crstitle, 
+//             c.crscreditpoints
+//         FROM ec2.termcourses t
+//         JOIN ec2.courses c 
+//             ON t.tcrcrsid = c.crsid
+//         WHERE t.tcrtrmid = :termId
+//     """, nativeQuery = true)
+//     List<Map<String, Object>> findByTermWithCourseDetails(@Param("termId") Long termId);
+
+@Query(value = """
+        SELECT 
+            t.*, 
+            c.crscode, 
+            c.crstitle, 
+            c.crscreditpoints
+        FROM ec2.termcourses t
+        JOIN ec2.courses c ON t.tcrcrsid = c.crsid
+        WHERE t.tcrtrmid = :termId
+    """, nativeQuery = true)
+    List<TermCourses> findByTermWithCourseDetails(@Param("termId") Long termId);
+
+    // boolean existsByTcrtrmidAndTcrcrsid(Long tcrtrmid, Long tcrcrsid);
+
+    // @Query("SELECT COALESCE(MAX(t.tcrid), 0) FROM TermCourses t")
+    // Long findMaxTcrid();
+
+    List<TermCourses> findByTcrtrmidOrderByTcrid(Long trmid);
+
+    boolean existsByTcrtrmid(Long trmid);
+
+    @Query("SELECT COALESCE(MAX(t.tcrid), 0) FROM TermCourses t")
+    Long findMaxTcrid();
+
+    @Modifying
+    @Transactional
+    void deleteByTcrid(Long tcrid);
+
+    boolean existsByTcrtrmidAndTcrcrsid(Long trmid, Long crsid);
+
 
 }

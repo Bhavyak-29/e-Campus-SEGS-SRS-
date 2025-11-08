@@ -28,4 +28,19 @@ public interface TermsRepository extends JpaRepository<Terms, Long> {
     List<Terms> findDistinctByTrmrowstateGreaterThan(int rowState);
 
     List<Terms> findByAcademicYear_AyridAndTrmrowstateGreaterThanOrderByTrmnameAsc(Long ayrId, int rowState);
+
+    @Query(value = "SELECT DISTINCT trmname FROM ec2.terms ORDER BY trmname", nativeQuery = true)
+    List<String> findDistinctTermNames();
+
+    // @Query(value = "SELECT * FROM ec2.terms WHERE trmname = :name ORDER BY trmayrid DESC LIMIT 1", nativeQuery = true)
+    // Terms findLatestTermByName(@Param("name") String trmname);
+
+    // @Query("SELECT t FROM Terms t WHERE LOWER(t.trmname) = LOWER(:termName) ORDER BY t.trmayrid DESC LIMIT 1")
+    // Terms findLatestTermByName(@Param("termName") String termName);
+
+    @Query(value = "SELECT * FROM ec2.terms WHERE LOWER(trmname) = LOWER(:termName) ORDER BY trmayrid DESC LIMIT 1", 
+           nativeQuery = true)
+    Terms findLatestTermByName(@Param("termName") String termName);
+
+
 }

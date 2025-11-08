@@ -44,4 +44,14 @@ public interface UserRepository extends JpaRepository<Users, Long> {
         """,
         nativeQuery = true)
     List<Users> searchFacultyList(@Param("keyword") String keyword);
+
+    @Query(value = """
+    SELECT * 
+    FROM ec2.users 
+    WHERE urole_0 = 'FACULTY' 
+      AND LOWER(uemail) LIKE LOWER(CONCAT('%', :query, '%'))
+""", nativeQuery = true)
+    List<Users> searchFacultyByName(@Param("query") String query);
+
+    List<Users> findByUemailContainingIgnoreCase(String name);
 }
