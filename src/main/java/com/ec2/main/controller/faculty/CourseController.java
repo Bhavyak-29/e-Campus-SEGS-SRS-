@@ -13,7 +13,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.ec2.main.model.AcademicYears;
 import com.ec2.main.model.Courses;
 import com.ec2.main.model.Terms;
+import com.ec2.main.model.Users;
 import com.ec2.main.model.TermCourses;
 import com.ec2.main.repository.AcademicYearsRepository;
 import com.ec2.main.repository.CoursesRepository;
@@ -40,6 +40,10 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 @RequestMapping("/courses")
 public class CourseController {
+
+    @Autowired
+    private com.ec2.main.service.facultyService facultyService;
+
 
     @Autowired
     private CoursesRepository coursesRepository;
@@ -56,6 +60,26 @@ public class CourseController {
     @Autowired
     private AcademicYearsRepository academicYearsRepository;
 
+// URL: /faculty/master-list
+    @GetMapping("/faculty/master-list")
+    public String showFacultyList(Model model,
+                                  @RequestParam(required = false) String keyword) {
+
+        List<Users> facultyList;
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            // Search by keyword
+            facultyList = facultyService.searchFaculties(keyword.trim());
+        } else {
+            // Default: all active faculty
+            facultyList = facultyService.getAllFaculties();
+        }
+
+        model.addAttribute("facultyList", facultyList);
+        model.addAttribute("keyword", keyword); // retain search text
+
+        return "facultyList"; // Thymeleaf template
+    }
 
 // View: Display Master Course List (with full-text search + pagination)
 @GetMapping("/master-list")

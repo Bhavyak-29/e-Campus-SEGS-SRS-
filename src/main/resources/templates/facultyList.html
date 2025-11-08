@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>DA-IICT - Faculty List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/ecampus.css}" />
+
+    <style>
+        /* 🌟 Modern Search Bar Styling */
+        .search-bar {
+            display: flex;
+            align-items: center;
+            background: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 50px;
+            padding: 6px 14px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease-in-out;
+            max-width: 420px;
+        }
+
+        .search-bar:focus-within {
+            border-color: #0d6efd;
+            box-shadow: 0 0 8px rgba(13, 110, 253, 0.25);
+        }
+
+        .search-bar input {
+            border: none;
+            outline: none;
+            flex: 1;
+            padding: 8px 10px;
+            font-size: 0.95rem;
+            border-radius: 50px;
+            background: transparent;
+        }
+
+        .search-bar button {
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            border: none;
+            background-color: #0d6efd;
+            color: #fff;
+            transition: background-color 0.3s;
+        }
+
+        .search-bar button:hover {
+            background-color: #0b5ed7;
+        }
+
+        .search-bar i {
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- Include the common header -->
+<div th:insert="~{fragments/commonHeader :: mainHeader}"></div>
+
+<div class="container mt-4 text-center">
+    <h2 class="mb-4">Faculty Master List</h2>
+
+    <!-- Back + Search Layout -->
+    <div class="position-relative mb-4">
+        <!-- Centered Search Bar -->
+        <form th:action="@{/courses/faculty/master-list}" method="get" class="d-inline-block">
+            <div class="search-bar d-flex align-items-center justify-content-center mx-auto">
+                <input type="text" name="keyword"
+                       style="height: 60px; width: 500px; font-size: 20px;"
+                       placeholder="Search faculty by name or email..."
+                       th:value="${keyword}" aria-label="Search Faculty">
+                <button type="submit">
+                    <i class="bi bi-search"></i>
+                </button>
+            </div>
+        </form>
+
+        <!-- Back Button (top-right corner) -->
+        <a th:href="@{/courses/faculty/master-list}"
+           class="btn btn-secondary btn-lg d-flex align-items-center px-4 py-2 position-absolute"
+           style="top: 0; right: 0;">x
+            <i class="bi bi-arrow-left me-2"></i> Back
+        </a>
+    </div>
+
+    <!-- 🧑 Faculty Table (Centered and Narrow) -->
+    <div class="table-responsive mx-auto" style="max-width: 1200px;">
+        <table class="table table-bordered table-striped align-middle text-center">
+            <thead class="table-dark">
+                <tr>
+                    <th>Sr. No.</th>
+                    <th>Faculty UID</th>
+                    <th>Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="faculty, iterStat : ${facultyList}">
+                    <td th:text="${iterStat.index + 1}"></td>
+                    <td th:text="${faculty.uid}"></td>
+                    <td th:text="${faculty.uemail}"></td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(facultyList)}">
+                    <td colspan="4" class="text-muted">No faculty found.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!-- Footer -->
+    <div class="text-center mt-5 mb-3">
+        <p>&copy; 2025 DA-IICT</p>
+    </div>
+</div>
+
+<!-- Bootstrap Icons -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+
+</body>
+</html>

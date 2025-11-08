@@ -82,8 +82,7 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2 class="fw-bold mb-0">Master Course List</h2>
 
-        <!-- 🔍 Modern Search Bar -->
-        <form class="search-bar" th:action="@{/courses/master-list}" method="get" style = "height: 60px; margin-right:450px; width:400px;">
+        <form class="search-bar" th:action="@{/courses/master-list}" method="get" style = "height: 60px; margin-right:450px; width:480px; border: 3px solid black;">
             <input type="search" name="keyword" placeholder="Search courses..." th:value="${keyword}" aria-label="Search" style = "font-size:20px;">
             <button type="submit">
                 <i class="bi bi-search"></i>
@@ -92,9 +91,10 @@
     </div>
 
     <div class="mb-3">
-        <a class="btn btn-primary" th:href="@{/courses/new}" style = "margin-right:20px;">Add Course</a>
-        <a class="btn btn-success" th:href="@{/courses/excel}" style = "margin-right:20px;">Download Excel</a>
-        <a class="btn btn-dark" th:href="@{/courses/archived}"style = "margin-right:20px;">View Archived Courses</a>
+        <a class="btn btn-primary" th:href="@{/courses/new}" style = "padding:12px;margin-right:20px; background: linear-gradient(135deg, #098993ff); font-weight: bold;font-size:18px;">Add Course</a>
+        <a class="btn btn-success" th:href="@{/courses/excel}" style = "padding:12px;margin-right:20px; font-weight: bold;font-size:18px;">Download Excel</a>
+        <a class="btn" th:href="@{/courses/archived}"   style="padding:12px;background: linear-gradient(135deg, #244e7bff); color: white; border: none; margin-right:20px; font-size:18px;font-weight: bold;">
+View Archived Courses</a>
     </div>
 
     <!-- Course Table -->
@@ -110,7 +110,7 @@
                     <th>L</th>
                     <th>T</th>
                     <th>P</th>
-                    <th>CP</th>
+                    <th>C</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -126,8 +126,8 @@
                     <td th:text="${course.crspracticals}"></td>
                     <td th:text="${course.crscreditpoints}"></td>
                     <td>
-                        <a class="btn btn-sm btn-warning" th:href="@{'/courses/edit/' + ${course.crsid}}">Edit</a>
-                        <a class="btn btn-sm btn-secondary"
+                        <a class="btn btn-md btn-warning" th:href="@{'/courses/edit/' + ${course.crsid}}"><i class="bi bi-pencil-square"></i> Edit</a>
+                        <a class="btn btn-md" style="margin-left:10px;color: white; background: linear-gradient(135deg, #009325ff);"
    th:href="@{/courses/archive/{crsid}(crsid=${course.crsid})}"
    onclick="return confirm('Archive this course?');">
    <i class="bi bi-archive"></i> Archive
