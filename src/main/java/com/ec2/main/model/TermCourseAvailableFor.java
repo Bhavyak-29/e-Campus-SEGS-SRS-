@@ -35,6 +35,11 @@ public class TermCourseAvailableFor {
     @Column(name = "tcarowstate")
     private Long tcarowstate;
 
+    @Column(name = "tcabchid")
+    private Long tcabchid;
+
+    @Column(name = "tcaelectivetype")
+    private String tcaelectivetype;
 
     public Long getTcaid() { return tcaid; }
     public void setTcaid(Long tcaid) { this.tcaid = tcaid; }
@@ -62,5 +67,11 @@ public class TermCourseAvailableFor {
 
     public Long getTcarowstate() { return tcarowstate; }
     public void setTcarowstate(Long tcarowstate) { this.tcarowstate = tcarowstate; }
+
+    public Long getTcabchid() { return tcabchid; }
+    public void setTcabchid(Long tcabchid) { this.tcabchid = tcabchid; }    
+
+    public String getTcaelectivetype() { return tcaelectivetype; }
+    public void setTcaelectivetype(String tcaelectivetype) { this.tcaelectivetype = tcaelectivetype; }
 
 }

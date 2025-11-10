@@ -716,6 +716,9 @@ document.getElementById('saveBtn').addEventListener('click', async () => {
     <div>
       <button id="saveBtn" class="btn btn-primary">Save</button>
     </div>
+    <div>
+      <button id="exitBtn" class="btn btn-secondary">Exit</button>
+    </div>
   </div>
 </div>
 
@@ -867,6 +870,10 @@ document.getElementById('saveBtn').addEventListener('click', async () => {
       console.error('Save request failed', e);
       alert('Error saving changes');
     }
+  });
+
+  document.getElementById('exitBtn').addEventListener('click', () => {
+    window.location.href = '/auth/homepage';
   });
 </script>
 </body>
