@@ -24,6 +24,8 @@ public interface BatchesRepository extends JpaRepository<Batches, Long> {
 
     List<Batches> findByPrograms_PrgidAndBchrowstateGreaterThanOrderByBchfield1Asc(Long prgId, Long rowState);
 
+    @Query("SELECT b FROM Batches b WHERE b.bchprgid = :prgid ORDER BY b.bchname")
+    List<Batches> findByPrgId(@Param("prgid") Long prgid);
 
 
 }
