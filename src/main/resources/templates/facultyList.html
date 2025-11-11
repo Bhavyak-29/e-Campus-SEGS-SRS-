@@ -7,7 +7,6 @@
     <link rel="stylesheet" th:href="@{/css/ecampus.css}" />
 
     <style>
-        /* 🌟 Modern Search Bar Styling */
         .search-bar {
             display: flex;
             align-items: center;
@@ -57,7 +56,7 @@
 
 <body>
 
-<!-- Include the common header -->
+<!-- Common header -->
 <div th:insert="~{fragments/commonHeader :: mainHeader}"></div>
 
 <div class="container mt-4 text-center">
@@ -65,35 +64,38 @@
 
     <!-- Back + Search Layout -->
     <div class="position-relative mb-4">
-        <!-- Centered Search Bar -->
+        <!-- Search Bar -->
         <form th:action="@{/courses/faculty/master-list}" method="get" class="d-inline-block">
             <div class="search-bar d-flex align-items-center justify-content-center mx-auto">
                 <input type="text" name="keyword"
                        style="height: 60px; width: 500px; font-size: 20px;"
                        placeholder="Search faculty by name or email..."
                        th:value="${keyword}" aria-label="Search Faculty">
+                <input type="hidden" name="crsId" th:value="${crsId}" />
+                <input type="hidden" name="slotNo" th:value="${slotNo}" />
                 <button type="submit">
                     <i class="bi bi-search"></i>
                 </button>
             </div>
         </form>
 
-        <!-- Back Button (top-right corner) -->
-        <a th:href="@{/courses/faculty/master-list}"
-           class="btn btn-secondary btn-lg d-flex align-items-center px-4 py-2 position-absolute"
-           style="top: 0; right: 0;">x
+        <!-- Back Button 
+        <a th:href="@{/courses/list}" 
+           class="btn btn-dark btn-lg d-flex align-items-center px-4 py-2 position-absolute"
+           style="top: 0; right: 0;">
             <i class="bi bi-arrow-left me-2"></i> Back
-        </a>
+        </a> -->
     </div>
 
-    <!-- 🧑 Faculty Table (Centered and Narrow) -->
-    <div class="table-responsive mx-auto" style="max-width: 1200px;">
-        <table class="table table-bordered table-striped align-middle text-center">
+    <!-- Faculty Table -->
+    <div class="table-responsive mx-auto" style="max-width: 900px;">
+        <table class="table table-bordered table-striped align-middle">
             <thead class="table-dark">
                 <tr>
                     <th>Sr. No.</th>
                     <th>Faculty UID</th>
                     <th>Email</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -101,6 +103,12 @@
                     <td th:text="${iterStat.index + 1}"></td>
                     <td th:text="${faculty.uid}"></td>
                     <td th:text="${faculty.uemail}"></td>
+                    <td>
+                        <a th:href="@{/courses/faculty/assign(facultyId=${faculty.uid}, crsId=${crsId}, slotNo=${slotNo})}"
+                           class="btn btn-success btn-sm">
+                            Assign
+                        </a>
+                    </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(facultyList)}">
                     <td colspan="4" class="text-muted">No faculty found.</td>
@@ -108,6 +116,7 @@
             </tbody>
         </table>
     </div>
+
     <!-- Footer -->
     <div class="text-center mt-5 mb-3">
         <p>&copy; 2025 DA-IICT</p>

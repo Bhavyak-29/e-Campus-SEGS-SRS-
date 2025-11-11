@@ -24,7 +24,9 @@ public interface CoursesRepository extends JpaRepository<Courses, Long> {
     
     @Query(value = "SELECT crs.CRSID FROM ec2.COURSES crs WHERE crs.CRSROWSTATE > 0 AND crs.CRSCODE = :courseCode", nativeQuery = true)
     Long findCourseIdByName(@Param("courseCode") String courseCode);
-List<Courses> findByCrsrowstate(int state);
+    // Fetch archived courses where rowstate >= 900
+    @Query("SELECT c FROM Courses c WHERE c.crsrowstate >= 900")
+    List<Courses> findArchivedCourses();
 
     List<Courses> findByTerm_Trmid(Long trmId);
     List<Courses> findByCrsrowstateGreaterThan(Long rowState);

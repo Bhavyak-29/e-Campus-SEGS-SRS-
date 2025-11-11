@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Select Faculty</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/ecampus.css}" />
+
+  <style>
+    body {
+      background: linear-gradient(135deg, #f7f8fc, #eef1f7);
+      font-family: "Poppins", sans-serif;
+    }
+
+    h3 {
+      font-weight: 700;
+      margin-bottom: 1rem;
+      color: #343a40;
+    }
+
+    .container {
+      margin-top: 40px;
+      max-width: 900px;
+    }
+
+    /* ✅ Search Bar Styling */
+    .search-box {
+      max-width: 400px;
+      margin: 25px auto;
+      position: relative;
+    }
+
+    .search-box input {
+      border-radius: 30px;
+      padding: 10px 20px 10px 45px;
+      border: 1.5px solid #ced4da;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .search-box input:focus {
+      border-color: #0d6efd;
+      box-shadow: 0 4px 10px rgba(13, 110, 253, 0.15);
+      outline: none;
+    }
+
+    .search-box::before {
+      content: "🔍";
+      position: absolute;
+      left: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #6c757d;
+      font-size: 1.1rem;
+    }
+
+    /* ✅ Table Styling */
+    .table-container {
+      max-width: 750px;
+      margin: 0 auto;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+      background-color: #fff;
+    }
+
+    .table th {
+      background-color: #343a40 !important;
+      color: white !important;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .table td {
+      vertical-align: middle;
+    }
+
+    /* ✅ Beautified Select Button */
+    .btn-select {
+      background: linear-gradient(135deg, #007bff, #0056d2);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 6px 16px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-select:hover {
+      background: linear-gradient(135deg, #0056d2, #0041a8);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 10px rgba(0, 86, 210, 0.3);
+    }
+
+    /* ✅ Toast Styling */
+    .toast-container {
+      position: fixed;
+      top: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 1080;
+    }
+
+    .toast {
+      border-radius: 12px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+      min-width: 450px;
+      font-size: 1.1rem;
+      padding: 12px 18px;
+      animation: slideDown 0.5s ease;
+    }
+
+    @keyframes slideDown {
+      from { opacity: 0; transform: translate(-50%, -20px); }
+      to { opacity: 1; transform: translate(-50%, 0); }
+    }
+
+    footer {
+      margin-top: 50px;
+      color: #6c757d;
+    }
+  </style>
+</head>
+
+<body>
+<div th:insert="~{fragments/commonHeader :: mainHeader}"></div>
+
+<div class="container text-center">
+  <h3>Select Faculty</h3>
+
+  <!-- ✅ Full-text Search Form -->
+  <form th:action="@{/admin/faculty/master-list}" method="get" class="search-box">
+    <input type="hidden" name="crsId" th:value="${crsId}" />
+    <input type="hidden" name="slotNo" th:value="${slotNo}" />
+    <input id="searchInput" name="search" class="form-control"
+           type="text" placeholder="Search by name, email, or username"
+           th:value="${search}">
+  </form>
+
+  <!-- ✅ Faculty Table -->
+  <form th:action="@{/admin/faculty/assign}" method="post">
+    <input type="hidden" name="crsId" th:value="${crsId}" />
+    <input type="hidden" name="slotNo" th:value="${slotNo}" />
+
+    <div class="table-container table-responsive">
+      <table class="table table-bordered table-striped align-middle text-center" id="facultyTable">
+        <thead class="table-dark">
+          <tr>
+            <th>ID</th>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr th:each="f : ${facultyList}">
+            <td th:text="${f.uid}"></td>
+            <td th:text="${f.ufullname}"></td>
+            <td th:text="${f.uemail}"></td>
+            <td>
+              <button type="submit" class="btn btn-select btn-sm"
+                      th:name="'facultyId'" th:value="${f.uid}">
+                Select
+              </button>
+            </td>
+          </tr>
+
+          <tr th:if="${#lists.isEmpty(facultyList)}">
+            <td colspan="4" class="text-muted">No faculty found.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </form>
+
+  <div class="mt-3">
+    <a th:href="@{/admin/assign-faculty}" class="btn btn-secondary rounded-pill px-4">Back</a>
+  </div>
+</div>
+
+<!-- ✅ Toast Notifications -->
+<div class="toast-container">
+  <div th:if="${success}" class="toast align-items-center text-bg-success border-0" role="alert">
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="toast-body fw-semibold" th:text="${success}"></div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
+
+  <div th:if="${error}" class="toast align-items-center text-bg-danger border-0" role="alert">
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="toast-body fw-semibold" th:text="${error}"></div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+<footer class="text-center">
+  <p>&copy; 2025 DA-IICT</p>
+</footer>
+</body>
+</html>

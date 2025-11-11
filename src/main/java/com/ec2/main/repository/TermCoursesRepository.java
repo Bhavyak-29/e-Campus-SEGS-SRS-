@@ -2,8 +2,6 @@ package com.ec2.main.repository;
 
 import com.ec2.main.model.DropdownItem;
 import com.ec2.main.model.TermCourses;
-
-import lombok.Lombok;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -113,5 +111,31 @@ public interface TermCoursesRepository extends JpaRepository<TermCourses, Long> 
 
     boolean existsByTcrtrmidAndTcrcrsid(Long trmid, Long crsid);
 
+    @Query("SELECT t FROM TermCourses t WHERE t.tcrid = :tcrid")
+    TermCourses findByTcrid(@Param("tcrid") Long tcrid);
+
+    @Query(value = """
+    SELECT 
+        t.tcrfacultyid AS facultyId,
+        u.uemail AS facultyEmail,
+        COUNT(t.tcrid) AS assignedCount
+    FROM ec2.termcourses t
+    JOIN ec2.users u ON u.uid = t.tcrfacultyid
+    WHERE t.tcrfacultyid IS NOT NULL
+      AND t.tcrtrmid = :termId
+    GROUP BY t.tcrfacultyid, u.uemail
+    ORDER BY assignedCount DESC
+    """, nativeQuery = true)
+List<Object[]> getFacultyAssignmentSummaryForTerm(@Param("termId") Long termId);
+@Query(value = """
+    SELECT c.crsid, c.crsname, c.crstitle, t.tcrslot
+    FROM ec2.termcourses t
+    JOIN ec2.courses c ON c.crsid = t.tcrcrsid
+    WHERE t.tcrfacultyid = :facultyId
+      AND t.tcrtrmid = :termId
+    ORDER BY c.crscode
+    """, nativeQuery = true)
+List<Object[]> getCoursesForFacultyInTerm(@Param("facultyId") Long facultyId,
+                                          @Param("termId") Long termId);
 
 }

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Faculty Assignment Summary</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" th:href="@{/css/ecampus.css}" />
+
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: "Poppins", sans-serif;
+    }
+
+    h2 {
+      font-weight: 700;
+      color: #343a40;
+      margin-bottom: 1.5rem;
+    }
+
+    .table-container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    th {
+      background-color: #212529 !important;
+      color: #fff !important;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      letter-spacing: 0.5px;
+    }
+
+    td {
+      vertical-align: middle;
+    }
+
+    footer {
+      margin-top: 40px;
+      color: #6c757d;
+    }
+  </style>
+</head>
+
+<body>
+<div th:insert="~{fragments/commonHeader :: mainHeader}"></div>
+
+<div class="container text-center mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+  <h2 class="mb-0">Faculty Assignment Summary</h2>
+  
+  <a th:href="@{/admin/assign-faculty}" 
+     class="btn px-4 fw-bold"
+     style="background-color: #000; color: #fff; border: none; transition: all 0.3s ease; font-size: 18px;"
+     onmouseover="this.style.backgroundColor='#333'"
+     onmouseout="this.style.backgroundColor='#000'">
+    ⬅ Back
+  </a>
+</div>
+
+  <div class="table-container mt-3">
+    <table class="table table-striped table-hover text-center">
+      <thead>
+  <tr>
+    <th>Faculty ID</th>
+    <th>Faculty Email</th>
+    <th>No. of Courses Assigned</th>
+    <th>Action</th>
+  </tr>
+</thead>
+      <tbody>
+  <tr th:each="f : ${facultySummary}">
+    <td th:text="${f.facultyId}"></td>
+    <td th:text="${f.facultyEmail}"></td>
+    <td>
+      <span th:text="${f.assignedCount}"
+            th:classappend="${f.assignedCount >= 5} ? 'fw-bold text-danger' : 'fw-semibold text-success'">
+      </span>
+    </td>
+    <td>
+      <a th:href="@{'/admin/faculty/' + ${f.facultyId} + '/courses'}"
+         class="btn btn-primary btn-sm rounded-pill">
+        View Courses
+      </a>
+    </td>
+  </tr>
+
+  <tr th:if="${#lists.isEmpty(facultySummary)}">
+    <td colspan="4" class="text-muted">No faculty assignments found.</td>
+  </tr>
+</tbody>
+
+    </table>
+  </div>
+
+  <div class="mt-4">
+    <a th:href="@{/admin/assign-faculty}" class="btn btn-secondary rounded-pill px-4">Back</a>
+  </div>
+</div>
+
+<footer class="text-center">
+  <p>&copy; 2025 DA-IICT</p>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,8 +1,6 @@
 package com.ec2.main.controller.faculty;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -112,7 +110,7 @@ public String showCourseMasterList(
 
     @GetMapping("/archived")
     public String showArchivedCourses(Model model) {
-        List<Courses> archivedCourses = coursesRepository.findByCrsrowstate(0);
+        List<Courses> archivedCourses = coursesRepository.findArchivedCourses();
         model.addAttribute("archivedCourses", archivedCourses);
         return "courseArchived"; // New Thymeleaf template
     }
