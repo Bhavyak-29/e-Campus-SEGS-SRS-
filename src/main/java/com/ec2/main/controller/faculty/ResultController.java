@@ -99,7 +99,101 @@ public class ResultController {
 
     @Autowired
     private GradeService gradeService;
+    @GetMapping("/semesterwise/selector")
+public String showSemesterWiseSelector(Model model, HttpSession session) {
 
+    // This is almost the same logic as showPrgBchSemSelector,
+    // but hard-coded for semester-wise list
+
+    List<Programs> programs =
+            programsRepository.findByPrgrowstateGreaterThanOrderByPrgfield1Asc((short) 0);
+
+    List<Batches> batches =
+            batchesRepository.findAllActiveBatchesOrderedByProgramAndBatchField();
+
+    List<Semesters> semesters =
+            semestersRepository.findAllActiveSemestersOrderedByProgramBatchAndSequence();
+
+    model.addAttribute("programs", programs);
+    model.addAttribute("batches", batches);
+    model.addAttribute("semesters", semesters);
+
+    // Text on the submit button
+    model.addAttribute("actionText", "View Semester-wise Result");
+
+    // Target endpoint that the form will submit to
+    model.addAttribute("targetUrl", "/results/semesterwise/list");
+
+    return "prgBchSemSelector"; // reuse existing selector template
+}
+
+/**
+ * Semester-wise result list for a given semester.
+ * Uses the same underlying query as SPI/CPI list, but:
+ *  - no filters
+ *  - simpler view (just a list of students with SPI/CPI)
+ */
+@GetMapping("/semesterwise/list")
+public String showSemesterWiseList(Model model,
+                                   HttpSession session,
+                                   HttpServletResponse response,
+                                   @RequestParam(name = "semesterId", required = false) String semesterIdParam,
+                                   RedirectAttributes redirectAttributes) throws IOException {
+
+    Long semesterId;
+
+    // 1. Try to get semesterId from request parameter
+    if (semesterIdParam != null && !semesterIdParam.isEmpty()) {
+        try {
+            semesterId = Long.parseLong(semesterIdParam);
+            session.setAttribute("currentSemesterId", semesterId);
+        } catch (NumberFormatException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Invalid semester ID format.");
+            return "redirect:/results/semesterwise/selector";
+        }
+    } else {
+        // 2. Fallback: read from session if already selected
+        Object sessionSemesterId = session.getAttribute("currentSemesterId");
+        if (sessionSemesterId instanceof Long) {
+            semesterId = (Long) sessionSemesterId;
+        } else if (sessionSemesterId instanceof String && !((String) sessionSemesterId).isEmpty()) {
+            try {
+                semesterId = Long.parseLong((String) sessionSemesterId);
+            } catch (NumberFormatException e) {
+                redirectAttributes.addFlashAttribute("errorMessage", "Invalid semester ID format in session.");
+                return "redirect:/results/semesterwise/selector";
+            }
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "Please select a semester first.");
+            return "redirect:/results/semesterwise/selector";
+        }
+    }
+
+    if (semesterId == null) {
+        redirectAttributes.addFlashAttribute("errorMessage", "Please select a semester first.");
+        return "redirect:/results/semesterwise/selector";
+    }
+
+    // 3. Call the same repository method used for SPI/CPI,
+    //    but with no CPI/SPI filters (nulls everywhere).
+    List<Object[]> results = studentSemesterResultRepository.findSpiCpiListBySpecification(
+            semesterId,
+            null, null, null,   // CPI operator/from/to
+            null, null, null,   // SPI operator/from/to
+            "and",              // condition, not really used with nulls
+            "STDINSTID",        // default order
+            "ASC"
+    );
+
+    // 4. Push to the model
+    model.addAttribute("studentSemesterResultsCollection", results);
+
+    // Optionally: semester name in header
+    Semesters sem = semestersRepository.findById(semesterId).orElse(null);
+    model.addAttribute("selectedSemesterName", sem != null ? sem.getStrname() : "Selected Semester");
+
+    return "semesterWiseList"; // new Thymeleaf template (see below)
+}
     // --- Existing Student-wise Result Methods (No Changes) ---
     @GetMapping("/studentwise/search")
     public String searchStudentsForResults(

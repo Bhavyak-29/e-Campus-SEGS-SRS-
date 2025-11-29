@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>Direct Grade Entry</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" th:href="@{/css/ecampus.css}" />
+  </head>
+  <body>
+    <table style="width: 100%">
+      <div th:insert="fragments/commonHeader :: mainHeader"></div>
+      <tr>
+        <td class="sidemenu"></td>
+        <td class="content">
+          <h2 class="mb-4 text-center" style="margin-top: 10px">
+            Select to proceed
+          </h2>
+          <form method="get" th:action="@{/admin/course-results/list}">
+            <div class="d-flex flex-column align-items-center">
+              <!-- Academic Year -->
+              <div class="mb-3 w-50 text-start">
+                <label for="academicYearSelect" class="form-label"
+                  >Academic Year</label
+                >
+                <select
+                  id="academicYearSelect"
+                  class="form-select"
+                  name="AYRID"
+                  onchange="fetchTerms(this.value)"
+                >
+                  <option value="">-- Select Academic Year --</option>
+                  <option
+                    th:each="ay : ${academicYears}"
+                    th:value="${ay.ayrid}"
+                    th:text="${ay.ayrname}"
+                    th:selected="${ay.ayrid == latestAY}"
+                  ></option>
+                </select>
+              </div>
+
+              <!-- Term -->
+              <div class="mb-3 w-50 text-start">
+                <label for="termSelect" class="form-label">Term</label>
+                <select
+                  id="termSelect"
+                  class="form-select"
+                  name="TRMID"
+                  onchange="fetchCourses(this.value)"
+                >
+                  <option value="">-- Select Term --</option>
+                  <option
+                    th:each="t : ${terms}"
+                    th:value="${t.trmid}"
+                    th:text="${t.trmname}"
+                    th:selected="${t.trmid == latestTerm}"
+                  ></option>
+                </select>
+              </div>
+
+              <!-- Course -->
+              <div class="mb-3 w-50 text-start">
+                <label for="courseSelect" class="form-label">Course</label>
+                <select
+                  id="courseSelect"
+                  class="form-select"
+                  name="CRSID"
+                >
+                  <option value="">-- Select Course --</option>
+                </select>
+              </div>
+
+              <!-- Exam Type -->
+              <div class="mb-4 w-50 text-start">
+                <label for="examTypeSelect" class="form-label">Exam Type</label>
+                <select
+                  id="examTypeSelect"
+                  class="form-select"
+                  name="examTypeId"
+                >
+                  <option value="">-- Select Exam Type --</option>
+                </select>
+              </div>
+
+              <button type="submit" class="btn custom-proceed-btn">
+                Proceed
+              </button>
+            </div>
+          </form>
+        </td>
+        <td class="sidemenu"></td>
+      </tr>
+    </table>
+
+    <!-- Scripts -->
+    <script th:inline="javascript">
+      document.addEventListener("DOMContentLoaded", function () {
+        const latestAY   = /*[[${latestAY}]]*/ null;
+        const latestTerm = /*[[${latestTerm}]]*/ null;
+
+        if (latestAY) {
+          fetchTerms(latestAY).then(() => {
+            if (latestTerm) {
+              document.getElementById("termSelect").value = latestTerm;
+              fetchCourses(latestTerm);
+            }
+          });
+        }
+
+        document.getElementById("courseSelect")
+          .addEventListener("change", function () {
+            const selectedCrsId = this.value;
+            const selectedTrmId = document.getElementById("termSelect").value;
+            fetchExamTypes(selectedCrsId, selectedTrmId);
+          });
+      });
+
+      function fetchTerms(AYRID) {
+        return fetch(`/api/terms?AYRID=${AYRID}`)
+          .then((response) => response.json())
+          .then((data) => {
+            const termSelect = document.getElementById("termSelect");
+            termSelect.innerHTML =
+              '<option value="">-- Select Term --</option>';
+            data.forEach((term) => {
+              const option = document.createElement("option");
+              option.value = term.trmid;
+              option.text = term.trmname;
+              termSelect.appendChild(option);
+            });
+
+            // Reset dependent selects
+            document.getElementById("courseSelect").innerHTML =
+              '<option value="">-- Select Course --</option>';
+            document.getElementById("examTypeSelect").innerHTML =
+              '<option value="">-- Select Exam Type --</option>';
+          });
+      }
+
+      function fetchCourses(TRMID) {
+        return fetch(`/api/courses?TRMID=${TRMID}`)
+          .then((response) => response.json())
+          .then((data) => {
+            const courseSelect = document.getElementById("courseSelect");
+            courseSelect.innerHTML =
+              '<option value="">-- Select Course --</option>';
+            data.forEach((course) => {
+              const option = document.createElement("option");
+              option.value = course.id;
+              option.text = course.code + " - " + course.name;
+              courseSelect.appendChild(option);
+            });
+
+            document.getElementById("examTypeSelect").innerHTML =
+              '<option value="">-- Select Exam Type --</option>';
+          });
+      }
+
+      function fetchExamTypes(CRSID, TRMID) {
+        if (!CRSID || !TRMID) {
+          console.warn("Missing CRSID or TRMID. Aborting fetchExamTypes.");
+          return;
+        }
+
+        fetch(`/api/exam-types?CRSID=${CRSID}&TRMID=${TRMID}`)
+          .then((response) => response.json())
+          .then((data) => {
+            const examTypeSelect = document.getElementById("examTypeSelect");
+            examTypeSelect.innerHTML =
+              '<option value="">-- Select Exam Type --</option>';
+            data.forEach((exam) => {
+              const option = document.createElement("option");
+              option.value = exam.id;
+              option.text = exam.title;
+              examTypeSelect.appendChild(option);
+            });
+          });
+      }
+    </script>
+  </body>
+</html>

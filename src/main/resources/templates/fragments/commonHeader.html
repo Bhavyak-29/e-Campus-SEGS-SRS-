@@ -23,7 +23,7 @@
             <td colspan="3">
                 <table class="w-100" style="table-layout: fixed;">
                     <tr>
-                        <td th:if="${session.roleId eq '901' or session.roleId eq '913' or session.roleId eq '905'}">
+                        <td th:if="${session.roleId eq '913' or session.roleId eq '905'}">
                             <div class="dropdown">
                                 <button class="btn btn-modern-nav dropdown-toggle w-100" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
                                     Transaction
@@ -151,7 +151,39 @@
                         <td th:if="${session.roleId eq '914'}">
                              <a class="btn btn-modern-nav w-100" style="color:white;font-weight:bold;" th:href="@{/srs/Registration}">Registration</a>
                         </td>
-                        
+                        <td th:if="${session.userid eq 99001}">
+                            <div class="dropdown">
+                                <button class="btn btn-modern-nav dropdown-toggle w-160 fw-bold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Result
+                                </button>
+                                <ul class="dropdown-menu">                                  
+
+                                    <!-- Direct Links -->
+<li><a class="dropdown-item" th:href="@{/admin/course-results/selector}">Course-wise Grade Report</a></li>
+                                    <li><a class="dropdown-item" th:href="@{/results/studentwise/search}">Student Wise</a></li>
+                                    <li><a class="dropdown-item" th:href="@{/results/spicpi/selector(target='/results/semesterwise/list', actionText='View Semester-wise Result')}">Semester Wise</a></li>
+                                    <li><a class="dropdown-item" th:href="@{?}">SPI-CPI Distribution</a></li>
+
+                                </ul>
+                            </div>
+                        </td>
+                        <td th:if="${session.userid eq 99001}">
+                            <div class="dropdown">
+                                <button class="btn btn-modern-nav dropdown-toggle w-160 fw-bold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Grade Card
+                                </button>
+                                <ul class="dropdown-menu">                                  
+
+                                    <!-- Direct Links -->
+<li><a class="dropdown-item" th:href="@{/results/spicpi/selector(target='/results/gradecard/semester/list', 
+                                             actionText='View Semester Grade Cards')}">Semester Wise Grade </a></li>
+                                    <li><a class="dropdown-item" th:href="@{/results/studentwise/search}">Student Wise</a></li>
+                                    <li><a class="dropdown-item" th:href="@{/results/spicpi/selector(target='/results/semesterwise/list', actionText='View Semester-wise Result')}">Serial No Batchwise</a></li>
+                                    <li><a class="dropdown-item" th:href="@{?}">SPI-CPI Distribution</a></li>
+
+                                </ul>
+                            </div>
+                        </td>
                         <td th:if="${session.userid eq 99001}">
                             <div class="dropdown">
                                 <button class="btn btn-modern-nav dropdown-toggle w-160 fw-bold" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -181,18 +213,7 @@
                             </div>
                         </td>
 
-                        <td>
-                            <div class="dropdown">
-                                <button class="btn btn-modern-nav dropdown-toggle w-70" style="color:white;font-weight:bold;" type="button" data-bs-toggle="dropdown">
-                                    Help
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <li><a class="dropdown-item" href="#">About Application</a></li>
-                                    <li><a class="dropdown-item" href="#">Workflow of SEGS</a></li>
-                                    <li><a class="dropdown-item" href="#">Contact Us</a></li>
-                                </ul>
-                            </div>
-                        </td>
+                        
                         
                         <td>
                              <form th:action="@{/auth/login}" method="get" class="d-grid">
