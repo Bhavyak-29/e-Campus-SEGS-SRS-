@@ -41,4 +41,15 @@ public interface StudentRegistrationRepository extends JpaRepository<StudentRegi
     // Semester dropdown loading
     @Query(value = "SELECT * FROM ec2.semesters WHERE strtrmid = :termId", nativeQuery = true)
     List<Semesters> findSemestersByTerm(@Param("termId") Long termId);
+    @Query("""
+       SELECT r
+       FROM StudentRegistration r
+       JOIN r.students s
+       JOIN r.semesters sem
+       WHERE sem.strid = :semesterId
+         AND r.srgrowstate > 0
+       ORDER BY s.stdinstid ASC
+       """)
+List<StudentRegistration> findBySemesterOrderByStudentInstId(@Param("semesterId") Long semesterId);
+
 }

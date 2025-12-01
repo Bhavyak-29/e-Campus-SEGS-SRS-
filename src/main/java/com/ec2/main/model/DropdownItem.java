@@ -2,19 +2,23 @@ package com.ec2.main.model;
 
 public class DropdownItem {
     private String id;
-    private String name;
+    private String label;
 
-    public DropdownItem(String id, String name) {
+    public DropdownItem(String id, String label) {
         this.id = id;
-        this.name = name;
+        this.label = label;
     }
 
-    // Getters
     public String getId() {
         return id;
     }
 
+    public String getLabel() {
+        return label;
+    }
+
+    // 👇 Add this to keep backward compatibility
     public String getName() {
-        return name;
+        return label;
     }
 }
