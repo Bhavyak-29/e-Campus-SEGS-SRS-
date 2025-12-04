@@ -97,32 +97,65 @@ public class LoginServlet {
     }
 
 
-    @GetMapping("/homepage")
-    public String dashboard(Authentication authentication, HttpSession session, Model model) {
-        if (authentication != null) {
-            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-            Users user = userDetails.getUser();
-            Long uid = userDetails.getUser().getUid();
-            String userName = user.getUname();
-            String roleName = user.getRole() != null ? user.getRole().getRoleName() : null;
-            String roleId = user.getRole() != null ? user.getRole().getRid() : null;
+    // @GetMapping("/homepage")
+    // public String dashboard(Authentication authentication, HttpSession session, Model model) {
+    //     if (authentication != null) {
+    //         CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+    //         Users user = userDetails.getUser();
+    //         Long uid = userDetails.getUser().getUid();
+    //         String userName = user.getUname();
+    //         String roleName = user.getRole() != null ? user.getRole().getRoleName() : null;
+    //         String roleId = user.getRole() != null ? user.getRole().getRid() : null;
 
-            // Store in session and model
-            session.setAttribute("username", userName);
-            session.setAttribute("userid",uid);
-            session.setAttribute("roleId", roleId);
-            model.addAttribute("username", userName);
-            model.addAttribute("roleId", roleId);
-            model.addAttribute("userid",uid);
+    //         // Store in session and model
+    //         session.setAttribute("username", userName);
+    //         session.setAttribute("univId", userName);
+    //         session.setAttribute("userid",uid);
+    //         session.setAttribute("roleId", roleId);
+    //         model.addAttribute("username", userName);
+    //         model.addAttribute("roleId", roleId);
+    //         model.addAttribute("userid",uid);
 
-            if ("STUDENT".equalsIgnoreCase(roleName)) {
-                return "redirect:/srs";
-            } else {
-                return "segsMenuFaculty";
-            }
+    //         if ("STUDENT".equalsIgnoreCase(roleName)) {
+    //             return "redirect:/srs";
+    //         } else if("FACULTY".equalsIgnoreCase(roleName)){
+    //             return "redirect:/faculty/current-courses";
+    //         }else {
+    //             return "segsMenuFaculty";
+    //         }
+    //     }
+    //     return "redirect:/auth/login";
+    // }
+   @GetMapping("/homepage")
+public String dashboard(Authentication authentication, HttpSession session, Model model) {
+    if (authentication != null) {
+        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+        Users user = userDetails.getUser();
+        Long uid      = user.getUid();
+        String uname  = user.getUname();   // login / display name
+        String roleName = user.getRole() != null ? user.getRole().getRoleName() : null;
+        String roleId   = user.getRole() != null ? user.getRole().getRid() : null;
+
+        // keep existing behaviour for admins etc.
+        session.setAttribute("username", uname);
+
+
+        session.setAttribute("userid", uid);
+        session.setAttribute("roleId", roleId);
+        model.addAttribute("username", uname);
+        model.addAttribute("roleId", roleId);
+        model.addAttribute("userid", uid);
+
+        if ("STUDENT".equalsIgnoreCase(roleName)) {
+            return "redirect:/srs";
+        } else if ("FACULTY".equalsIgnoreCase(roleName)) {
+            return "redirect:/faculty/current-courses";
+        } else {
+            return "segsMenuFaculty";
         }
-        return "redirect:/auth/login";
     }
+    return "redirect:/auth/login";
+}
 
 
     @GetMapping("/wrong-password")

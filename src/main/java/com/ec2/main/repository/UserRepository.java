@@ -15,9 +15,17 @@ public interface UserRepository extends JpaRepository<Users, Long> {
 
     List<Users> findByUrole0(String urole0);
 
-    Optional<Users> findByUnivId(String univId);
+    // Use native query so we hit the actual DB column `univid`
+    @Query(value = "SELECT * FROM ec2.users WHERE univid = :univid", nativeQuery = true)
+    Optional<Users> findByUnivId(@Param("univid") String univId);
 
-    @Query(value = "SELECT u.* FROM ec2.users u JOIN ec2.ec2_roles r ON u.urole = r.rid WHERE u.univId = :univid", nativeQuery = true)
+    @Query(value = """
+        SELECT u.* 
+        FROM ec2.users u 
+        JOIN ec2.ec2_roles r ON u.urole = r.rid 
+        WHERE u.univid = :univid
+        """,
+        nativeQuery = true)
     Optional<Users> findByUnividWithRoles(@Param("univid") String univId);
 
     // 🔹 All faculty (urole = '913', row_state > 0) without pagination
@@ -46,11 +54,12 @@ public interface UserRepository extends JpaRepository<Users, Long> {
     List<Users> searchFacultyList(@Param("keyword") String keyword);
 
     @Query(value = """
-    SELECT * 
-    FROM ec2.users 
-    WHERE urole_0 = 'FACULTY' 
-      AND LOWER(uemail) LIKE LOWER(CONCAT('%', :query, '%'))
-""", nativeQuery = true)
+        SELECT * 
+        FROM ec2.users 
+        WHERE urole_0 = 'FACULTY' 
+          AND LOWER(uemail) LIKE LOWER(CONCAT('%', :query, '%'))
+        """,
+        nativeQuery = true)
     List<Users> searchFacultyByName(@Param("query") String query);
 
     List<Users> findByUemailContainingIgnoreCase(String name);

@@ -80,7 +80,15 @@ public interface TermCoursesRepository extends JpaRepository<TermCourses, Long> 
 //         WHERE t.tcrtrmid = :termId
 //     """, nativeQuery = true)
 //     List<Map<String, Object>> findByTermWithCourseDetails(@Param("termId") Long termId);
-
+@Query("SELECT t FROM TermCourses t " +
+       "WHERE t.term.trmid = :trmid " +
+       "AND t.tcrfacultyid = :facultyId " +
+       "AND t.tcrrowstate > 0 " +
+       "ORDER BY t.course.crsid")
+List<TermCourses> findFacultyCoursesInTerm(
+        @Param("trmid") Long trmid,
+        @Param("facultyId") Long facultyId
+);
 @Query(value = """
         SELECT 
             t.*, 
@@ -137,5 +145,23 @@ List<Object[]> getFacultyAssignmentSummaryForTerm(@Param("termId") Long termId);
     """, nativeQuery = true)
 List<Object[]> getCoursesForFacultyInTerm(@Param("facultyId") Long facultyId,
                                           @Param("termId") Long termId);
+
+                                              @Query(value = """
+        SELECT 
+            src.SRCTCRID AS tcrid,
+            COUNT(*)     AS studentCount
+        FROM ec2.STUDENTREGISTRATIONCOURSES src
+        JOIN ec2.STUDENTREGISTRATIONS srg
+          ON src.SRCSRGID = srg.SRGID
+        WHERE src.SRCTCRID IN (:tcrids)
+          AND src.SRCROWSTATE > 0          -- active course registrations
+          AND src.SRCSTATUS = 'ACTIVE'     -- active status
+          AND (src.SRCTYPE IS NULL OR src.SRCTYPE <> 'AUDIT') -- no audit if you want
+          AND srg.SRGROWSTATE > 0          -- active student registrations
+        GROUP BY src.SRCTCRID
+        """,
+        nativeQuery = true)
+    List<Object[]> countStudentsForTermCourses(@Param("tcrids") List<Long> tcrids);
+
 
 }

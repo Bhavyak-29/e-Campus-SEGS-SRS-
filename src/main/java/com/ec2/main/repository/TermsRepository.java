@@ -42,5 +42,14 @@ public interface TermsRepository extends JpaRepository<Terms, Long> {
            nativeQuery = true)
     Terms findLatestTermByName(@Param("termName") String termName);
 
-
+    @Query("""
+    SELECT t
+    FROM Terms t
+    WHERE t.trmid = (
+        SELECT MAX(t2.trmid) - 3
+        FROM Terms t2
+        WHERE t2.trmrowstate > :rowState
+    )
+""")
+Terms findLatestMinusThree(@Param("rowState") int rowState);
 }
